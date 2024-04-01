@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import Header from './Header';
 import Footer from './Footer';
 import Popularity from '../Tabs/popularity';
-import Soccer_p from "../Tabs/Category/soccer_ploblem";
-
+import Ploblem_UI from "../Tabs/Category/Ploblem_UI";
+import Make_ploblem from "../Tabs/make_ploblem"
 // 이미지 import한 부분입니다.
 import Soccer_image from './img/SoccerImage.jpg'
 import Food_Image from "./img/FoodImage.jpg"
@@ -58,7 +58,7 @@ const Layout = () => {
                         <button className={`nav-link ${activeTab === '전체' && 'active'}`} style={{ width: '100%', backgroundColor: activeTab === '전체' ? 'blue' : 'initial' }} onClick={() => handleTabChange('전체')}>전체</button>
                     </li>
                     <li className="nav-item" style={{ width: 200 }}> {/*이거는 카테고리 탭 디자인 하는 곳 */}
-                        <div className="position-relative">
+                        <div className="position-relative" style={{ zIndex: 999 }}>
                             <button className={`nav-link ${activeTab === '카테고리' && 'active'}`} style={{ width: '100%' }} onClick={handleCategoryToggle}>카테고리</button>
                             {isCategoryOpen && (
                                 <div className="position-absolute p-2 rounded " style={{ top: '100%', left: 0, minWidth: '600px', background: 'pink' }}>
@@ -142,15 +142,21 @@ const Layout = () => {
                 )}
                 {selectedCategory && (
                     <div>
-                        {selectedCategory === '축구'}
-                        <Soccer_p />
+                        {selectedCategory === '축구' && <Ploblem_UI />}
+                        {selectedCategory === '음식' && <Ploblem_UI />}
+                        {selectedCategory === '연애' && <Ploblem_UI />}
+                        {selectedCategory === '노래' && <Ploblem_UI />}
+                        {selectedCategory === '생존' && <Ploblem_UI />}
+                        {selectedCategory === '드라마&영화' && <Ploblem_UI />}
+                        {selectedCategory === '일상' && <Ploblem_UI />}
                     </div>
                 )}
+
                 {activeTab === '인기' && (
                     <Popularity />
                 )}
                 {activeTab === '문제 만들기' && (
-                    <>문제 만들기 탭 내용</>
+                    <Make_ploblem />
                 )}
                 {activeTab === '공지' && (
                     <>공지 탭 내용</>
