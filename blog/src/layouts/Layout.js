@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { Link } from 'react-router-dom';
+
 import Header from './Header';
 import Footer from './Footer';
 import Popularity from '../Tabs/popularity';
 import Ploblem_UI from "../Tabs/Category/Ploblem_UI";
 import Make_ploblem from "../Tabs/make_ploblem"
+import Entire from "../Tabs/entire";
 // 이미지 import한 부분입니다.
 import Soccer_image from './img/SoccerImage.jpg'
 import Food_Image from "./img/FoodImage.jpg"
@@ -15,6 +18,9 @@ import Daily_Image from './img/DailyImage.jpg'
 
 // Layout 모듈에서 default로 내보내도록 수정
 const Layout = () => {
+
+    
+
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [activeTab, setActiveTab] = useState('전체');
     const [isCategoryOpen, setCategoryOpen] = useState(false); // 카테고리 드롭다운 상태
@@ -51,6 +57,7 @@ const Layout = () => {
 
     return (
         <>
+
             <Header />
             <div>
                 <ul className="nav nav-tabs">
@@ -159,10 +166,11 @@ const Layout = () => {
                     <Make_ploblem />
                 )}
                 {activeTab === '공지' && (
-                    <>공지 탭 내용</>
+                    <>공지 미개발</>
                 )}
             </div>
             <Footer />
+
         </>
     );
 };
