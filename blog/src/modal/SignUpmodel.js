@@ -1,13 +1,14 @@
-import React from 'react';
-import { Modal, Button, Form, Container } from 'react-bootstrap';
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import React from 'react'
+import { Modal, Button, Form, Container } from 'react-bootstrap'
+import KaKaoimage from "../layouts/img/Kakao_login.png"
+import Googleimage from "../layouts/img/Goolge_login.png"
 
 const SignUpmodel = ({ show, onHide }) => {
-  const responseGoogle = (response) => { // 구글 로그인 성공이나 실패 띄울 때 쓸거에요
-    console.log(response);
+  const handleSignUpButtonClick = () => {
+    // 회원가입 페이지로 이동하는 로직을 추가하세요.
+    // 예: window.location.href = '/회원가입페이지경로';
+    console.log('회원가입 페이지로 이동');
   };
-
-  const clientId = '1047897370733-dovpvu7kv56d4f6vf2vvtborl7j66nct.apps.googleusercontent.com'; // 구글 클라이언트 ID
 
   return (
     <Modal
@@ -41,20 +42,18 @@ const SignUpmodel = ({ show, onHide }) => {
               />
             </Form.Group>
           </Form>
-          <GoogleOAuthProvider clientId={clientId}>
-            <GoogleLogin
-              onSuccess={(res) => {
-                console.log(res);
-              }}
-              onFailure={(err) => {
-                console.log(err);
-              }}
-            />
-          </GoogleOAuthProvider>
+          {/* 구글 로그인 버튼 */}
+          <Button variant="light" onClick={handleSignUpButtonClick}>
+            <img src={Googleimage} alt="구글 이미지" style={{ width: '170px', height: '45px' }} />
+          </Button>
+          {/* 카카오 로그인 버튼 */}
+          <Button variant="light" onClick={handleSignUpButtonClick}>
+            <img src={KaKaoimage} alt="카카오톡 이미지" />
+          </Button>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="info" type="button">
-            로그인
+            만들기
           </Button>
           <Button onClick={onHide}>닫기</Button>
         </Modal.Footer>

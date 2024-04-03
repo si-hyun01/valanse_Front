@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
-
 import Header from './Header';
 import Footer from './Footer';
 import Popularity from '../Tabs/popularity';
+import Notice from '../Tabs/notinoti'
 import Ploblem_UI from "../Tabs/Category/Ploblem_UI";
+import Food_ploblem from "../Tabs/Category/Food_ploblem"
 import Make_ploblem from "../Tabs/make_ploblem"
+import Love_ploblem from "../Tabs/Category/Love_ploblem"
 import Entire from "../Tabs/entire";
+
 // 이미지 import한 부분입니다.
 import Soccer_image from './img/SoccerImage.jpg'
 import Food_Image from "./img/FoodImage.jpg"
@@ -16,11 +19,8 @@ import Actor_Image from "./img/actor.png"
 import Survival_Image from "./img/Survival.jpg"
 import Daily_Image from './img/DailyImage.jpg'
 
-// Layout 모듈에서 default로 내보내도록 수정
+
 const Layout = () => {
-
-    
-
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [activeTab, setActiveTab] = useState('전체');
     const [isCategoryOpen, setCategoryOpen] = useState(false); // 카테고리 드롭다운 상태
@@ -57,7 +57,6 @@ const Layout = () => {
 
     return (
         <>
-
             <Header />
             <div>
                 <ul className="nav nav-tabs">
@@ -150,8 +149,8 @@ const Layout = () => {
                 {selectedCategory && (
                     <div>
                         {selectedCategory === '축구' && <Ploblem_UI />}
-                        {selectedCategory === '음식' && <Ploblem_UI />}
-                        {selectedCategory === '연애' && <Ploblem_UI />}
+                        {selectedCategory === '음식' && <Food_ploblem />}
+                        {selectedCategory === '연애' && <Love_ploblem />}
                         {selectedCategory === '노래' && <Ploblem_UI />}
                         {selectedCategory === '생존' && <Ploblem_UI />}
                         {selectedCategory === '드라마&영화' && <Ploblem_UI />}
@@ -166,11 +165,10 @@ const Layout = () => {
                     <Make_ploblem />
                 )}
                 {activeTab === '공지' && (
-                    <>공지 미개발</>
+                    <>공지 구현중</>
                 )}
             </div>
             <Footer />
-
         </>
     );
 };

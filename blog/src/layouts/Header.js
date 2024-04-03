@@ -7,8 +7,6 @@ import valanse_logo from "./img/valanse_logo.png";
 import SignUpmodel from "../modal/SignUpmodel";
 
 
-
-
 const Header = () => {
     const [SignUpmodelOn, setSignUpModalOn] = useState(false);
     return (
@@ -18,9 +16,7 @@ const Header = () => {
                 <Navbar bg="light" expand="lg">
                     <Container>
                         <Navbar.Brand>
-                           
                                 <img src={valanse_logo} alt="노이즈 로고" />
-                            
                         </Navbar.Brand>
                         <Navbar.Toggle aria-controls="basic-navbar-nav" />
                         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">  {/*회원가입과 로그인 버튼을 오른쪽으로 정렬하는 거에요*/}
