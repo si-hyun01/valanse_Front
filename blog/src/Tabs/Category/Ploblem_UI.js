@@ -6,6 +6,10 @@ import {
   CardContent,
   CardMedia,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Grid,
   IconButton,
   TextField,
@@ -36,15 +40,28 @@ function QuestionPage({ question, explanations, onNext }) {
   const [comments, setComments] = useState({});
   const [likes, setLikes] = useState(0); // 문제에 대한 좋아요 
   const [dislikes, setDislikes] = useState(0); // 문제에 대한 싫어요 
-  const [isNextOverlayVisible, setNextOverlayVisible] = useState(false); // 다음으로 진행하는 검은색 막 상태 추가
+  const [isDialogOpen, setDialogOpen] = useState(false); // 다이얼로그 열림 상태 추가
+  const [selectedChoice, setSelectedChoice] = useState(null); // 선택된 선택지 상태 추가
 
 
   // 문제 설명을 업데이트
   const handleExplanationSelect = (explanation) => {
     setSelectedExplanation(explanation);
-    setNextOverlayVisible(true); // 다음으로 진행하는 검은색 막 표시
+    setDialogOpen(true); // 다이얼로그 열기
     setComments({});// 다른 문제를 선택할 때마다 댓글을 초기화
     setCommentText(''); // 댓글 입력 필드 비우기
+  };
+
+  // 선택한 선택지를 처리
+  const handleConfirmation = (choice) => {
+    if (choice === 'yes') {
+      // 선택한 선택지를 처리하는 작업 수행
+      onNext(selectedExplanation);
+    }
+    // 다이얼로그 닫기
+    setDialogOpen(false);
+    // 선택된 선택지 초기화
+    setSelectedChoice(null);
   };
 
   // 댓글 추가
@@ -79,21 +96,10 @@ function QuestionPage({ question, explanations, onNext }) {
     setDislikes(dislikes + 1);
   };
 
-
-  // 다음으로 진행
-  const handleNext = () => {
-    onNext(selectedExplanation);
-    setSelectedExplanation(null); // 다음 문제를 위해 선택한 설명을 초기화합니다.
-    setCommentText(''); // 댓글 입력 필드 비우기
-    setNextOverlayVisible(false); // 검은색 막 숨기기
-  };
-
-  // 선택하지 않고 다음으로 진행합니다.
-  const handleNoChoice = () => {
-    onNext(null); // 선택하지 않은 것으로 처리합니다.
-    setComments({}); // 댓글을 초기화합니다.
-    setCommentText(''); // 댓글 입력 필드 비우기
-    setNextOverlayVisible(false); // 검은색 막 숨기기
+  // 선택지를 선택하면 다이얼로그를 열고 선택한 선택지를 저장
+  const handleChoiceSelect = (explanation) => {
+    setSelectedExplanation(explanation);
+    setDialogOpen(true);
   };
 
   return (
@@ -116,7 +122,7 @@ function QuestionPage({ question, explanations, onNext }) {
         {/* 설명 카드 */}
         {explanations.map((explanation, index) => (
           <Grid key={index} item xs={5}>
-            <Card sx={{ maxWidth: 500 }} onClick={() => handleExplanationSelect(explanation)}>
+            <Card sx={{ maxWidth: 500 }} onClick={() => handleChoiceSelect(explanation)}>
               <CardActionArea>
                 <CardMedia
                   component="img"
@@ -131,67 +137,25 @@ function QuestionPage({ question, explanations, onNext }) {
                 </CardContent>
               </CardActionArea>
             </Card>
-            {/* 문제 선택시 나타나는 검은색 창*/}
-            {selectedExplanation === explanation && isNextOverlayVisible && (
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '60%', // 막이 위에서부터 아래까지 나타나는 위치설정
-                  left: '50%', // 막이 왼쪽에서부터 중간에 위치하도록 설정
-                  transform: 'translate(-50%, -50%)', // 막을 수직 및 수평으로 중앙에 위치하도록 설정
-                  width: '80%', // 검은색 막 너비 80% 크기로 설정
-                  height: '75%', // 검은색 막 높이 70% 크기로 설정
-                  backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  color: 'white',
-                  fontSize: '24px',
-                  zIndex: 9999, // 다른 요소들보다 위에 오도록 설정
-                }}
-                onClick={handleNext} // 검은색 막 클릭 시 다음으로 진행
-              >
-                다음으로 넘어갈려면 이 검은색 화면을 클릭하시오
-              </div>
-            )}
           </Grid>
         ))}
-        {/* 선택하지 않고 진행하기 */}
-        <Grid item xs={12} textAlign="center">
-          <Button variant="contained" color="secondary" onClick={handleNoChoice}>
-            선택하지 않고 진행
-          </Button>
-        </Grid>
-        {/* 댓글 입력 폼 */}
-        <Grid item xs={12}>
-          <form onSubmit={handleCommentSubmit}>
-            <TextField
-              id="comment"
-              label="이 문제에 댓글을 입력해보세요."
-              fullWidth
-              variant="outlined"
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-            />
-            <Button type="submit" variant="contained" color="primary">댓글 남기기</Button>
-          </form>
-        </Grid>
-        {/* 댓글 목록 */}
-        {comments[selectedExplanation] && comments[selectedExplanation].length > 0 && (
-          <Grid item xs={12}>
-            <Typography variant="h6">댓글</Typography>
-            {comments[selectedExplanation].map((comment, index) => (
-              <Comment
-                key={index}
-                text={comment.text}
-                likes={comment.likes}
-                dislikes={comment.dislikes}
-                onLike={() => handleCommentLike(selectedExplanation, index)}
-                onDislike={() => handleCommentDislike(selectedExplanation, index)}
-              />
-            ))}
-          </Grid>
-        )}
+        {/* 다이얼로그 */}
+        <Dialog open={isDialogOpen} onClose={() => setDialogOpen(false)}>
+          <DialogTitle>선택 확인</DialogTitle>
+          <DialogContent>
+            <Typography variant="body1">
+              정말 이 선택지를 선택하시겠습니까?
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => handleConfirmation('no')} color="primary">
+              아니오
+            </Button>
+            <Button onClick={() => handleConfirmation('yes')} color="primary">
+              예
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Grid>
     </Container>
   );

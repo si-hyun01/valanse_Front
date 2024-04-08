@@ -165,7 +165,7 @@ const Layout = () => {
                     <Make_ploblem />
                 )}
                 {activeTab === '공지' && (
-                    <>공지 구현중</>
+                    <Notice />
                 )}
             </div>
             <Footer />

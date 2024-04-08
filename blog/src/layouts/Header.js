@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import valanse_logo from "./img/valanse_logo.png";
 import SignUpmodel from "../modal/SignUpmodel";
+import { Link } from 'react-router-dom';
 
 
 const Header = () => {
@@ -15,8 +16,8 @@ const Header = () => {
             <header>
                 <Navbar bg="light" expand="lg">
                     <Container>
-                        <Navbar.Brand>
-                                <img src={valanse_logo} alt="노이즈 로고" />
+                        <Navbar.Brand as={Link} to="/">
+                            <img src={valanse_logo} alt="노이즈 로고" />
                         </Navbar.Brand>
                         <Navbar.Toggle aria-controls="basic-navbar-nav" />
                         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">  {/*회원가입과 로그인 버튼을 오른쪽으로 정렬하는 거에요*/}
