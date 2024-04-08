@@ -6,7 +6,7 @@ import 문제만들기 from "./Tabs/make_ploblem"
 import 공지게시판 from "./Tabs/notinoti"
 import 공지작성페이지 from "./Tabs/noti_write"
 
-function App() {  //라우터는 제가 연습삼아 참고의 의미를 넣어놨어요. 나중에 수정할게요
+function App() { 
   return (
     <Router>
       <Routes>
