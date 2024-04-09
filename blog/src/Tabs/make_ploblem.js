@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Container, Grid, TextField, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
+
 function CreateQuestionPage({ onCreate }) {
     const [question, setQuestion] = useState('');
     const [story1, setStory1] = useState('');

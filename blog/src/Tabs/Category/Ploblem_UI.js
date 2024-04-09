@@ -6,6 +6,11 @@ import {
   CardContent,
   CardMedia,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Grid,
   IconButton,
   TextField,
@@ -14,8 +19,6 @@ import {
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 
-
-// 댓글을 나타내는 컴포넌트에 댓글 작성자의 정보를 추가합니다.
 function Comment({ author, text, likes, dislikes, onLike, onDislike }) {
   return (
     <div>
@@ -35,17 +38,27 @@ function QuestionPage({ question, explanations, onNext, currentUser }) {
   const [selectedExplanation, setSelectedExplanation] = useState(null);
   const [commentText, setCommentText] = useState('');
   const [comments, setComments] = useState({});
-  const [likes, setLikes] = useState(0); // 문제에 대한 좋아요 
-  const [dislikes, setDislikes] = useState(0); // 문제에 대한 싫어요 
+  const [likes, setLikes] = useState(0);
+  const [dislikes, setDislikes] = useState(0);
+  const [openDialog, setOpenDialog] = useState(false);
 
-  // 문제 설명을 업데이트
   const handleExplanationSelect = (explanation) => {
     setSelectedExplanation(explanation);
-    setComments({});// 다른 문제를 선택할 때마다 댓글을 초기화
-    setCommentText(''); // 댓글 입력 필드 비우기
+    setOpenDialog(true); // 선택지 클릭 시 다이얼로그 열기
   };
 
-  // 댓글 추가
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleConfirmChoice = () => {
+    console.log("선택한 설명으로 진행합니다:", selectedExplanation);
+    onNext(selectedExplanation);
+    setSelectedExplanation(null); // 다음 문제를 위해 선택한 설명 초기화
+    setCommentText(''); // 댓글 입력 필드 비우기
+    setOpenDialog(false); // 다이얼로그 닫기
+  };
+
   const handleCommentSubmit = (e) => {
     e.preventDefault();
     if (commentText.trim() !== '') {
@@ -54,7 +67,7 @@ function QuestionPage({ question, explanations, onNext, currentUser }) {
         [selectedExplanation]: [
           ...(comments[selectedExplanation] || []),
           {
-            author: currentUser ? currentUser.nickname : '익명', //여기서 로그인 한 사람이름과 안한 사람 구분해서 이름 출력
+            author: currentUser ? currentUser.nickname : '익명',
             text: commentText,
             likes: 0,
             dislikes: 0
@@ -65,14 +78,12 @@ function QuestionPage({ question, explanations, onNext, currentUser }) {
     }
   };
 
-  // 댓글 추천
   const handleCommentLike = (explanation, index) => {
     const newComments = { ...comments };
     newComments[explanation][index].likes += 1;
     setComments(newComments);
   };
 
-  // 댓글 비추천
   const handleCommentDislike = (explanation, index) => {
     const newComments = { ...comments };
     newComments[explanation][index].dislikes += 1;
@@ -83,34 +94,23 @@ function QuestionPage({ question, explanations, onNext, currentUser }) {
     setLikes(likes + 1);
   };
 
-  // 문제에 대한 싫어요 처리
   const handleQuestionDislike = () => {
     setDislikes(dislikes + 1);
   };
 
-  // 다음으로 진행
-  const handleNext = () => {
-    onNext(selectedExplanation);
-    setSelectedExplanation(null); // 다음 문제를 위해 선택한 설명을 초기화합니다.
-    setCommentText(''); // 댓글 입력 필드 비우기
-  };
-
-  // 선택하지 않고 다음으로 진행하기
   const handleNoChoice = () => {
-    onNext(null); // 선택하지 않은 것으로 처리합니다.
-    setComments({}); // 댓글을 초기화합니다.
+    onNext(null); // 선택하지 않은 것으로 처리
+    setComments({}); // 댓글 초기화
     setCommentText(''); // 댓글 입력 필드 비우기
   };
 
   return (
     <Container maxWidth="lg">
-      {/* 문제 설명 */}
       <Grid container spacing={2} justifyContent="center">
         <Grid item xs={12} style={{ height: '30px' }} />
         <Grid item xs={12}>
           <Typography variant="h4" align="center">{question}</Typography>
         </Grid>
-        {/* 문제에 대한 좋아요와 싫어요 버튼 */}
         <Grid item xs={12} textAlign="center">
           <IconButton onClick={handleQuestionLike}>
             <ThumbUpIcon /> {likes}
@@ -119,7 +119,6 @@ function QuestionPage({ question, explanations, onNext, currentUser }) {
             <ThumbDownIcon /> {dislikes}
           </IconButton>
         </Grid>
-        {/* 설명 카드 */}
         {explanations.map((explanation, index) => (
           <Grid key={index} item xs={5}>
             <Card sx={{ maxWidth: 500 }} onClick={() => handleExplanationSelect(explanation)}>
@@ -139,13 +138,11 @@ function QuestionPage({ question, explanations, onNext, currentUser }) {
             </Card>
           </Grid>
         ))}
-        {/* 선택하지 않고 진행하기 */}
         <Grid item xs={12} textAlign="center">
           <Button variant="contained" color="secondary" onClick={handleNoChoice}>
             선택하지 않고 진행
           </Button>
         </Grid>
-        {/* 댓글 입력 폼 */}
         <Grid item xs={12}>
           <form onSubmit={handleCommentSubmit}>
             <TextField
@@ -159,7 +156,6 @@ function QuestionPage({ question, explanations, onNext, currentUser }) {
             <Button type="submit" variant="contained" color="primary">댓글 남기기</Button>
           </form>
         </Grid>
-        {/* 댓글 목록 */}
         {comments[selectedExplanation] && comments[selectedExplanation].length > 0 && (
           <Grid item xs={12}>
             <Typography variant="h6">댓글</Typography>
@@ -177,6 +173,27 @@ function QuestionPage({ question, explanations, onNext, currentUser }) {
           </Grid>
         )}
       </Grid>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"선택한 설명으로 진행하시겠습니까?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            선택한 설명으로 진행하시겠습니까?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            아니오
+          </Button>
+          <Button onClick={handleConfirmChoice} color="primary" autoFocus>
+            예
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 }
@@ -184,19 +201,17 @@ function QuestionPage({ question, explanations, onNext, currentUser }) {
 function App() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedExplanations, setSelectedExplanations] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null); // 현재 사용자 정보
+  const [currentUser, setCurrentUser] = useState(null);
 
-  // 사용자가 로그인하면 호출되는 함수
-  const handleLogin = (user) => {
-    setCurrentUser(user);
+  const handleNext = (selectedExplanation) => {
+    setSelectedExplanations([...selectedExplanations, selectedExplanation]);
+    if (currentQuestionIndex + 1 < questions.length) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    } else {
+      // 마지막 문제를 처리합니다
+    }
   };
 
-  // 사용자가 로그아웃하면 호출되는 함수
-  const handleLogout = () => {
-    setCurrentUser(null);
-  };
-
-  // 문제 리스트
   const questions = [
     {
       question: "문제 제목이 나타나는 곳입니다.",
@@ -208,22 +223,10 @@ function App() {
     }
   ];
 
-  // 다음 문제로 넘어갑니다
-  const handleNext = (selectedExplanation) => {
-    setSelectedExplanations([...selectedExplanations, selectedExplanation]);
-    if (currentQuestionIndex + 1 < questions.length) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    } else {
-      // 마지막 문제를 처리합니다
-    }
-  };
-
-  // 문제가 없는 경우 나타나는 문구
   if (questions.length === 0) {
     return <div>문제가 없습니다</div>;
   }
 
-  // 현재 진행 중인 문제 페이지를 렌더링하는 거
   return (
     <QuestionPage
       question={questions[currentQuestionIndex].question}
