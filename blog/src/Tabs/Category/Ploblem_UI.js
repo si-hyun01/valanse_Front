@@ -57,6 +57,10 @@ function QuestionPage({ question, explanations, onNext, currentUser }) {
     setSelectedExplanation(null); // 다음 문제를 위해 선택한 설명 초기화
     setCommentText(''); // 댓글 입력 필드 비우기
     setOpenDialog(false); // 다이얼로그 닫기
+  
+    // 추천 카운트와 싫어요 카운트 초기화
+    setLikes(0);
+    setDislikes(0);
   };
 
   const handleCommentSubmit = (e) => {
