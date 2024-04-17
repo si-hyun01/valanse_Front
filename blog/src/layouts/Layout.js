@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Container, Typography, TextField, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
@@ -57,6 +58,7 @@ const Layout = () => {
 
     return (
         <>
+        <Container style={{ maxWidth: '80%' }}>
             <Header />
             <div>
                 <ul className="nav nav-tabs">
@@ -144,7 +146,7 @@ const Layout = () => {
             </div>
             <div>
                 {activeTab === '전체' && (
-                    <>대충 메인 페이지는 바로 VS 시작하는 형태로 가는 거 고려하기</>
+                    <Entire />
                 )}
                 {selectedCategory && (
                     <div>
@@ -169,6 +171,7 @@ const Layout = () => {
                 )}
             </div>
             <Footer />
+            </Container>
         </>
     );
 };

@@ -52,7 +52,7 @@ function QuestionPage({ question, explanations, onNext, currentUser }) {
   };
 
   const handleConfirmChoice = () => {
-    console.log("선택한 설명으로 진행합니다:", selectedExplanation);
+    console.log("정말 이 선택지를 선택하겠습니까?:", selectedExplanation);
     onNext(selectedExplanation);
     setSelectedExplanation(null); // 다음 문제를 위해 선택한 설명 초기화
     setCommentText(''); // 댓글 입력 필드 비우기
@@ -67,9 +67,9 @@ function QuestionPage({ question, explanations, onNext, currentUser }) {
     e.preventDefault();
     if (commentText.trim() !== '') {
       setComments({
-        ...comments,
+        comments,
         [selectedExplanation]: [
-          ...(comments[selectedExplanation] || []),
+          (comments[selectedExplanation] || []),
           {
             author: currentUser ? currentUser.nickname : '익명',
             text: commentText,
@@ -83,13 +83,13 @@ function QuestionPage({ question, explanations, onNext, currentUser }) {
   };
 
   const handleCommentLike = (explanation, index) => {
-    const newComments = { ...comments };
+    const newComments = {comments};
     newComments[explanation][index].likes += 1;
     setComments(newComments);
   };
 
   const handleCommentDislike = (explanation, index) => {
-    const newComments = { ...comments };
+    const newComments = {comments};
     newComments[explanation][index].dislikes += 1;
     setComments(newComments);
   };
@@ -183,10 +183,10 @@ function QuestionPage({ question, explanations, onNext, currentUser }) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"선택한 설명으로 진행하시겠습니까?"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"선택 확인"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            선택한 설명으로 진행하시겠습니까?
+            정말 이 선택지를 선택하시겠습니까?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -208,7 +208,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
 
   const handleNext = (selectedExplanation) => {
-    setSelectedExplanations([...selectedExplanations, selectedExplanation]);
+    setSelectedExplanations([selectedExplanations, selectedExplanation]);
     if (currentQuestionIndex + 1 < questions.length) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
@@ -218,7 +218,7 @@ function App() {
 
   const questions = [
     {
-      question: "문제 제목이 나타나는 곳입니다.",
+      question: "누가 더 악질이라고 생각해?",
       explanations: ["반 페르시의 맨유 이적", "솔 캠벨의 아스날 이적"]
     },
     {

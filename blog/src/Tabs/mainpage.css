@@ -1,0 +1,15 @@
+.rank_title {
+    font-family: 'Arial', sans-serif;
+    font-size: 30px; 
+    font-weight: bold; 
+    color: blue; 
+  }
+
+
+  .rank_title_under_text {
+    font-weight: bold;
+    font-size: 20px; 
+    color: black;
+    margin-bottom: 25px;
+  }
+
