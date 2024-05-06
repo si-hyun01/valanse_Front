@@ -27,7 +27,7 @@ export default function SliderContainer() {
   ];
 
   return (
-    <Card elevation={3} className="slider-card" style={{ width: "700px", height: "423px" }}> {/* Card의 크기 조절 */}
+    <Card elevation={3} className="slider-card" style={{ minWidth: "770px", maxWidth: "770px", minHeight: "450px", maxHeight: "450px", overflow: "hidden" }}> {/* Card의 크기 조절 및 overflow 설정 */}
       <CardContent>
         <Swiper
           effect={"slide"} // slide 효과로 변경
