@@ -2,11 +2,10 @@ import React from 'react'
 import { Modal, Button, Form, Container } from 'react-bootstrap'
 import KaKaoimage from "../layouts/img/Kakao_login.png"
 import Googleimage from "../layouts/img/Goolge_login.png"
+import Naverimage from "../layouts/img/Naver_login.png"
 
 const SignUpmodel = ({ show, onHide }) => {
   const handleSignUpButtonClick = () => {
-    // 회원가입 페이지로 이동하는 로직을 추가하세요.
-    // 예: window.location.href = '/회원가입페이지경로';
     console.log('회원가입 페이지로 이동');
   };
 
@@ -21,27 +20,11 @@ const SignUpmodel = ({ show, onHide }) => {
       <Container>
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            회원가입
+            로그인
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form>
-            <Form.Group className="mb-3" controlId="formGroupEmail">
-              <Form.Label>닉네임</Form.Label>
-              <Form.Control type="email" placeholder="닉네임 입력하세요." />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formGroupEmail">
-              <Form.Label>아이디</Form.Label>
-              <Form.Control type="email" placeholder="아이디 입력하세요." />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formGroupPassword">
-              <Form.Label>비밀번호</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="비밀번호 입력하세요."
-              />
-            </Form.Group>
-          </Form>
+          
           {/* 구글 로그인 버튼 */}
           <Button variant="light" onClick={handleSignUpButtonClick}>
             <img src={Googleimage} alt="구글 이미지" style={{ width: '170px', height: '45px' }} />
@@ -50,11 +33,11 @@ const SignUpmodel = ({ show, onHide }) => {
           <Button variant="light" onClick={handleSignUpButtonClick}>
             <img src={KaKaoimage} alt="카카오톡 이미지" />
           </Button>
+          <Button variant="light" onClick={handleSignUpButtonClick}>
+            <img src={Naverimage} alt="네이버 이미지" style={{ width: '170px', height: '45px' }} />
+          </Button>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="info" type="button">
-            만들기
-          </Button>
           <Button onClick={onHide}>닫기</Button>
         </Modal.Footer>
       </Container>

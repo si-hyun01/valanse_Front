@@ -1,19 +1,7 @@
 import React, { useState } from 'react';
 import {
-  Button,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Grid,
-  IconButton,
-  TextField,
+  Button, Card,CardActionArea,CardContent,CardMedia,Container,Dialog,DialogActions,DialogContent,DialogContentText,DialogTitle,Grid,IconButton,
+TextField,
   Typography
 } from '@mui/material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
@@ -34,7 +22,7 @@ function Comment({ author, text, likes, dislikes, onLike, onDislike }) {
   );
 }
 
-function QuestionPage({ question, explanations, onNext, currentUser }) {
+function QuestionPage({ question, explanations, onNext, currentUser, currentQuestionIndex, setCurrentQuestionIndex }) {
   const [selectedExplanation, setSelectedExplanation] = useState(null);
   const [commentText, setCommentText] = useState('');
   const [comments, setComments] = useState({});
@@ -108,6 +96,18 @@ function QuestionPage({ question, explanations, onNext, currentUser }) {
     setCommentText(''); // 댓글 입력 필드 비우기
   };
 
+  const handlePreviousQuestion = () => {
+    onNext(null); // 현재 선택한 것을 초기화하여 이전으로 돌아갑니다.
+    setSelectedExplanation(null);
+    setComments({});
+    setCommentText('');
+    if (currentQuestionIndex - 1 >= 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    } else {
+      // 처음 문제입니다. 특별한 처리를 하세요.
+    }
+  };
+
   return (
     <Container maxWidth="lg">
       <Grid container spacing={2} justifyContent="center">
@@ -142,8 +142,13 @@ function QuestionPage({ question, explanations, onNext, currentUser }) {
             </Card>
           </Grid>
         ))}
-        <Grid item xs={12} textAlign="center">
-          <Button variant="contained" color="secondary" onClick={handleNoChoice}>
+        <Grid item xs={6} textAlign="center">
+          <Button variant="contained" color="primary" onClick={handlePreviousQuestion}>
+            이전 문제로 돌아가기
+          </Button>
+        </Grid>
+        <Grid item xs={6} textAlign="center">
+          <Button variant="contained" color="primary" onClick={handleNoChoice}>
             선택하지 않고 진행
           </Button>
         </Grid>
@@ -216,6 +221,14 @@ function App() {
     }
   };
 
+  const handlePrevious = () => {
+    if (currentQuestionIndex - 1 >= 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    } else {
+      // 처음 문제입니다. 특별한 처리를 하세요.
+    }
+  };
+
   const questions = [
     {
       question: "누가 더 악질이라고 생각해?",
@@ -236,7 +249,10 @@ function App() {
       question={questions[currentQuestionIndex].question}
       explanations={questions[currentQuestionIndex].explanations}
       onNext={handleNext}
+      onPrevious={handlePrevious}
       currentUser={currentUser}
+      currentQuestionIndex={currentQuestionIndex}
+      setCurrentQuestionIndex={setCurrentQuestionIndex}
     />
   );
 }
