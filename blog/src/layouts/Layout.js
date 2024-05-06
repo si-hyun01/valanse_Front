@@ -63,11 +63,12 @@ const Layout = () => {
             <div>
                 <ul className="nav nav-tabs">
                     <li className="nav-item" style={{ width: '200px' }}>
-                        <button className={`nav-link ${activeTab === '전체' && 'active'}`} style={{ width: '100%', backgroundColor: activeTab === '전체' ? 'blue' : 'initial' }} onClick={() => handleTabChange('전체')}>전체</button>
+                        <button className={`nav-link ${activeTab === '전체' && 'active'}`} 
+                        style={{ width: '100%', backgroundColor: activeTab === '전체' ? 'rgba(0, 0, 255, 0.3)' : 'initial', fontWeight: 'bold', color: 'black' }} onClick={() => handleTabChange('전체')}>전체</button>
                     </li>
                     <li className="nav-item" style={{ width: 200 }}> {/*이거는 카테고리 탭 디자인 하는 곳 */}
                         <div className="position-relative" style={{ zIndex: 999 }}>
-                            <button className={`nav-link ${activeTab === '카테고리' && 'active'}`} style={{ width: '100%' }} onClick={handleCategoryToggle}>카테고리</button>
+                            <button className={`nav-link ${activeTab === '카테고리' && 'active'}`} style={{ width: '100%', backgroundColor: activeTab === '카테고리' ? 'rgba(0, 0, 255, 0.3)' : 'initial', fontWeight: 'bold', color: 'black' }} onClick={handleCategoryToggle}>카테고리</button>
                             {isCategoryOpen && (
                                 <div className="position-absolute p-2 rounded " style={{ top: '100%', left: 0, minWidth: '600px', background: 'pink' }}>
                                     <ul className="list-unstyled m-0 d-flex flex-wrap">
@@ -134,13 +135,13 @@ const Layout = () => {
                         </div>
                     </li>
                     <li className="nav-item" style={{ width: '200px' }}>
-                        <button className={`nav-link ${activeTab === '인기' && 'active'}`} style={{ width: '100%', backgroundColor: activeTab === '인기' ? 'blue' : 'initial' }} onClick={() => handleTabChange('인기')}>인기</button>
+                        <button className={`nav-link ${activeTab === '인기' && 'active'}`} style={{ width: '100%', backgroundColor: activeTab === '인기' ? 'rgba(0, 0, 255, 0.3)' : 'initial', fontWeight: 'bold', color: 'black' }} onClick={() => handleTabChange('인기')}>인기</button>
                     </li>
                     <li className="nav-item" style={{ width: '200px' }}>
-                        <button className={`nav-link ${activeTab === '문제 만들기' && 'active'}`} style={{ width: '100%', backgroundColor: activeTab === '문제 만들기' ? 'blue' : 'initial' }} onClick={() => handleTabChange('문제 만들기')}>문제 만들기</button>
+                        <button className={`nav-link ${activeTab === '문제 만들기' && 'active'}`} style={{ width: '100%', backgroundColor: activeTab === '문제 만들기' ? 'rgba(0, 0, 255, 0.3)' : 'initial' , fontWeight: 'bold', color: 'black'}} onClick={() => handleTabChange('문제 만들기')}>문제 만들기</button>
                     </li>
                     <li className="nav-item" style={{ width: '200px' }}>
-                        <button className={`nav-link ${activeTab === '공지' && 'active'}`} style={{ width: '100%', backgroundColor: activeTab === '공지' ? 'blue' : 'initial' }} onClick={() => handleTabChange('공지')}>공지</button>
+                        <button className={`nav-link ${activeTab === '공지' && 'active'}`} style={{ width: '100%', backgroundColor: activeTab === '공지' ? 'rgba(0, 0, 255, 0.3)' : 'initial', fontWeight: 'bold', color: 'black' }} onClick={() => handleTabChange('공지')}>공지</button>
                     </li>
                 </ul>
             </div>
