@@ -1,5 +1,7 @@
-import React, { useState } from "react";
-import "./mainpage.css"
+import React from "react";
+import { Typography, Card, CardContent, CardHeader, Divider, Avatar } from "@mui/material";
+import "./mainpage.css";
+import rank_icon from "../layouts/img/ranking.png"
 
 const Popularity = () => {
     // 정적 데이터
@@ -20,17 +22,28 @@ const Popularity = () => {
     const sortedData = allData.slice().sort((a, b) => b.likes - a.likes); // 좋아요 수로 내림차순 정렬
 
     // 상위 6개의 데이터 추출
-    const topSixData = sortedData.slice(0, 6);
+    const topSixData = sortedData.slice(0, 8);
 
     return (
-        <div>
-            <h2 className="rank_title">현재 인기 랭킹</h2>
-            <ul>
-                {topSixData.map((item) => (
-                    <li key={item.id} className="rank_title_under_text">{item.title}</li>
+        <Card elevation={3} className="main-card">
+            <CardHeader
+                title="현재 인기 랭킹"
+                titleTypographyProps={{ variant: "h5", className: "rank_title", color: "black", fontWeight: "bold" }} // 글자 굵기 설정
+                avatar={ // Avatar로 이미지JPG를 아이콘 변형
+                    <Avatar alt="Rank Icon" src={rank_icon} sx={{ width: 30, height: 30 }} /> 
+                }
+                sx={{ backgroundColor: "lime" }}
+            />
+            <CardContent>
+                {topSixData.map((item, index) => (
+                    <div key={item.id} style={{ marginBottom: "10px", display: "flex", alignItems: "center" }}>
+                        <Avatar variant="square" sx={{ width: 30, height: 30, backgroundColor: "blue" }}>{index + 1}</Avatar>
+                        <Typography variant="body1" className="rank_title_under_text" style={{ marginLeft: "10px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.title}</Typography>
+                        <Divider sx={{ borderBottomWidth: "3px", borderColor: "black" }} />
+                    </div>
                 ))}
-            </ul>
-        </div>
+            </CardContent>
+        </Card>
     );
 }
 

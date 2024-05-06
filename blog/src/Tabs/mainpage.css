@@ -13,3 +13,9 @@
     margin-bottom: 25px;
   }
 
+  .line_design {
+    border-color: rgba(0, 0, 0, 1); /* 검은색 선으로 설정 */
+    border-width: 40px; /* 선의 굵기를 조절 */
+}
+
+

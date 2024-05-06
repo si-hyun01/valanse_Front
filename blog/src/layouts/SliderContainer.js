@@ -4,6 +4,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import { Card, CardContent } from "@mui/material"; // Card 및 관련 컴포넌트 import 추가
 import Life1 from "./img/Life_Quotes1.png";
 import Life2 from "./img/Life_Quotes2.png";
 import Life3 from "./img/Life_Quotes3.png";
@@ -26,26 +27,28 @@ export default function SliderContainer() {
   ];
 
   return (
-    <div> {/* 부모 요소에 맞게 크기 조절 */}
-      <Swiper
-        effect={"slide"} // slide 효과로 변경
-        autoplay={{
-          delay: 7000,
-          disableOnInteraction: false,
-        }}
-        pagination={{
-          clickable: true,
-        }}
-        modules={[Navigation, Pagination, Autoplay]}
-        className="mySwiper"
-        loop={true}
-      >
-        {items.map((item, idx) => (
-          <SwiperSlide key={idx}>
-            <img src={item.src} alt={`이미지 ${idx+1}`} className="life_quotes" style={{ width: "100%", height: "100%" }} />
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    </div>
+    <Card elevation={3} className="slider-card" style={{ width: "700px", height: "423px" }}> {/* Card의 크기 조절 */}
+      <CardContent>
+        <Swiper
+          effect={"slide"} // slide 효과로 변경
+          autoplay={{
+            delay: 7000,
+            disableOnInteraction: false,
+          }}
+          pagination={{
+            clickable: true,
+          }}
+          modules={[Navigation, Pagination, Autoplay]}
+          className="mySwiper"
+          loop={true}
+        >
+          {items.map((item, idx) => (
+            <SwiperSlide key={idx}>
+              <img src={item.src} alt={`이미지 ${idx + 1}`} className="life_quotes" style={{ width: "100%", height: "100%" }} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </CardContent>
+    </Card>
   );
 }
