@@ -5,11 +5,6 @@ import Googleimage from "../layouts/img/Goolge_login.png";
 import Naverimage from "../layouts/img/Naver_login.png";
 
 const SignUpmodel = ({ show, onHide }) => {
-  const handleKakaoLogin = () => {
-    // 카카오톡 인증 페이지로 이동하는 로직을 여기에 추가
-    window.location.href = "http://54.180.170.88:8080/oauth2/authorization/kakao";
-  };
-
   return (
     <Modal
       show={show}
@@ -30,7 +25,7 @@ const SignUpmodel = ({ show, onHide }) => {
             <img src={Googleimage} alt="구글 이미지" style={{ width: '170px', height: '45px' }} />
           </Button>
           {/* 카카오 로그인 버튼 */}
-          <Button variant="light" onClick={handleKakaoLogin}>
+          <Button variant="light">
             <img src={KaKaoimage} alt="카카오톡 이미지" />
           </Button>
           {/* 네이버 로그인 버튼 */}
