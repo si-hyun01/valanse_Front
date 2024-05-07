@@ -22,10 +22,10 @@ const Popularity = () => {
     const sortedData = allData.slice().sort((a, b) => b.likes - a.likes); // 좋아요 수로 내림차순 정렬
 
     // 상위 8개의 데이터 추출
-    const topSixData = sortedData.slice(0, 8);
+    const topSixData = sortedData.slice(0, 10);
 
     return (
-        <Card elevation={3} className="main-card" style={{ width: "375px", height: "450px", overflow: "auto" }}>
+        <Card elevation={3} className="main-card" >
             <CardHeader
                 title="현재 인기 랭킹"
                 titleTypographyProps={{ variant: "h5", className: "rank_title", color: "black", fontWeight: "bold" }} // 글자 굵기 설정

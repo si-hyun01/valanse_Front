@@ -4,7 +4,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
-import { Card, CardContent } from "@mui/material"; // Card 및 관련 컴포넌트 import 추가
+import { Card, CardContent, Typography } from "@mui/material"; // Card 및 관련 컴포넌트 import 추가
 import Life1 from "./img/Life_Quotes1.png";
 import Life2 from "./img/Life_Quotes2.png";
 import Life3 from "./img/Life_Quotes3.png";
@@ -27,8 +27,8 @@ export default function SliderContainer() {
   ];
 
   return (
-    <Card elevation={3} className="slider-card" style={{ minWidth: "770px", maxWidth: "770px", minHeight: "450px", maxHeight: "450px", overflow: "hidden" }}> {/* Card의 크기 조절 및 overflow 설정 */}
-      <CardContent>
+    <Card elevation={3} className="slider-card" >
+      <CardContent style={{ paddingTop: '20px', paddingBottom: '5px' }}>
         <Swiper
           effect={"slide"} // slide 효과로 변경
           autoplay={{
@@ -48,6 +48,9 @@ export default function SliderContainer() {
             </SwiperSlide>
           ))}
         </Swiper>
+        <Typography gutterBottom variant="h5" component="div" align="center" style={{ fontWeight: 'bold', padding: '20px' }}>
+          카테고리를 선택하면 게임을 시작할 수 있습니다.
+        </Typography>
       </CardContent>
     </Card>
   );
