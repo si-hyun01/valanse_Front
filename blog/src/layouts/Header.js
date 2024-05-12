@@ -4,9 +4,9 @@ import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import valanse_logo from "./img/valanse_logo.png";
-import SignUpmodel from "../modal/SignUpmodel";
 import axios from 'axios'; // Axios 라이브러리 추가
 import { Link } from 'react-router-dom';
+import SignUpmodel from "../modal/SignUpmodel";
 
 const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태를 관리하는 상태 변수
@@ -35,9 +35,32 @@ const Header = () => {
         setShowSignUpModal(!showSignUpModal);
     };
 
+    // 네이버 로그인 함수
+    const handleNaverLogin = () => {
+        // 네이버 인증 페이지로 이동
+        window.location.href = "http://54.180.170.88:8080/oauth2/authorization/naver";
+    };
+
+    // 구글 로그인 함수
+    const handleGoogleLogin = () => {
+        // 구글 인증 페이지로 이동
+        window.location.href = "http://54.180.170.88:8080/oauth2/authorization/google";
+    };
+
+    // 카카오 로그인 함수
+    const handleKakaoLogin = () => {
+        // 카카오 인증 페이지로 이동
+        window.location.href = "http://54.180.170.88:8080/oauth2/authorization/kakao";
+    };
+
+    // 로그인 후 콜백 함수
+    const handleLoginCallback = () => {
+        // 로그인 상태 변경
+        setIsLoggedIn(true);
+    };
+
     return (
         <>
-            <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} /> {/* 회원가입 모달 */}
             <header>
                 <Navbar bg="light" expand="lg">
                     <Container>
@@ -57,6 +80,8 @@ const Header = () => {
                                         <Button variant="secondary" onClick={toggleSignUpModal}>로그인</Button>
                                     </Nav.Link>
                                 )}
+                                {/* 로그인 모달 */}
+                                <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} onLogin={handleLoginCallback} />
                             </Nav>
                         </Navbar.Collapse>
                     </Container>
