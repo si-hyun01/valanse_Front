@@ -12,17 +12,17 @@ const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태를 관리하는 상태 변수
     const [showSignUpModal, setShowSignUpModal] = useState(false); // 회원가입 모달의 표시 여부를 관리하는 상태
 
-    // 컴포넌트가 마운트될 때 로그인 상태 확인
+    // 컴포넌트가 마운트될 때 서버에 로그인 상태를 확인하는 함수 호출
     useEffect(() => {
         checkLoginStatus();
     }, []);
 
-    // 로그인 상태 확인 함수
+    // 서버에 로그인 상태를 확인하는 함수
     const checkLoginStatus = async () => {
         try {
-            // 로그인 상태를 확인하는 요청 보내기
+            // 서버에 요청하여 로그인 상태 확인
             const response = await axios.get('http://54.180.170.88:8080/checkLoginStatus');
-            // 로그인 상태가 확인되면 상태 변경
+            // 서버로부터 받은 데이터를 기반으로 로그인 상태 업데이트
             setIsLoggedIn(response.data.isLoggedIn);
         } catch (error) {
             console.error('로그인 상태 확인 중 에러 발생:', error);
@@ -44,18 +44,6 @@ const Header = () => {
     // 로그인 모달을 열거나 닫는 함수
     const toggleSignUpModal = () => {
         setShowSignUpModal(!showSignUpModal);
-    };
-
-    // 네이버 로그인 함수
-    const handleNaverLogin = () => {
-        // 네이버 인증 페이지로 이동
-        window.location.href = "http://54.180.170.88:8080/oauth2/authorization/naver";
-    };
-
-    // 로그인 후 콜백 함수
-    const handleLoginCallback = () => {
-        // 로그인 상태 변경
-        setIsLoggedIn(true);
     };
 
     return (
@@ -80,7 +68,7 @@ const Header = () => {
                                     </Nav.Link>
                                 )}
                                 {/* 로그인 모달 */}
-                                <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} onLogin={handleLoginCallback} />
+                                <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} />
                             </Nav>
                         </Navbar.Collapse>
                     </Container>
