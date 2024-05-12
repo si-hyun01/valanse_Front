@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
@@ -12,9 +12,21 @@ const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태를 관리하는 상태 변수
     const [showSignUpModal, setShowSignUpModal] = useState(false); // 회원가입 모달의 표시 여부를 관리하는 상태
 
-    // 로그인 상태에 따라 로그인 또는 로그아웃 버튼을 토글하는 함수
-    const toggleLoginButton = () => {
-        setIsLoggedIn(!isLoggedIn);
+    // 컴포넌트가 마운트될 때 로그인 상태 확인
+    useEffect(() => {
+        checkLoginStatus();
+    }, []);
+
+    // 로그인 상태 확인 함수
+    const checkLoginStatus = async () => {
+        try {
+            // 로그인 상태를 확인하는 요청 보내기
+            const response = await axios.get('http://54.180.170.88:8080/checkLoginStatus');
+            // 로그인 상태가 확인되면 상태 변경
+            setIsLoggedIn(response.data.isLoggedIn);
+        } catch (error) {
+            console.error('로그인 상태 확인 중 에러 발생:', error);
+        }
     };
 
     // 로그아웃 함수
@@ -22,7 +34,6 @@ const Header = () => {
         try {
             // 로그아웃 요청 보내기
             await axios.post('http://54.180.170.88:8080/token/logout');
-
             // 로그아웃 성공 시 상태 변경
             setIsLoggedIn(false);
         } catch (error) {
@@ -39,18 +50,6 @@ const Header = () => {
     const handleNaverLogin = () => {
         // 네이버 인증 페이지로 이동
         window.location.href = "http://54.180.170.88:8080/oauth2/authorization/naver";
-    };
-
-    // 구글 로그인 함수
-    const handleGoogleLogin = () => {
-        // 구글 인증 페이지로 이동
-        window.location.href = "http://54.180.170.88:8080/oauth2/authorization/google";
-    };
-
-    // 카카오 로그인 함수
-    const handleKakaoLogin = () => {
-        // 카카오 인증 페이지로 이동
-        window.location.href = "http://54.180.170.88:8080/oauth2/authorization/kakao";
     };
 
     // 로그인 후 콜백 함수
