@@ -24,6 +24,12 @@ const Header = () => {
         setStateToken(token);
     }, []);
 
+    useEffect(() => {
+        if (stateToken) {
+            getAccessToken();
+        }
+    }, [stateToken]);
+
     const getAccessToken = async () => {
         try {
             const response = await axios.post('http://54.180.170.88:8080/token/get', null, {
@@ -37,15 +43,13 @@ const Header = () => {
         }
     };
 
-    useEffect(() => {
-        if (stateToken) {
-            getAccessToken();
-        }
-    }, [stateToken, getAccessToken]);
-
     const handleLogout = async () => {
         try {
-            await axios.post('http://54.180.170.88:8080/token/logout', { accessToken });
+            await axios.post('http://54.180.170.88:8080/token/logout', null, {
+                headers: {
+                    accessToken: accessToken
+                }
+            });
             Cookies.remove('access_token');
             setIsLoggedIn(false);
         } catch (error) {
