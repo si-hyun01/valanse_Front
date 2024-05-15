@@ -32,15 +32,11 @@ const Header = () => {
 
     const getAccessToken = async () => {
         try {
-            const response = await axios.post(
-                'http://54.180.170.88:8080/token/get',
-                null,
-                {
-                    headers: {
-                        Authorization: `Bearer ${stateToken}`
-                    }
+            const response = await axios.post('http://54.180.170.88:8080/token/get', null, {
+                headers: {
+                    stateToken: stateToken
                 }
-            );
+            });
             setAccessToken(response.data.data);
         } catch (error) {
             console.error('Error getting access token:', error.message);
@@ -51,7 +47,7 @@ const Header = () => {
         try {
             await axios.post('http://54.180.170.88:8080/token/logout', null, {
                 headers: {
-                    Authorization: `Bearer ${accessToken}`
+                    accessToken: accessToken
                 }
             });
             Cookies.remove('access_token');
