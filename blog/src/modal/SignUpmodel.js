@@ -3,11 +3,12 @@ import { Modal, Button, Container } from 'react-bootstrap';
 import KaKaoimage from "../layouts/img/Kakao_login.png";
 import Googleimage from "../layouts/img/Google_login1.png";
 import Naverimage from "../layouts/img/Naver_login.png";
-import useAccessToken from '../hooks/useAccessToken'; // 커스텀 훅 추가
+import Cookies from 'js-cookie';
+import axios from 'axios'; // axios 패키지 import
 
 const SignUpmodel = ({ show, onHide }) => {
   const [stateToken, setStateToken] = useState('');
-  const accessToken = useAccessToken(stateToken); // 커스텀 훅 사용
+  const [accessToken, setAccessToken] = useState('');
 
   useEffect(() => {
     // URL에서 상태 토큰 추출
@@ -16,10 +17,28 @@ const SignUpmodel = ({ show, onHide }) => {
     setStateToken(token);
   }, []);
 
-  const handleLogin = () => {
+  const getAccessToken = async () => {
+    try {
+      const response = await axios.post('http://54.180.170.88:8080/token/get', {}, {
+        headers: {
+          'stateToken': stateToken
+        }
+      });
+      if (response.status === 200) {
+        setAccessToken(response.data.data);
+      } else {
+        throw new Error('Failed to get access token');
+      }
+    } catch (error) {
+      console.error('Error getting access token:', error.message);
+    }
+  };
+
+  const handleLogin = async () => {
+    await getAccessToken();
     if (accessToken) {
-      // 액세스 토큰이 있을 경우 로직 추가
-      console.log('Access Token:', accessToken);
+      Cookies.set('access_token', accessToken, { expires: 1 });
+      onHide();
     } else {
       console.error('Failed to get access token');
     }
