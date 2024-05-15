@@ -21,7 +21,6 @@ const SignUpmodel = ({ show, onHide }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'stateToken': stateToken
         },
         body: JSON.stringify({ stateToken: stateToken })
       });
