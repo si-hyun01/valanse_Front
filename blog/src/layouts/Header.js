@@ -33,7 +33,7 @@ const Header = () => {
     // 액세스 토큰 가져오는 함수
     const getAccessToken = async () => {
         try {
-            const response = await axios.post('http://54.180.170.88:8080/token/get', {}, {
+            const response = await axios.post('https://54.180.170.88:8080/token/get', {}, {
                 headers: {
                     'stateToken': stateToken
                 }
@@ -52,7 +52,7 @@ const Header = () => {
     const handleLogout = async () => {
         try {
             // 로그아웃 요청 보내기
-            await axios.post('http://54.180.170.88:8080/token/logout');
+            await axios.post('https://54.180.170.88:8080/token/logout');
             // 로그아웃 성공 시 쿠키 삭제 및 로그인 상태 변경
             Cookies.remove('access_token');
             setIsLoggedIn(false);
