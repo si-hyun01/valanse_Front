@@ -13,6 +13,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.8",
     "google-login-react": "^0.2.17",
+    "js-cookie": "^3.0.5",
     "next": "^14.1.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.2",
