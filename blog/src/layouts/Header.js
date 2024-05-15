@@ -30,11 +30,11 @@ const Header = () => {
 
             // stateToken이 존재할 경우, 로컬 스토리지에 토큰 저장
             if (stateToken) {
-                localStorage.setItem('accessToken', stateToken);
+                localStorage.setItem('stateToken', stateToken);
                 setIsLoggedIn(true);
             } else {
                 // 로컬 스토리지에서 토큰을 가져옴
-                const token = localStorage.getItem('accessToken');
+                const token = localStorage.getItem('stateToken');
                 if (token) {
                     setIsLoggedIn(true);
                 } else {
@@ -50,7 +50,7 @@ const Header = () => {
     const handleLogout = async () => {
         try {
             // 로컬 스토리지에서 토큰 제거
-            localStorage.removeItem('accessToken');
+            localStorage.removeItem('stateToken');
             // 로그아웃 성공 시 상태 변경
             setIsLoggedIn(false);
         } catch (error) {
