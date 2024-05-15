@@ -1,3 +1,4 @@
+// Header.js
 import React, { useState, useEffect } from "react";
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -22,19 +23,17 @@ const Header = () => {
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('stateToken');
         setStateToken(token);
+
+        if (token) {
+            getAccessToken(token);
+        }
     }, []);
 
-    useEffect(() => {
-        if (stateToken) {
-            getAccessToken();
-        }
-    }, [stateToken]);
-
-    const getAccessToken = async () => {
+    const getAccessToken = async (stateToken) => {
         try {
             const response = await axios.post('http://54.180.170.88:8080/token/get', null, {
                 headers: {
-                    stateToken: stateToken
+                    Authorization: `Bearer ${stateToken}`
                 }
             });
             setAccessToken(response.data.data);
@@ -47,7 +46,7 @@ const Header = () => {
         try {
             await axios.post('http://54.180.170.88:8080/token/logout', null, {
                 headers: {
-                    accessToken: accessToken
+                    Authorization: `Bearer ${accessToken}`
                 }
             });
             Cookies.remove('access_token');
