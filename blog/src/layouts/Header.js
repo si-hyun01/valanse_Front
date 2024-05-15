@@ -14,6 +14,7 @@ const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [stateToken, setStateToken] = useState('');
     const [accessToken, setAccessToken] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         const accessTokenCookie = Cookies.get('access_token');
@@ -38,6 +39,7 @@ const Header = () => {
             }
         } catch (error) {
             console.error('Error getting access token:', error.message);
+            setErrorMessage('액세스 토큰 발급을 실패했습니다.');
         }
     };
 
@@ -93,6 +95,11 @@ const Header = () => {
             {accessToken && (
                 <div style={{ textAlign: 'center', margin: '20px' }}>
                     <h3>Access Token: {accessToken}</h3>
+                </div>
+            )}
+            {errorMessage && (
+                <div style={{ textAlign: 'center', margin: '20px', color: 'red' }}>
+                    <h3>{errorMessage}</h3>
                 </div>
             )}
         </>
