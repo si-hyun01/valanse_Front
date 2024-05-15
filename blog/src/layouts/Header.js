@@ -33,7 +33,7 @@ const Header = () => {
     // 액세스 토큰 가져오는 함수
     const getAccessToken = async () => {
         try {
-            const response = await axios.post('https://54.180.170.88:8080/token/get', {}, {
+            const response = await axios.post('http://54.180.170.88:8080/token/get', {}, {
                 headers: {
                     'stateToken': stateToken
                 }
