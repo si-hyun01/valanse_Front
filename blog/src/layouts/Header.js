@@ -29,13 +29,7 @@ const Header = () => {
             try {
                 const response = await axios.post('http://54.180.170.88:8080/token/get', {}, {
                     headers: {
-                        'Statetoken': stateToken,
-                        'Referer': 'http://54.180.170.88:8080/swagger-ui/index.html',
-                        'Cookie': 'JSESSIONID=68062CEF981E55FAF55A069EF16E25EE',
-                        'Content-Type': 'application/json;charset=UTF-8',
-                        'Accept': 'application/json;charset=UTF-8',
-                        'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate',
-                        'Pragma': 'no-cache'
+                        'stateToken': stateToken
                     }
                 });
                 if (response.status === 200) {
