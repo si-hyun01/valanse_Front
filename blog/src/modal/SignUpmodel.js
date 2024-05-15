@@ -3,10 +3,10 @@
 import React from 'react';
 import { Modal, Button, Container } from 'react-bootstrap';
 import KaKaoimage from "../layouts/img/Kakao_login.png";
-import Googleimage from "../layouts/img/Goolge_login.png";
+import Googleimage from "../layouts/img/Google_login1.png"; // 이미지 파일 경로 수정
 import Naverimage from "../layouts/img/Naver_login.png";
 
-const SignUpmodel = ({ show, onHide }) => {
+const SignUpmodel = ({ show, onHide, saveAccessToken }) => { // saveAccessToken 콜백 함수 추가
 
   const getAccessToken = async (stateToken) => {
     try {
@@ -33,8 +33,8 @@ const SignUpmodel = ({ show, onHide }) => {
     const stateToken = window.location.search.split('=')[1]; // URL에서 stateToken 추출
     const accessToken = await getAccessToken(stateToken);
     if (accessToken) {
-      localStorage.setItem('accessToken', accessToken);
-      // 여기서 필요한 작업 수행 (예: 페이지 리다이렉트 등)
+      saveAccessToken(accessToken); // 액세스 토큰을 부모 컴포넌트로 전달
+      onHide(); // 모달 숨기기
     } else {
       console.error('Failed to get access token');
     }

@@ -1,49 +1,36 @@
-// Header.js
-
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import valanse_logo from "./img/valanse_logo.png";
-import axios from 'axios';
+import { Link } from 'react-router-dom'; // Link 추가
+import axios from 'axios'; // axios 추가
 import SignUpmodel from "../modal/SignUpmodel";
 
 const Header = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [showSignUpModal, setShowSignUpModal] = useState(false);
+    const [showSignUpModal, setShowSignUpModal] = useState(false); // 회원가입 모달의 표시 여부를 관리하는 상태
 
-    useEffect(() => {
-        const accessToken = localStorage.getItem('accessToken');
-        if (accessToken) {
-            setIsLoggedIn(true);
-        } else {
-            setIsLoggedIn(false);
-        }
-    }, []);
+    // 액세스 토큰 저장 함수
+    const saveAccessToken = (accessToken) => {
+        localStorage.setItem('accessToken', accessToken);
+    };
 
+    // 로그아웃 함수
     const handleLogout = async () => {
         try {
-            const accessToken = localStorage.getItem('accessToken');
-            await axios.post('http://54.180.170.88:8080/token/logout', {}, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            });
-            setIsLoggedIn(false);
+            // 로그아웃 요청 보내기
+            await axios.post('http://54.180.170.88:8080/token/logout');
+            // 로그아웃 성공 시 상태 변경
             localStorage.removeItem('accessToken');
         } catch (error) {
             console.error('로그아웃 중 에러 발생:', error);
         }
     };
 
+    // 로그인 모달을 열거나 닫는 함수
     const toggleSignUpModal = () => {
         setShowSignUpModal(!showSignUpModal);
-    };
-
-    const saveAccessTokenToLocalStorage = (accessToken) => {
-        localStorage.setItem('accessToken', accessToken);
-        setIsLoggedIn(true); // 로그인 상태로 변경
     };
 
     return (
@@ -51,23 +38,24 @@ const Header = () => {
             <header>
                 <Navbar bg="light" expand="lg">
                     <Container>
-                        <Navbar.Brand href="/">
+                        <Navbar.Brand as={Link} to="/">
                             <img src={valanse_logo} alt="노이즈 로고" />
                         </Navbar.Brand>
                         <Navbar.Toggle aria-controls="basic-navbar-nav" />
                         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
                             <Nav className="ml-auto">
-                                {isLoggedIn ? (
+                                {/* 로그인 또는 로그아웃 버튼 */}
+                                {localStorage.getItem('accessToken') ? (
                                     <Nav.Link>
                                         <Button variant="secondary" onClick={handleLogout}>로그아웃</Button>
                                     </Nav.Link>
-                                ) : null}
-                                {!isLoggedIn ? (
+                                ) : (
                                     <Nav.Link>
                                         <Button variant="secondary" onClick={toggleSignUpModal}>로그인</Button>
                                     </Nav.Link>
-                                ) : null}
-                                <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} saveAccessToken={saveAccessTokenToLocalStorage} />
+                                )}
+                                {/* 로그인 모달 */}
+                                <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} saveAccessToken={saveAccessToken} />
                             </Nav>
                         </Navbar.Collapse>
                     </Container>
