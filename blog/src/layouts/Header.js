@@ -14,7 +14,6 @@ const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [stateToken, setStateToken] = useState('');
     const [accessToken, setAccessToken] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         const accessTokenCookie = Cookies.get('access_token');
@@ -24,6 +23,12 @@ const Header = () => {
         const token = urlParams.get('stateToken');
         setStateToken(token);
     }, []);
+
+    useEffect(() => {
+        if (stateToken) {
+            getAccessToken();
+        }
+    }, [stateToken]);
 
     const getAccessToken = async () => {
         try {
@@ -39,7 +44,6 @@ const Header = () => {
             }
         } catch (error) {
             console.error('Error getting access token:', error.message);
-            setErrorMessage('액세스 토큰 발급을 실패했습니다.');
         }
     };
 
@@ -55,10 +59,6 @@ const Header = () => {
 
     const toggleSignUpModal = () => {
         setShowSignUpModal(!showSignUpModal);
-    };
-
-    const handleLogin = async () => {
-        await getAccessToken();
     };
 
     return (
@@ -92,14 +92,13 @@ const Header = () => {
                     <h3>State Token: {stateToken}</h3>
                 </div>
             )}
-            {accessToken && (
+            {accessToken ? (
                 <div style={{ textAlign: 'center', margin: '20px' }}>
                     <h3>Access Token: {accessToken}</h3>
                 </div>
-            )}
-            {errorMessage && (
-                <div style={{ textAlign: 'center', margin: '20px', color: 'red' }}>
-                    <h3>{errorMessage}</h3>
+            ) : (
+                <div style={{ textAlign: 'center', margin: '20px' }}>
+                    <h3>Access Token이 없습니다.</h3>
                 </div>
             )}
         </>
