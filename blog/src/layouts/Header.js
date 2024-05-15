@@ -12,24 +12,30 @@ const Header = () => {
     const [showSignUpModal, setShowSignUpModal] = useState(false); // 회원가입 모달의 표시 여부를 관리하는 상태
 
     useEffect(() => {
-        // 컴포넌트가 마운트될 때 로컬 스토리지에서 로그인 상태를 가져와 설정
-        const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
-        setIsLoggedIn(loggedIn);
+        // 로컬 스토리지에서 액세스 토큰을 가져와서 로그인 상태를 설정
+        const accessToken = localStorage.getItem('accessToken');
+        if (accessToken) {
+            setIsLoggedIn(true);
+        }
     }, []);
 
     // 로그아웃 함수
     const handleLogout = async () => {
         try {
+            // 액세스 토큰 가져오기
+            const accessToken = localStorage.getItem('accessToken');
+
             // 서버에 로그아웃 요청 보내기
             await axios.post('http://54.180.170.88:8080/token/logout', {}, {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+                    Authorization: `Bearer ${accessToken}`
                 }
             });
-            // 로그아웃 성공 시 상태 변경 및 로컬 스토리지에서 상태 제거
+
+            // 로그아웃 성공 시 상태 변경
             setIsLoggedIn(false);
+            // 로그아웃 후 액세스 토큰 삭제
             localStorage.removeItem('accessToken');
-            localStorage.setItem('isLoggedIn', false);
         } catch (error) {
             console.error('로그아웃 중 에러 발생:', error);
         }
@@ -38,6 +44,10 @@ const Header = () => {
     // 로그인 모달을 열거나 닫는 함수
     const toggleSignUpModal = () => {
         setShowSignUpModal(!showSignUpModal);
+    };
+
+    const saveAccessTokenToLocalStorage = (accessToken) => {
+        localStorage.setItem('accessToken', accessToken);
     };
 
     return (
@@ -63,7 +73,7 @@ const Header = () => {
                                     </Nav.Link>
                                 ) : null}
                                 {/* 로그인 모달 */}
-                                <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} />
+                                <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} saveAccessToken={saveAccessTokenToLocalStorage} />
                             </Nav>
                         </Navbar.Collapse>
                     </Container>
