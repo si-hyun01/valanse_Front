@@ -12,12 +12,18 @@ import Cookies from 'js-cookie'; // js-cookie 패키지 import
 const Header = () => {
     const [showSignUpModal, setShowSignUpModal] = useState(false); // 회원가입 모달의 표시 여부를 관리하는 상태
     const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태를 관리하는 상태
+    const [stateToken, setStateToken] = useState(''); // 상태 토큰을 관리하는 상태
 
     useEffect(() => {
         // 쿠키에서 액세스 토큰 가져오기
         const accessToken = Cookies.get('access_token');
         // 액세스 토큰이 존재하는 경우 로그인 상태 설정
         setIsLoggedIn(accessToken ? true : false);
+
+        // URL에서 상태 토큰 추출
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('stateToken');
+        setStateToken(token);
     }, []);
 
     // 로그아웃 함수
@@ -66,6 +72,12 @@ const Header = () => {
                     </Container>
                 </Navbar>
             </header>
+            {/* 상태 토큰 출력 */}
+            {stateToken && (
+                <div style={{ textAlign: 'center', margin: '20px' }}>
+                    <h3>State Token: {stateToken}</h3>
+                </div>
+            )}
         </>
     );
 };
