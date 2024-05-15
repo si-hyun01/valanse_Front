@@ -1,5 +1,3 @@
-// Header.js
-
 import React, { useState, useEffect } from "react";
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -7,52 +5,31 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import valanse_logo from "./img/valanse_logo.png";
 import axios from 'axios'; // Axios 라이브러리 추가
-import { Link, useLocation } from 'react-router-dom'; // useLocation 추가
 import SignUpmodel from "../modal/SignUpmodel";
 
 const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태를 관리하는 상태 변수
     const [showSignUpModal, setShowSignUpModal] = useState(false); // 회원가입 모달의 표시 여부를 관리하는 상태
 
-    const location = useLocation(); // 현재 URL 정보 가져오기
-
-    // 컴포넌트가 마운트될 때 서버에 로그인 상태를 확인하는 함수 호출
     useEffect(() => {
-        checkLoginStatus();
-    }, [location.search]); // location.search 변경 시마다 호출
-
-    // 서버에 로그인 상태를 확인하는 함수
-    const checkLoginStatus = async () => {
-        try {
-            // URL에서 stateToken 가져오기
-            const urlParams = new URLSearchParams(location.search);
-            const stateToken = urlParams.get('stateToken');
-
-            // stateToken이 존재할 경우, 로컬 스토리지에 토큰 저장
-            if (stateToken) {
-                localStorage.setItem('stateToken', stateToken);
-                setIsLoggedIn(true);
-            } else {
-                // 로컬 스토리지에서 토큰을 가져옴
-                const token = localStorage.getItem('stateToken');
-                if (token) {
-                    setIsLoggedIn(true);
-                } else {
-                    setIsLoggedIn(false);
-                }
-            }
-        } catch (error) {
-            console.error('로그인 상태 확인 중 에러 발생:', error);
-        }
-    };
+        // 컴포넌트가 마운트될 때 로컬 스토리지에서 로그인 상태를 가져와 설정
+        const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        setIsLoggedIn(loggedIn);
+    }, []);
 
     // 로그아웃 함수
     const handleLogout = async () => {
         try {
-            // 로컬 스토리지에서 토큰 제거
-            localStorage.removeItem('stateToken');
-            // 로그아웃 성공 시 상태 변경
+            // 서버에 로그아웃 요청 보내기
+            await axios.post('http://54.180.170.88:8080/token/logout', {}, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+                }
+            });
+            // 로그아웃 성공 시 상태 변경 및 로컬 스토리지에서 상태 제거
             setIsLoggedIn(false);
+            localStorage.removeItem('accessToken');
+            localStorage.setItem('isLoggedIn', false);
         } catch (error) {
             console.error('로그아웃 중 에러 발생:', error);
         }
@@ -68,7 +45,7 @@ const Header = () => {
             <header>
                 <Navbar bg="light" expand="lg">
                     <Container>
-                        <Navbar.Brand as={Link} to="/">
+                        <Navbar.Brand href="/">
                             <img src={valanse_logo} alt="노이즈 로고" />
                         </Navbar.Brand>
                         <Navbar.Toggle aria-controls="basic-navbar-nav" />
