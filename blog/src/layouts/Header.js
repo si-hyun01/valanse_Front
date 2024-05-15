@@ -1,3 +1,5 @@
+// Header.js
+
 import React, { useState, useEffect } from "react";
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -20,10 +22,13 @@ const Header = () => {
     // 서버에 로그인 상태를 확인하는 함수
     const checkLoginStatus = async () => {
         try {
-            // 서버에 요청하여 로그인 상태 확인
-            const response = await axios.get('http://54.180.170.88:8080/checkLoginStatus');
-            // 서버로부터 받은 데이터를 기반으로 로그인 상태 업데이트
-            setIsLoggedIn(response.data.isLoggedIn);
+            // 로컬 스토리지에서 토큰을 가져옴
+            const token = localStorage.getItem('accessToken');
+            if (token) {
+                setIsLoggedIn(true);
+            } else {
+                setIsLoggedIn(false);
+            }
         } catch (error) {
             console.error('로그인 상태 확인 중 에러 발생:', error);
         }
@@ -32,8 +37,8 @@ const Header = () => {
     // 로그아웃 함수
     const handleLogout = async () => {
         try {
-            // 로그아웃 요청 보내기
-            await axios.post('http://54.180.170.88:8080/token/logout');
+            // 로컬 스토리지에서 토큰 제거
+            localStorage.removeItem('accessToken');
             // 로그아웃 성공 시 상태 변경
             setIsLoggedIn(false);
         } catch (error) {
@@ -44,6 +49,18 @@ const Header = () => {
     // 로그인 모달을 열거나 닫는 함수
     const toggleSignUpModal = () => {
         setShowSignUpModal(!showSignUpModal);
+    };
+
+    // 토큰을 받아 로컬 스토리지에 저장하는 함수
+    const handleTokenReceived = (token) => {
+        try {
+            // 로컬 스토리지에 토큰 저장
+            localStorage.setItem('accessToken', token);
+            // 로그인 상태 업데이트
+            setIsLoggedIn(true);
+        } catch (error) {
+            console.error('토큰 저장 중 에러 발생:', error);
+        }
     };
 
     return (
@@ -62,13 +79,14 @@ const Header = () => {
                                     <Nav.Link>
                                         <Button variant="secondary" onClick={handleLogout}>로그아웃</Button>
                                     </Nav.Link>
-                                ) : (
+                                ) : null}
+                                {!isLoggedIn ? (
                                     <Nav.Link>
                                         <Button variant="secondary" onClick={toggleSignUpModal}>로그인</Button>
                                     </Nav.Link>
-                                )}
+                                ) : null}
                                 {/* 로그인 모달 */}
-                                <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} />
+                                <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} onTokenReceived={handleTokenReceived} />
                             </Nav>
                         </Navbar.Collapse>
                     </Container>
