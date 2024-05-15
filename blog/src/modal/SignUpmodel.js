@@ -18,7 +18,7 @@ const SignUpmodel = ({ show, onHide }) => {
 
   const getAccessToken = async () => {
     try {
-      const response = await axios.post('http://54.180.170.88:8080/token/get', { stateToken });
+      const response = await axios.get('http://54.180.170.88:8080/token/get', { params: { stateToken } });
       if (response.status === 200) {
         return response.data.access_token;
       } else {
