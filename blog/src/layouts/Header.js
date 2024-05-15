@@ -7,27 +7,39 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import valanse_logo from "./img/valanse_logo.png";
 import axios from 'axios'; // Axios 라이브러리 추가
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom'; // useLocation 추가
 import SignUpmodel from "../modal/SignUpmodel";
 
 const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태를 관리하는 상태 변수
     const [showSignUpModal, setShowSignUpModal] = useState(false); // 회원가입 모달의 표시 여부를 관리하는 상태
 
+    const location = useLocation(); // 현재 URL 정보 가져오기
+
     // 컴포넌트가 마운트될 때 서버에 로그인 상태를 확인하는 함수 호출
     useEffect(() => {
         checkLoginStatus();
-    }, []);
+    }, [location.search]); // location.search 변경 시마다 호출
 
     // 서버에 로그인 상태를 확인하는 함수
     const checkLoginStatus = async () => {
         try {
-            // 로컬 스토리지에서 토큰을 가져옴
-            const token = localStorage.getItem('accessToken');
-            if (token) {
+            // URL에서 stateToken 가져오기
+            const urlParams = new URLSearchParams(location.search);
+            const stateToken = urlParams.get('stateToken');
+
+            // stateToken이 존재할 경우, 로컬 스토리지에 토큰 저장
+            if (stateToken) {
+                localStorage.setItem('accessToken', stateToken);
                 setIsLoggedIn(true);
             } else {
-                setIsLoggedIn(false);
+                // 로컬 스토리지에서 토큰을 가져옴
+                const token = localStorage.getItem('accessToken');
+                if (token) {
+                    setIsLoggedIn(true);
+                } else {
+                    setIsLoggedIn(false);
+                }
             }
         } catch (error) {
             console.error('로그인 상태 확인 중 에러 발생:', error);
@@ -49,18 +61,6 @@ const Header = () => {
     // 로그인 모달을 열거나 닫는 함수
     const toggleSignUpModal = () => {
         setShowSignUpModal(!showSignUpModal);
-    };
-
-    // 토큰을 받아 로컬 스토리지에 저장하는 함수
-    const handleTokenReceived = (token) => {
-        try {
-            // 로컬 스토리지에 토큰 저장
-            localStorage.setItem('accessToken', token);
-            // 로그인 상태 업데이트
-            setIsLoggedIn(true);
-        } catch (error) {
-            console.error('토큰 저장 중 에러 발생:', error);
-        }
     };
 
     return (
@@ -86,7 +86,7 @@ const Header = () => {
                                     </Nav.Link>
                                 ) : null}
                                 {/* 로그인 모달 */}
-                                <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} onTokenReceived={handleTokenReceived} />
+                                <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} />
                             </Nav>
                         </Navbar.Collapse>
                     </Container>
