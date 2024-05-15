@@ -17,11 +17,12 @@ const SignUpmodel = ({ show, onHide }) => {
 
   const getAccessToken = async () => {
     try {
-      const response = await fetch(`http://54.180.170.88:8080/token/get?stateToken=${stateToken}`, {
-        method: 'GET',
+      const response = await fetch('http://54.180.170.88:8080/token/get', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify({ stateToken: stateToken })
       });
       if (response.ok) {
         const data = await response.json();
