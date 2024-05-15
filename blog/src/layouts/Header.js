@@ -45,7 +45,7 @@ const Header = () => {
     const handleLogout = async () => {
         try {
             await axios.post('http://54.180.170.88:8080/token/logout', null, {
-                header: {
+                headers: {
                     stateToken: stateToken
                 }
             });
