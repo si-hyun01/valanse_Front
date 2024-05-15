@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button, Container } from 'react-bootstrap';
 import KaKaoimage from "../layouts/img/Kakao_login.png";
 import Googleimage from "../layouts/img/Google_login1.png";
@@ -6,14 +6,24 @@ import Naverimage from "../layouts/img/Naver_login.png";
 import Cookies from 'js-cookie'; // js-cookie 패키지 import
 
 const SignUpmodel = ({ show, onHide }) => {
-  const getAccessToken = async (stateToken) => {
+  const [stateToken, setStateToken] = useState('');
+
+  useEffect(() => {
+    // URL에서 상태 토큰 추출
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('stateToken');
+    setStateToken(token);
+  }, []);
+
+  const getAccessToken = async () => {
     try {
       const response = await fetch('http://54.180.170.88:8080/token/get', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'stateToken': stateToken // 상태 토큰을 요청 헤더에 추가
-        }
+          'stateToken': stateToken
+        },
+        body: JSON.stringify({ stateToken: stateToken })
       });
       if (response.ok) {
         const data = await response.json();
@@ -28,13 +38,7 @@ const SignUpmodel = ({ show, onHide }) => {
   };
 
   const handleLogin = async () => {
-    const stateToken = new URLSearchParams(window.location.search).get('stateToken'); // URL에서 상태 토큰 추출
-    if (!stateToken) {
-      console.error('State token not found in URL');
-      return;
-    }
-
-    const accessToken = await getAccessToken(stateToken);
+    const accessToken = await getAccessToken();
     if (accessToken) {
       // 쿠키에 액세스 토큰 저장 (유효기간 설정 가능)
       Cookies.set('access_token', accessToken, { expires: 1 }); // 1일 동안 유효한 쿠키
