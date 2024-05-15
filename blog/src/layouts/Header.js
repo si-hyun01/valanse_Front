@@ -33,7 +33,7 @@ const Header = () => {
         try {
             const response = await axios.post('http://54.180.170.88:8080/token/get', null, {
                 headers: {
-                    Authorization: `Bearer ${stateToken}`
+                    stateToken: stateToken
                 }
             });
             setAccessToken(response.data.data);
@@ -46,7 +46,8 @@ const Header = () => {
         try {
             await axios.post('http://54.180.170.88:8080/token/logout', null, {
                 headers: {
-                    Authorization: `Bearer ${accessToken}`
+                    Authorization: `Bearer ${accessToken}`,
+                    stateToken: stateToken
                 }
             });
             Cookies.remove('access_token');
