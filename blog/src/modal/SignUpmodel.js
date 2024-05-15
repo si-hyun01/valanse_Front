@@ -8,6 +8,7 @@ import axios from 'axios'; // axios 패키지 import
 
 const SignUpmodel = ({ show, onHide }) => {
   const [stateToken, setStateToken] = useState('');
+  const [accessToken, setAccessToken] = useState('');
 
   useEffect(() => {
     // URL에서 상태 토큰 추출
@@ -18,20 +19,23 @@ const SignUpmodel = ({ show, onHide }) => {
 
   const getAccessToken = async () => {
     try {
-      const response = await axios.post('http://54.180.170.88:8080/token/get', { stateToken });
+      const response = await axios.post('http://54.180.170.88:8080/token/get', {}, {
+        headers: {
+          'stateToken': stateToken
+        }
+      });
       if (response.status === 200) {
-        return response.data.access_token;
+        setAccessToken(response.data.data);
       } else {
         throw new Error('Failed to get access token');
       }
     } catch (error) {
       console.error('Error getting access token:', error.message);
-      return null;
     }
   };
 
   const handleLogin = async () => {
-    const accessToken = await getAccessToken();
+    await getAccessToken();
     if (accessToken) {
       Cookies.set('access_token', accessToken, { expires: 1 });
       onHide();
