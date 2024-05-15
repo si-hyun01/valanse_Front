@@ -9,6 +9,13 @@ import axios from 'axios';
 import SignUpmodel from "../modal/SignUpmodel";
 import Cookies from 'js-cookie';
 
+// axios 인스턴스 생성
+const baseURL = import.meta.env.VITE_API_URL;
+const HTTP = axios.create({
+  baseURL,
+  withCredentials: true,
+});
+
 const Header = () => {
     const [showSignUpModal, setShowSignUpModal] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -32,7 +39,7 @@ const Header = () => {
 
     const getAccessToken = async () => {
         try {
-            const response = await axios.post('http://54.180.170.88:8080/token/get', null, {
+            const response = await HTTP.post('/token/get', null, {
                 headers: {
                     stateToken: stateToken
                 }
@@ -45,7 +52,7 @@ const Header = () => {
 
     const handleLogout = async () => {
         try {
-            await axios.post('http://54.180.170.88:8080/token/logout', null, {
+            await HTTP.post('/token/logout', null, {
                 headers: {
                     accessToken: accessToken
                 }
