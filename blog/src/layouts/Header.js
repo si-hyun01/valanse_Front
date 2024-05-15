@@ -32,7 +32,11 @@ const Header = () => {
 
     const getAccessToken = async () => {
         try {
-            const response = await axios.post('http://54.180.170.88:8080/token/get', { stateToken });
+            const response = await axios.post('http://54.180.170.88:8080/token/get', null, {
+                params: {
+                    stateToken: stateToken
+                }
+            });
             setAccessToken(response.data.data);
         } catch (error) {
             console.error('Error getting access token:', error.message);
