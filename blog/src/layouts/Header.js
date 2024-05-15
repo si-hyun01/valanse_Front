@@ -41,7 +41,7 @@ const Header = () => {
 
     const handleLogout = async () => {
         try {
-            await axios.post('https://54.180.170.88:8080/token/logout', { accessToken });
+            await axios.post('http://54.180.170.88:8080/token/logout', { accessToken });
             Cookies.remove('access_token');
             setIsLoggedIn(false);
         } catch (error) {
