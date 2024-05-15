@@ -3,13 +3,12 @@ import { Modal, Button, Container } from 'react-bootstrap';
 import KaKaoimage from "../layouts/img/Kakao_login.png";
 import Googleimage from "../layouts/img/Google_login1.png";
 import Naverimage from "../layouts/img/Naver_login.png";
-import Cookies from 'js-cookie'; // js-cookie 패키지 import
+import Cookies from 'js-cookie';
 
 const SignUpmodel = ({ show, onHide }) => {
   const [stateToken, setStateToken] = useState('');
 
   useEffect(() => {
-    // URL에서 상태 토큰 추출
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('stateToken');
     setStateToken(token);
@@ -21,6 +20,7 @@ const SignUpmodel = ({ show, onHide }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'stateToken': stateToken
         },
         body: JSON.stringify({ stateToken: stateToken })
       });
@@ -39,9 +39,8 @@ const SignUpmodel = ({ show, onHide }) => {
   const handleLogin = async () => {
     const accessToken = await getAccessToken();
     if (accessToken) {
-      // 쿠키에 액세스 토큰 저장 (유효기간 설정 가능)
-      Cookies.set('access_token', accessToken, { expires: 1 }); // 1일 동안 유효한 쿠키
-      onHide(); // 모달 닫기
+      Cookies.set('access_token', accessToken, { expires: 1 });
+      onHide();
     } else {
       console.error('Failed to get access token');
     }
@@ -74,7 +73,6 @@ const SignUpmodel = ({ show, onHide }) => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {/* 구글, 카카오, 네이버 로그인 버튼 */}
           <Button variant="light" onClick={handleGoogleLogin}>
             <img src={Googleimage} alt="구글 이미지" style={{ width: '170px', height: '45px' }} />
           </Button>
