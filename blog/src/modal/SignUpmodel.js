@@ -11,9 +11,9 @@ const SignUpmodel = ({ show, onHide }) => {
       const response = await fetch('http://54.180.170.88:8080/token/get', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ stateToken: stateToken })
+          'Content-Type': 'application/json',
+          'stateToken': stateToken // 상태 토큰을 요청 헤더에 추가
+        }
       });
       if (response.ok) {
         const data = await response.json();
@@ -28,7 +28,12 @@ const SignUpmodel = ({ show, onHide }) => {
   };
 
   const handleLogin = async () => {
-    const stateToken = window.location.search.split('=')[1]; // URL에서 stateToken 추출
+    const stateToken = new URLSearchParams(window.location.search).get('stateToken'); // URL에서 상태 토큰 추출
+    if (!stateToken) {
+      console.error('State token not found in URL');
+      return;
+    }
+
     const accessToken = await getAccessToken(stateToken);
     if (accessToken) {
       // 쿠키에 액세스 토큰 저장 (유효기간 설정 가능)
