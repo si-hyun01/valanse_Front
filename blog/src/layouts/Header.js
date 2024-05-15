@@ -32,11 +32,7 @@ const Header = () => {
 
     const getAccessToken = async () => {
         try {
-            const response = await axios.post('http://54.180.170.88:8080/token/get', {}, {
-                headers: {
-                    'stateToken': stateToken
-                }
-            });
+            const response = await axios.post('http://54.180.170.88:8080/token/get', { stateToken });
             if (response.status === 200) {
                 setAccessToken(response.data.data);
             } else {
@@ -49,7 +45,7 @@ const Header = () => {
 
     const handleLogout = async () => {
         try {
-            await axios.post('https://54.180.170.88:8080/token/logout');
+            await axios.post('https://54.180.170.88:8080/token/logout', { accessToken });
             Cookies.remove('access_token');
             setIsLoggedIn(false);
         } catch (error) {
