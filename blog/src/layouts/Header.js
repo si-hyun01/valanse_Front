@@ -24,12 +24,6 @@ const Header = () => {
         setStateToken(token);
     }, []);
 
-    useEffect(() => {
-        if (stateToken) {
-            getAccessToken();
-        }
-    }, [stateToken]);
-
     const getAccessToken = async () => {
         try {
             const response = await axios.post('http://54.180.170.88:8080/token/get', null, {
@@ -42,6 +36,12 @@ const Header = () => {
             console.error('Error getting access token:', error.message);
         }
     };
+
+    useEffect(() => {
+        if (stateToken) {
+            getAccessToken();
+        }
+    }, [stateToken, getAccessToken]);
 
     const handleLogout = async () => {
         try {
