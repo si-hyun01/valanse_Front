@@ -3,7 +3,8 @@ import { Modal, Button, Container } from 'react-bootstrap';
 import KaKaoimage from "../layouts/img/Kakao_login.png";
 import Googleimage from "../layouts/img/Google_login1.png";
 import Naverimage from "../layouts/img/Naver_login.png";
-import Cookies from 'js-cookie'; // js-cookie 패키지 import
+import Cookies from 'js-cookie';
+import axios from 'axios'; // axios 패키지 import
 
 const SignUpmodel = ({ show, onHide }) => {
   const [stateToken, setStateToken] = useState('');
@@ -17,16 +18,9 @@ const SignUpmodel = ({ show, onHide }) => {
 
   const getAccessToken = async () => {
     try {
-      const response = await fetch('http://54.180.170.88:8080/token/get', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ stateToken: stateToken })
-      });
-      if (response.ok) {
-        const data = await response.json();
-        return data.access_token;
+      const response = await axios.post('http://54.180.170.88:8080/token/get', { stateToken });
+      if (response.status === 200) {
+        return response.data.access_token;
       } else {
         throw new Error('Failed to get access token');
       }
@@ -39,9 +33,8 @@ const SignUpmodel = ({ show, onHide }) => {
   const handleLogin = async () => {
     const accessToken = await getAccessToken();
     if (accessToken) {
-      // 쿠키에 액세스 토큰 저장 (유효기간 설정 가능)
-      Cookies.set('access_token', accessToken, { expires: 1 }); // 1일 동안 유효한 쿠키
-      onHide(); // 모달 닫기
+      Cookies.set('access_token', accessToken, { expires: 1 });
+      onHide();
     } else {
       console.error('Failed to get access token');
     }
