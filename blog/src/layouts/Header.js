@@ -17,6 +17,8 @@ const Header = () => {
         const accessToken = localStorage.getItem('accessToken');
         if (accessToken) {
             setIsLoggedIn(true);
+        } else {
+            setIsLoggedIn(false);
         }
     }, []);
 
@@ -41,6 +43,7 @@ const Header = () => {
 
     const saveAccessTokenToLocalStorage = (accessToken) => {
         localStorage.setItem('accessToken', accessToken);
+        setIsLoggedIn(true); // 로그인 상태로 변경
     };
 
     return (
