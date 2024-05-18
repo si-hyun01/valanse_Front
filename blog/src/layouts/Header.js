@@ -32,7 +32,7 @@ const Header = () => {
     const getAccessToken = async (stateToken) => {
         try {
             const response = await axios.post('https://valanse.site/token/get', null, {
-                header: {
+                headers: {
                     stateToken: stateToken
                 }
             });
