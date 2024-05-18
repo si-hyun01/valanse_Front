@@ -31,7 +31,7 @@ const Header = () => {
 
     const getAccessToken = async (stateToken) => {
         try {
-            const response = await axios.post('http://54.180.170.88:8080/token/get', null, {
+            const response = await axios.post('https://54.180.170.88:8080/token/get', null, {
                 headers: {
                     stateToken: stateToken
                 }
@@ -44,7 +44,7 @@ const Header = () => {
 
     const handleLogout = async () => {
         try {
-            await axios.post('http://54.180.170.88:8080/token/logout', null, {
+            await axios.post('https://54.180.170.88:8080/token/logout', null, {
                 headers: {
                     stateToken: stateToken
                 }
