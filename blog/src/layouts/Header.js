@@ -32,7 +32,7 @@ const Header = () => {
     const getAccessToken = async (stateToken) => {
         try {
             const response = await axios.post('https://valanse.site/token/get', null, {
-                headers: {
+                header: {
                     stateToken: stateToken
                 }
             });
@@ -44,7 +44,7 @@ const Header = () => {
 
     const handleLogout = async () => {
         try {
-            await axios.post('https://54.180.170.88:8080/token/logout', null, {
+            await axios.post('https://valanse.site/token/logout', null, {
                 headers: {
                     stateToken: stateToken
                 }
