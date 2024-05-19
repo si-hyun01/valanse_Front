@@ -30,17 +30,17 @@ const Header = () => {
     }, []);
 
     const getAccessToken = async (stateToken) => {
-  try {
-    const response = await axios.post('https://valanse.site/token/get', { stateToken }, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    console.log('Access Token:', response.data.data);
-  } catch (error) {
-    console.error('Error getting access token:', error.message);
-  }
-};
+        try {
+            const response = await axios.post('https://valanse.site/token/get', null, {
+                headers: {
+                    stateToken: stateToken
+                }
+            });
+            setAccessToken(response.data.data);
+        } catch (error) {
+            console.error('Error getting access token:', error.message);
+        }
+    };
 
     const handleLogout = async () => {
         try {
