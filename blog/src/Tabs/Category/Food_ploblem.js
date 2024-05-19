@@ -29,7 +29,7 @@ function FoodProblem() {
             // Add any necessary headers here
           }
         });
-        setCurrentQuestion(response.data);
+        setCurrentQuestion(response.data); // 변경된 부분
       } catch (error) {
         console.error('Error fetching quiz data:', error.message);
       }
@@ -64,7 +64,7 @@ function FoodProblem() {
       <Grid container spacing={2} justifyContent="center">
         <Grid item xs={12} style={{ height: '30px' }} />
         <Grid item xs={12}>
-          <Typography variant="h4" align="center">{currentQuestion.question}</Typography>
+          <Typography variant="h4" align="center">{currentQuestion.question}</Typography> {/* 변경된 부분 */}
         </Grid>
         <Grid item xs={12} textAlign="center">
           <IconButton onClick={handleQuestionLike}>
