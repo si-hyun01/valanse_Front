@@ -6,15 +6,15 @@ import Naverimage from "../layouts/img/Naver_login.png";
 
 const SignUpmodel = ({ show, onHide }) => {
   const handleKakaoLogin = () => {
-    window.location.href = "http://54.180.170.88:8080/oauth2/authorization/kakao";
+    window.location.href = "https://valanse.site/login/oauth2/authorization/kakao";
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://54.180.170.88:8080/oauth2/authorization/google";
+    window.location.href = "https://valanse.site/login/oauth2/authorization/google";
   };
 
   const handleNaverLogin = () => {
-    window.location.href = "http://54.180.170.88:8080/oauth2/authorization/naver";
+    window.location.href = "https://valanse.site/login/oauth2/authorization/naver";
   };
 
   return (
@@ -32,7 +32,6 @@ const SignUpmodel = ({ show, onHide }) => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {/* 구글, 카카오, 네이버 로그인 버튼 */}
           <Button variant="light" onClick={handleGoogleLogin}>
             <img src={Googleimage} alt="구글 이미지" style={{ width: '170px', height: '45px' }} />
           </Button>
