@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import {
   Button,
   Card,
@@ -13,7 +14,6 @@ import {
 } from '@mui/material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
-
 
 // 댓글을 나타내는 컴포넌트에요
 function Comment({ text, likes, dislikes, onLike, onDislike }) {
@@ -77,7 +77,6 @@ function QuestionPage({ question, explanations, onNext }) {
     setDislikes(dislikes + 1);
   };
 
-
   // 다음으로 진행
   const handleNext = () => {
     onNext(selectedExplanation);
@@ -118,7 +117,7 @@ function QuestionPage({ question, explanations, onNext }) {
                   component="img"
                   height="300"
                   image={"http://via.placeholder.com/200x150"}
-                  alt="Soccer Image"
+                  alt="Explanation Image"
                 />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
@@ -177,41 +176,40 @@ function QuestionPage({ question, explanations, onNext }) {
 }
 
 function App() {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedExplanations, setSelectedExplanations] = useState([]);
+  const [currentQuestion, setCurrentQuestion] = useState(null);
 
-  // 문제 리스트
-  const questions = [
-    {
-      question: "음식 문제 제목이 나타나는 곳입니다.",
-      explanations: ["부먹", "찍먹"]
-    },
-    {
-      question: "어느 라면이 더 맛있어요?",
-      explanations: ["내가 한 라면", "남이 한 라면"]
-    }
-  ];
+  useEffect(() => {
+    // 퀴즈 데이터를 가져오는 함수
+    const fetchQuizData = async () => {
+      try {
+        const response = await axios.get('https://valanse.site/quiz/1', {
+          headers: {
+            'accept': 'application/json;charset=UTF-8',
+            // 여기에 필요하다면 Authorization 헤더를 추가하세요
+            // 'Authorization': `Bearer ${yourAccessToken}`
+          }
+        });
+        setCurrentQuestion(response.data);
+      } catch (error) {
+        console.error('Error fetching quiz data:', error.message);
+      }
+    };
 
-  // 다음 문제로 넘어갑니다
+    fetchQuizData();
+  }, []);
+
   const handleNext = (selectedExplanation) => {
-    setSelectedExplanations([...selectedExplanations, selectedExplanation]);
-    if (currentQuestionIndex + 1 < questions.length) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    } else {
-      // 마지막 문제를 처리합니다
-    }
+    // 여기에 다음 문제로 넘어가는 로직을 추가하세요.
   };
 
-  // 문제가 없는 경우 나타나는 문구
-  if (questions.length === 0) {
-    return <div>문제가 없습니다</div>;
+  if (!currentQuestion) {
+    return <div>Loading...</div>;
   }
 
-  // 현재 진행 중인 문제 페이지를 렌더링하는 거
   return (
     <QuestionPage
-      question={questions[currentQuestionIndex].question}
-      explanations={questions[currentQuestionIndex].explanations}
+      question={currentQuestion.question}
+      explanations={currentQuestion.explanations}
       onNext={handleNext}
     />
   );
