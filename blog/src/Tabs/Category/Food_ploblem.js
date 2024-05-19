@@ -68,7 +68,7 @@ function FoodProblem() {
             <ThumbDownIcon /> {dislikes}
           </IconButton>
         </Grid>
-        <Grid item xs={12} textAlign="center">
+        <Grid item xs={6} textAlign="center"> {/* 수정된 부분 */}
           <Card sx={{ maxWidth: 500 }} onClick={() => handleOptionSelect('A')}>
             <CardActionArea>
               <CardMedia
@@ -88,7 +88,7 @@ function FoodProblem() {
             </CardActionArea>
           </Card>
         </Grid>
-        <Grid item xs={12} textAlign="center">
+        <Grid item xs={6} textAlign="center"> {/* 수정된 부분 */}
           <Card sx={{ maxWidth: 500 }} onClick={() => handleOptionSelect('B')}>
             <CardActionArea>
               <CardMedia
