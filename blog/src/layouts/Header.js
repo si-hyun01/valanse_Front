@@ -12,7 +12,7 @@ import Cookies from 'js-cookie';
 
 const Header = () => {
     const [showSignUpModal, setShowSignUpModal] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false); // 여기에 isLoggedIn 상태를 정의합니다.
     const [stateToken, setStateToken] = useState('');
     const [accessToken, setAccessToken] = useState('');
 
@@ -38,6 +38,7 @@ const Header = () => {
                 }
             });
             setAccessToken(response.data.data);
+            setIsLoggedIn(true); // 액세스 토큰을 받으면 로그인 상태로 변경합니다.
         } catch (error) {
             console.error('Error getting access token:', error.message);
         }
@@ -51,7 +52,7 @@ const Header = () => {
                 }
             });
             Cookies.remove('access_token');
-            setIsLoggedIn(false);
+            setIsLoggedIn(false); // 로그아웃 시 로그인 상태를 false로 변경합니다.
         } catch (error) {
             console.error('Error during logout:', error);
         }
@@ -94,11 +95,11 @@ const Header = () => {
             )}
             {accessToken ? (
                 <div style={{ textAlign: 'center', margin: '20px' }}>
-                    <h3>Access Token: {accessToken}</h3>
+                    <h3>액세스 토큰 가져오기 성공</h3>
                 </div>
             ) : (
                 <div style={{ textAlign: 'center', margin: '20px' }}>
-                    <h3>No Access Token available.</h3>
+                    <h3>상태코드는 받았지만 액세스 토큰을 못 받음</h3>
                 </div>
             )}
         </>
@@ -106,4 +107,3 @@ const Header = () => {
 };
 
 export default Header;
-
