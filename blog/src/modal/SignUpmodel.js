@@ -3,21 +3,18 @@ import { Modal, Button, Container } from 'react-bootstrap';
 import KaKaoimage from "../layouts/img/Kakao_login.png";
 import Googleimage from "../layouts/img/Google_login1.png";
 import Naverimage from "../layouts/img/Naver_login.png";
-import { useNavigate } from 'react-router-dom';
 
 const SignUpmodel = ({ show, onHide }) => {
-  const navigate = useNavigate();
-
   const handleKakaoLogin = () => {
-    navigate("https://valanse.site/login/oauth2/authorization/kakao");
+    window.location.href = "https://valanse.site/login/oauth2/authorization/kakao";
   };
 
   const handleGoogleLogin = () => {
-    navigate("https://valanse.site/login/oauth2/authorization/google");
+    window.location.href = "https://valanse.site/login/oauth2/authorization/google";
   };
 
   const handleNaverLogin = () => {
-    navigate("https://valanse.site/oauth2/authorization/naver");
+    window.location.href = "https://valanse.site/oauth2/authorization/naver";
   };
 
   return (
