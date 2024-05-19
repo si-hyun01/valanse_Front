@@ -1,30 +1,20 @@
 import React from 'react';
 import { Modal, Button, Container } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom'; // useHistory 대신 useNavigate를 가져옵니다.
 import KaKaoimage from "../layouts/img/Kakao_login.png";
 import Googleimage from "../layouts/img/Google_login1.png";
 import Naverimage from "../layouts/img/Naver_login.png";
 
 const SignUpmodel = ({ show, onHide }) => {
-  const navigate = useNavigate(); // useHistory 대신 useNavigate 훅을 사용하여 navigate 함수를 가져옵니다.
-
-  // 로그인 후에 사용자를 리다이렉션할 URL을 기억합니다.
-  const redirectUrl = () => {
-    // 여기서는 로그인 후에 사용자를 '/' 경로로 리다이렉션합니다.
-    return '/';
-  };
-
-  // 각 로그인 버튼 클릭 시 해당 OAuth 서비스로 리다이렉션합니다.
   const handleKakaoLogin = () => {
-    navigate("https://valanse.site/login/oauth2/authorization/kakao?redirect_uri=" + encodeURIComponent(redirectUrl()));
+    window.location.href = "https://valanse.site/login/oauth2/authorization/kakao";
   };
 
   const handleGoogleLogin = () => {
-    navigate("https://valanse.site/login/oauth2/authorization/google?redirect_uri=" + encodeURIComponent(redirectUrl()));
+    window.location.href = "https://valanse.site/login/oauth2/authorization/google";
   };
 
   const handleNaverLogin = () => {
-    navigate("https://valanse.site/oauth2/authorization/naver?redirect_uri=" + encodeURIComponent(redirectUrl()));
+    window.location.href = "https://valanse.site/oauth2/authorization/naver";
   };
 
   return (
