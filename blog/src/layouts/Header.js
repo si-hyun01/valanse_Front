@@ -31,7 +31,7 @@ const Header = () => {
 
     const getAccessToken = async (stateToken) => {
         try {
-            const response = await axios.post('http://54.180.170.88:8080/token/get', null, {
+            const response = await axios.post('https://valanse.site/token/get', null, {
                 headers: {
                     'accept': 'application/json;charset=UTF-8',
                     'stateToken': stateToken
