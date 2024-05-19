@@ -1,3 +1,4 @@
+// Header.js
 import React, { useState, useEffect } from "react";
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -37,8 +38,6 @@ const Header = () => {
                 }
             });
             setAccessToken(response.data.data);
-            // 액세스 토큰을 쿠키에 저장
-            Cookies.set('access_token', response.data.data);
         } catch (error) {
             console.error('Error getting access token:', error.message);
         }
@@ -107,3 +106,4 @@ const Header = () => {
 };
 
 export default Header;
+
