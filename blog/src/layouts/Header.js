@@ -1,3 +1,4 @@
+// Header.js
 import React, { useState, useEffect } from "react";
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -11,20 +12,23 @@ import Cookies from 'js-cookie';
 
 const Header = () => {
     const [showSignUpModal, setShowSignUpModal] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [stateToken, setStateToken] = useState('');
     const [accessToken, setAccessToken] = useState('');
 
     useEffect(() => {
-        const accessTokenCookie = Cookies.get('access_token');
-        setIsLoggedIn(accessTokenCookie ? true : false);
-
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('stateToken');
         setStateToken(token);
 
         if (token) {
             getAccessToken(token);
+        } else {
+            // 쿠키에서 액세스 토큰 확인
+            const accessTokenCookie = Cookies.get('access_token');
+            if (accessTokenCookie) {
+                // 로그인 상태로 설정
+                setIsLoggedIn(true);
+            }
         }
     }, []);
 
@@ -39,6 +43,8 @@ const Header = () => {
             setAccessToken(response.data.data);
             // 액세스 토큰을 쿠키에 저장
             Cookies.set('access_token', response.data.data);
+            // 로그인 상태로 설정
+            setIsLoggedIn(true);
         } catch (error) {
             console.error('Error getting access token:', error.message);
         }
@@ -52,6 +58,7 @@ const Header = () => {
                 }
             });
             Cookies.remove('access_token');
+            // 로그아웃 상태로 설정
             setIsLoggedIn(false);
         } catch (error) {
             console.error('Error during logout:', error);
