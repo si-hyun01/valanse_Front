@@ -1,4 +1,3 @@
-// Header.js
 import React, { useState, useEffect } from "react";
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -12,7 +11,7 @@ import Cookies from 'js-cookie';
 
 const Header = () => {
     const [showSignUpModal, setShowSignUpModal] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // 여기에 isLoggedIn 상태를 정의합니다.
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [stateToken, setStateToken] = useState('');
     const [accessToken, setAccessToken] = useState('');
 
@@ -38,7 +37,8 @@ const Header = () => {
                 }
             });
             setAccessToken(response.data.data);
-            setIsLoggedIn(true); // 액세스 토큰을 받으면 로그인 상태로 변경합니다.
+            // 액세스 토큰을 쿠키에 저장
+            Cookies.set('access_token', response.data.data);
         } catch (error) {
             console.error('Error getting access token:', error.message);
         }
@@ -52,7 +52,7 @@ const Header = () => {
                 }
             });
             Cookies.remove('access_token');
-            setIsLoggedIn(false); // 로그아웃 시 로그인 상태를 false로 변경합니다.
+            setIsLoggedIn(false);
         } catch (error) {
             console.error('Error during logout:', error);
         }
