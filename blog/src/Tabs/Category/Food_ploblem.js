@@ -54,7 +54,7 @@ function FoodProblem() {
   }
 
   return (
-    <Card sx={{ bgcolor: '#f5f5f5' }}> {/* 수정된 부분 */}
+    <Card sx={{ bgcolor: '#f5f5f5', borderRadius: '16px' }}> {/* 수정된 부분 */}
       <Container maxWidth="lg">
         <Grid container spacing={2} justifyContent="center">
           <Grid item xs={12} style={{ height: '30px' }} />
@@ -70,7 +70,7 @@ function FoodProblem() {
             </IconButton>
           </Grid>
           <Grid item xs={6} textAlign="center">
-            <Card onClick={() => handleOptionSelect('A')}>
+            <Card onClick={() => handleOptionSelect('A')} sx={{ borderRadius: '16px' }}> {/* 수정된 부분 */}
               <CardActionArea>
                 <CardMedia
                   component="img"
@@ -90,7 +90,7 @@ function FoodProblem() {
             </Card>
           </Grid>
           <Grid item xs={6} textAlign="center">
-            <Card onClick={() => handleOptionSelect('B')}>
+            <Card onClick={() => handleOptionSelect('B')} sx={{ borderRadius: '16px' }}> {/* 수정된 부분 */}
               <CardActionArea>
                 <CardMedia
                   component="img"
