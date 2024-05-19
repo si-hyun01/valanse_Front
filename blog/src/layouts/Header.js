@@ -34,7 +34,7 @@ const Header = () => {
             const response = await axios.post('https://valanse.site/token/get', null, {
                 headers: {
                     'stateToken': stateToken,
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json;charset=UTF-8'
                 }
             });
             setAccessToken(response.data.data);
