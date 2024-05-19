@@ -7,6 +7,10 @@ import {
   CardContent,
   CardMedia,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Grid,
   IconButton,
   Typography
@@ -19,6 +23,7 @@ function FoodProblem() {
   const [selectedOption, setSelectedOption] = useState(null);
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
+  const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
 
   useEffect(() => {
     fetchQuizData();
@@ -31,6 +36,7 @@ function FoodProblem() {
       if (!data) {
         // 퀴즈가 없는 경우
         setQuizData(null);
+        setShowNoProblemDialog(true);
         return;
       }
       setQuizData(data);
@@ -56,68 +62,88 @@ function FoodProblem() {
     fetchQuizData(); // 다음 퀴즈 가져오기
   };
 
-  if (!quizData) {
-    return <Typography variant="h4" align="center">문제가 없습니다.</Typography>;
-  }
+  const handleCloseNoProblemDialog = () => {
+    setShowNoProblemDialog(false);
+  };
 
   return (
-    <Card sx={{ bgcolor: '#f5f5f5', borderRadius: '16px' }}>
-      <Container maxWidth="lg">
-        <Grid container spacing={2} justifyContent="center">
-          <Grid item xs={12} style={{ height: '30px' }} />
-          <Grid item xs={12}>
-            <Typography variant="h4" align="center">{quizData.content}</Typography>
+    <>
+      <Card sx={{ bgcolor: '#f5f5f5', borderRadius: '16px' }}>
+        <Container maxWidth="lg">
+          <Grid container spacing={2} justifyContent="center">
+            <Grid item xs={12} style={{ height: '30px' }} />
+            <Grid item xs={12}>
+              <Typography variant="h4" align="center">{quizData ? quizData.content : ''}</Typography>
+            </Grid>
+            <Grid item xs={12} textAlign="center">
+              <IconButton onClick={handleOptionLike}>
+                <ThumbUpIcon /> {likes}
+              </IconButton>
+              <IconButton onClick={handleOptionDislike}>
+                <ThumbDownIcon /> {dislikes}
+              </IconButton>
+            </Grid>
+            <Grid item xs={6} textAlign="center">
+              <Card onClick={() => handleOptionSelect('A')} sx={{ borderRadius: '16px' }}>
+                <CardActionArea>
+                  <CardMedia
+                    component="img"
+                    height="300"
+                    image={quizData ? quizData.imageA : ''}
+                    alt=""
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {quizData ? quizData.descriptionA : ''}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+            <Grid item xs={6} textAlign="center">
+              <Card onClick={() => handleOptionSelect('B')} sx={{ borderRadius: '16px' }}>
+                <CardActionArea>
+                  <CardMedia
+                    component="img"
+                    height="300"
+                    image={quizData ? quizData.imageB : ''}
+                    alt=""
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {quizData ? quizData.descriptionB : ''}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+            <Grid item xs={12} textAlign="center">
+              <Button variant="contained" color="primary" onClick={handleNext} disabled={!selectedOption}>
+                Next
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={12} textAlign="center">
-            <IconButton onClick={handleOptionLike}>
-              <ThumbUpIcon /> {likes}
-            </IconButton>
-            <IconButton onClick={handleOptionDislike}>
-              <ThumbDownIcon /> {dislikes}
-            </IconButton>
-          </Grid>
-          <Grid item xs={6} textAlign="center">
-            <Card onClick={() => handleOptionSelect('A')} sx={{ borderRadius: '16px' }}>
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  height="300"
-                  image={quizData.imageA}
-                  alt=""
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {quizData.descriptionA}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-          <Grid item xs={6} textAlign="center">
-            <Card onClick={() => handleOptionSelect('B')} sx={{ borderRadius: '16px' }}>
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  height="300"
-                  image={quizData.imageB}
-                  alt=""
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {quizData.descriptionB}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-          <Grid item xs={12} textAlign="center">
-            <Button variant="contained" color="primary" onClick={handleNext} disabled={!selectedOption}>
-              Next
-            </Button>
-          </Grid>
-        </Grid>
-      </Container>
-    </Card>
+        </Container>
+      </Card>
+      <Dialog
+        open={showNoProblemDialog}
+        onClose={handleCloseNoProblemDialog}
+        aria-labelledby="no-problem-dialog-title"
+        aria-describedby="no-problem-dialog-description"
+      >
+        <DialogTitle id="no-problem-dialog-title">문제가 없습니다.</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1" id="no-problem-dialog-description">
+            현재 문제가 더 이상 제공되지 않습니다.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseNoProblemDialog} color="primary">
+            확인
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
 
