@@ -80,9 +80,6 @@ function FoodProblem() {
                 />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
-                    왼쪽 사진 {/* 수정된 부분 */}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
                     {quizData.descriptionA}
                   </Typography>
                 </CardContent>
@@ -100,9 +97,6 @@ function FoodProblem() {
                 />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
-                    오른쪽 사진 {/* 수정된 부분 */}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
                     {quizData.descriptionB}
                   </Typography>
                 </CardContent>
