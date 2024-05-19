@@ -31,10 +31,9 @@ function FoodProblem() {
 
   const fetchQuizData = async () => {
     try {
-      const response = await axios.get('https://valanse.site/quiz/' + (quizData ? quizData.id + 1 : 1));
+      const response = await axios.get('https://valanse.site/quiz/' + (quizData ? quizData.quizId + 1 : 1));
       const data = response.data.data;
-      if (!data) {
-        // 퀴즈가 없는 경우
+      if (!data || Object.keys(data).length === 0) { // 데이터가 비어있는 경우
         setQuizData(null);
         setShowNoProblemDialog(true);
         return;
