@@ -31,9 +31,9 @@ const Header = () => {
 
     const getAccessToken = async (stateToken) => {
         try {
-            const response = await axios.post('https://valanse.site/token/get', { stateToken }, {
+            const response = await axios.post('https://valanse.site/token/get', null, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    'stateToken': stateToken
                 }
             });
             setAccessToken(response.data.data);
@@ -46,13 +46,13 @@ const Header = () => {
         try {
             await axios.post('https://valanse.site/token/logout', null, {
                 headers: {
-                    stateToken: stateToken
+                    'stateToken': stateToken
                 }
             });
             Cookies.remove('access_token');
             setIsLoggedIn(false);
         } catch (error) {
-            console.error('로그아웃 중 에러 발생:', error);
+            console.error('Error during logout:', error);
         }
     };
 
@@ -66,18 +66,18 @@ const Header = () => {
                 <Navbar bg="light" expand="lg">
                     <Container>
                         <Navbar.Brand as={Link} to="/">
-                            <img src={valanse_logo} alt="노이즈 로고" />
+                            <img src={valanse_logo} alt="Valanse Logo" />
                         </Navbar.Brand>
                         <Navbar.Toggle aria-controls="basic-navbar-nav" />
                         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
                             <Nav className="ml-auto">
                                 {isLoggedIn ? (
                                     <Nav.Link>
-                                        <Button variant="secondary" onClick={handleLogout}>로그아웃</Button>
+                                        <Button variant="secondary" onClick={handleLogout}>Logout</Button>
                                     </Nav.Link>
                                 ) : (
                                     <Nav.Link>
-                                        <Button variant="secondary" onClick={toggleSignUpModal}>로그인</Button>
+                                        <Button variant="secondary" onClick={toggleSignUpModal}>Login</Button>
                                     </Nav.Link>
                                 )}
                                 <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} />
@@ -97,7 +97,7 @@ const Header = () => {
                 </div>
             ) : (
                 <div style={{ textAlign: 'center', margin: '20px' }}>
-                    <h3>Access Token이 없습니다.</h3>
+                    <h3>No Access Token available.</h3>
                 </div>
             )}
         </>
