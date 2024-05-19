@@ -12,7 +12,7 @@ import Cookies from 'js-cookie';
 
 const Header = () => {
     const [showSignUpModal, setShowSignUpModal] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // 여기에 isLoggedIn 상태를 정의합니다.
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [stateToken, setStateToken] = useState('');
     const [accessToken, setAccessToken] = useState('');
 
@@ -37,8 +37,10 @@ const Header = () => {
                     'Content-Type': 'application/json'
                 }
             });
-            setAccessToken(response.data.data);
-            setIsLoggedIn(true); // 액세스 토큰을 받으면 로그인 상태로 변경합니다.
+            const token = response.data.data;
+            setAccessToken(token);
+            Cookies.set('access_token', token); // 액세스 토큰을 쿠키에 저장합니다.
+            setIsLoggedIn(true);
         } catch (error) {
             console.error('Error getting access token:', error.message);
         }
@@ -46,15 +48,20 @@ const Header = () => {
 
     const handleLogout = async () => {
         try {
-            await axios.post('https://valanse.site/token/logout', null, {
-                headers: {
-                    'stateToken': stateToken
-                }
-            });
-            Cookies.remove('access_token');
-            setIsLoggedIn(false); // 로그아웃 시 로그인 상태를 false로 변경합니다.
+            const accessTokenCookie = Cookies.get('access_token');
+            if (accessTokenCookie) {
+                await axios.post('https://valanse.site/token/logout', null, {
+                    headers: {
+                        'Authorization': `Bearer ${accessTokenCookie}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                Cookies.remove('access_token');
+                setIsLoggedIn(false);
+                setAccessToken('');
+            }
         } catch (error) {
-            console.error('Error during logout:', error);
+            console.error('Error during logout:', error.message);
         }
     };
 
@@ -99,7 +106,7 @@ const Header = () => {
                 </div>
             ) : (
                 <div style={{ textAlign: 'center', margin: '20px' }}>
-                    <h3>상태코드는 받았지만 액세스 토큰을 못 받음</h3>
+                    <h3>로그인 안한 상황</h3>
                 </div>
             )}
         </>
