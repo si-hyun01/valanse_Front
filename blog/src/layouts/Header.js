@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
@@ -9,9 +9,23 @@ import axios from 'axios';
 import SignUpmodel from "../modal/SignUpmodel";
 import Cookies from 'js-cookie';
 
+// Axios 인터셉터 설정
+axios.interceptors.request.use(
+    config => {
+        const token = Cookies.get('access_token');
+        if (token) {
+            config.headers['Authorization'] = token;
+        }
+        return config;
+    },
+    error => {
+        return Promise.reject(error);
+    }
+);
+
 const Header = () => {
     const [showSignUpModal, setShowSignUpModal] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // 여기에 isLoggedIn 상태를 정의합니다.
+    const [isLoggedIn, setIsLoggedIn] = useState(false); 
     const [stateToken, setStateToken] = useState('');
     const [accessToken, setAccessToken] = useState('');
 
