@@ -16,19 +16,20 @@ import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 
 function FoodProblem() {
   const [quizData, setQuizData] = useState(null);
+  const [selectedOption, setSelectedOption] = useState(null);
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
 
   useEffect(() => {
     fetchQuizData();
-  }, []); // 컴포넌트가 처음 렌더링될 때만 실행되도록 설정
+  }, []);
 
   const fetchQuizData = async () => {
     try {
-      const response = await axios.get('https://valanse.site/quiz/1'); // 첫 번째 퀴즈 ID로 시작
+      const response = await axios.get('https://valanse.site/quiz/' + (quizData ? quizData.id + 1 : 1));
       const data = response.data.data;
-      if (!data || !data.content) {
-        // 퀴즈 내용이 없는 경우
+      if (!data) {
+        // 퀴즈가 없는 경우
         setQuizData(null);
         return;
       }
@@ -38,22 +39,8 @@ function FoodProblem() {
     }
   };
 
-  const handleOptionSelect = async () => {
-    try {
-      const nextQuizId = quizData.id + 1; // 다음 퀴즈 ID
-      const response = await axios.get(`https://valanse.site/quiz/${nextQuizId}`);
-      const data = response.data.data;
-      if (!data || !data.content) {
-        // 퀴즈 내용이 없는 경우
-        setQuizData(null);
-        return;
-      }
-      setQuizData(data);
-      setLikes(0); // 좋아요 카운트 초기화
-      setDislikes(0); // 싫어요 카운트 초기화
-    } catch (error) {
-      console.error('Error fetching quiz data:', error.message);
-    }
+  const handleOptionSelect = (option) => {
+    setSelectedOption(option);
   };
 
   const handleOptionLike = () => {
@@ -62,6 +49,11 @@ function FoodProblem() {
 
   const handleOptionDislike = () => {
     setDislikes(dislikes + 1);
+  };
+
+  const handleNext = () => {
+    setSelectedOption(null);
+    fetchQuizData(); // 다음 퀴즈 가져오기
   };
 
   if (!quizData) {
@@ -85,7 +77,7 @@ function FoodProblem() {
             </IconButton>
           </Grid>
           <Grid item xs={6} textAlign="center">
-            <Card onClick={handleOptionSelect} sx={{ borderRadius: '16px' }}>
+            <Card onClick={() => handleOptionSelect('A')} sx={{ borderRadius: '16px' }}>
               <CardActionArea>
                 <CardMedia
                   component="img"
@@ -95,14 +87,14 @@ function FoodProblem() {
                 />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
-                    왼쪽 사진
+                    {quizData.descriptionA}
                   </Typography>
                 </CardContent>
               </CardActionArea>
             </Card>
           </Grid>
           <Grid item xs={6} textAlign="center">
-            <Card onClick={handleOptionSelect} sx={{ borderRadius: '16px' }}>
+            <Card onClick={() => handleOptionSelect('B')} sx={{ borderRadius: '16px' }}>
               <CardActionArea>
                 <CardMedia
                   component="img"
@@ -112,11 +104,16 @@ function FoodProblem() {
                 />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
-                    오른쪽 사진
+                    {quizData.descriptionB}
                   </Typography>
                 </CardContent>
               </CardActionArea>
             </Card>
+          </Grid>
+          <Grid item xs={12} textAlign="center">
+            <Button variant="contained" color="primary" onClick={handleNext} disabled={!selectedOption}>
+              Next
+            </Button>
           </Grid>
         </Grid>
       </Container>
