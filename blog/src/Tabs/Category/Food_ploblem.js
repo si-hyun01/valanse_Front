@@ -41,6 +41,10 @@ function FoodProblem() {
       setQuizData(data);
     } catch (error) {
       console.error('Error fetching quiz data:', error.message);
+      if (error.response.status === 404) { // 퀴즈가 없는 경우
+        setQuizData(null);
+        setShowNoProblemDialog(true);
+      }
     }
   };
 
@@ -129,7 +133,7 @@ function FoodProblem() {
         onClose={handleCloseNoProblemDialog}
         aria-labelledby="no-problem-dialog-title"
         aria-describedby="no-problem-dialog-description"
-      >
+        >
         <DialogTitle id="no-problem-dialog-title">문제가 없습니다.</DialogTitle>
         <DialogContent>
           <Typography variant="body1" id="no-problem-dialog-description">
