@@ -55,7 +55,7 @@ function FoodProblem() {
     setSelectedExplanation(null);
   };
 
-  if (!currentQuestion) {
+  if (!currentQuestion || !currentQuestion.explanations) {
     return <div>Loading...</div>;
   }
 
