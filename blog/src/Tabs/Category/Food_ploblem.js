@@ -9,7 +9,8 @@ import {
   Container,
   Grid,
   IconButton,
-  Typography
+  Typography,
+  Box
 } from '@mui/material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
@@ -54,7 +55,7 @@ function FoodProblem() {
   }
 
   return (
-    <Card variant="outlined" sx={{ padding: '20px' }}>
+    <Box sx={{ bgcolor: '#f5f5f5' }}>
       <Container maxWidth="lg">
         <Grid container spacing={2} justifyContent="center">
           <Grid item xs={12} style={{ height: '30px' }} />
@@ -116,7 +117,7 @@ function FoodProblem() {
           </Grid>
         </Grid>
       </Container>
-    </Card>
+    </Box>
   );
 }
 
