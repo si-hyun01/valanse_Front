@@ -14,7 +14,7 @@ const SignUpmodel = ({ show, onHide }) => {
   };
 
   const handleNaverLogin = () => {
-    window.location.href = "https://valanse.site/login/oauth2/authorization/naver";
+    window.location.href = "https://valanse.site/oauth2/authorization/naver";
   };
 
   return (
