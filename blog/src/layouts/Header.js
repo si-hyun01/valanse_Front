@@ -4,7 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import valanse_logo from "./img/valanse_logo.png";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // useNavigate를 추가합니다.
 import axios from 'axios';
 import SignUpmodel from "../modal/SignUpmodel";
 import Cookies from 'js-cookie';
@@ -28,6 +28,7 @@ const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false); 
     const [stateToken, setStateToken] = useState('');
     const [accessToken, setAccessToken] = useState('');
+    const navigate = useNavigate(); // useNavigate 훅을 사용하여 navigate 함수를 가져옵니다.
 
     useEffect(() => {
         const accessTokenCookie = Cookies.get('access_token');
@@ -72,6 +73,7 @@ const Header = () => {
                 Cookies.remove('access_token');
                 setIsLoggedIn(false);
                 setAccessToken('');
+                navigate('/'); // 로그아웃 후에 원래 메인 홈페이지로 이동합니다.
             }
         } catch (error) {
             console.error('Error during logout:', error.message);
