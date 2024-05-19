@@ -76,7 +76,7 @@ function FoodProblem() {
                   component="img"
                   height="300"
                   image={quizData.imageA}
-                  alt="Option A Image"
+                  alt=""
                 />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
@@ -96,7 +96,7 @@ function FoodProblem() {
                   component="img"
                   height="300"
                   image={quizData.imageB}
-                  alt="Option B Image"
+                  alt=""
                 />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
