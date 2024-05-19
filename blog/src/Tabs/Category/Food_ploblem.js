@@ -1,55 +1,106 @@
 import React, { useState, useEffect } from 'react';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
-import Cookies from 'js-cookie';
+import {
+  Button,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Container,
+  Grid,
+  IconButton,
+  Typography
+} from '@mui/material';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 
-const QuizPage = () => {
-    const [quizData, setQuizData] = useState(null);
+function FoodProblem() {
+  const [currentQuestion, setCurrentQuestion] = useState(null);
+  const [selectedExplanation, setSelectedExplanation] = useState(null);
+  const [likes, setLikes] = useState(0);
+  const [dislikes, setDislikes] = useState(0);
 
-    useEffect(() => {
-        const fetchQuizData = async () => {
-            try {
-                const response = await axios.get('https://valanse.site/quiz/1', {
-                    headers: {
-                        'accept': 'application/json',
-                        'Authorization': Cookies.get('access_token')
-                    }
-                });
-                setQuizData(response.data);
-            } catch (error) {
-                console.error('Error fetching quiz data:', error.message);
-            }
-        };
+  useEffect(() => {
+    const fetchQuizData = async () => {
+      try {
+        const response = await axios.get('https://valanse.site/quiz/1', {
+          headers: {
+            'accept': 'application/json;charset=UTF-8',
+            // Add any necessary headers here
+          }
+        });
+        setCurrentQuestion(response.data);
+      } catch (error) {
+        console.error('Error fetching quiz data:', error.message);
+      }
+    };
 
-        fetchQuizData();
-    }, []);
+    fetchQuizData();
+  }, []);
 
-    if (!quizData) {
-        return <div>Loading...</div>;
-    }
+  const handleExplanationSelect = (explanation) => {
+    setSelectedExplanation(explanation);
+  };
 
-    return (
-        <div>
-            {/* 여기에 퀴즈 데이터를 표시하는 코드 작성 */}
-            <h2>{quizData.title}</h2>
-            <ul>
-                {quizData.questions.map((question, index) => (
-                    <li key={index}>
-                        <h3>{question.text}</h3>
-                        <ul>
-                            {question.options.map((option, optionIndex) => (
-                                <li key={optionIndex}>{option}</li>
-                            ))}
-                        </ul>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
-};
+  const handleQuestionLike = () => {
+    setLikes(likes + 1);
+  };
 
-export default QuizPage;
+  const handleQuestionDislike = () => {
+    setDislikes(dislikes + 1);
+  };
+
+  const handleNext = () => {
+    // Logic for moving to the next question
+    setSelectedExplanation(null);
+  };
+
+  if (!currentQuestion) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <Container maxWidth="lg">
+      <Grid container spacing={2} justifyContent="center">
+        <Grid item xs={12} style={{ height: '30px' }} />
+        <Grid item xs={12}>
+          <Typography variant="h4" align="center">{currentQuestion.question}</Typography>
+        </Grid>
+        <Grid item xs={12} textAlign="center">
+          <IconButton onClick={handleQuestionLike}>
+            <ThumbUpIcon /> {likes}
+          </IconButton>
+          <IconButton onClick={handleQuestionDislike}>
+            <ThumbDownIcon /> {dislikes}
+          </IconButton>
+        </Grid>
+        {currentQuestion.explanations.map((explanation, index) => (
+          <Grid key={index} item xs={5}>
+            <Card sx={{ maxWidth: 500 }} onClick={() => handleExplanationSelect(explanation)}>
+              <CardActionArea>
+                <CardMedia
+                  component="img"
+                  height="300"
+                  image={"http://via.placeholder.com/200x150"}
+                  alt="Explanation Image"
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="div">
+                    {explanation}
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Grid>
+        ))}
+        <Grid item xs={12} textAlign="center">
+          <Button variant="contained" color="primary" onClick={handleNext} disabled={!selectedExplanation}>
+            Next
+          </Button>
+        </Grid>
+      </Grid>
+    </Container>
+  );
+}
+
+export default FoodProblem;
