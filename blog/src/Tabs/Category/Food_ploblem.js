@@ -54,7 +54,7 @@ function FoodProblem() {
   }
 
   return (
-    <Card sx={{ bgcolor: '#f5f5f5', borderRadius: '16px' }}> {/* 수정된 부분 */}
+    <Card sx={{ bgcolor: '#f5f5f5', borderRadius: '16px' }}>
       <Container maxWidth="lg">
         <Grid container spacing={2} justifyContent="center">
           <Grid item xs={12} style={{ height: '30px' }} />
@@ -70,7 +70,7 @@ function FoodProblem() {
             </IconButton>
           </Grid>
           <Grid item xs={6} textAlign="center">
-            <Card onClick={() => handleOptionSelect('A')} sx={{ borderRadius: '16px' }}> {/* 수정된 부분 */}
+            <Card onClick={() => handleOptionSelect('A')} sx={{ borderRadius: '16px' }}>
               <CardActionArea>
                 <CardMedia
                   component="img"
@@ -80,7 +80,7 @@ function FoodProblem() {
                 />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
-                    {quizData.optionA}
+                    왼쪽 사진 {/* 수정된 부분 */}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     {quizData.descriptionA}
@@ -90,7 +90,7 @@ function FoodProblem() {
             </Card>
           </Grid>
           <Grid item xs={6} textAlign="center">
-            <Card onClick={() => handleOptionSelect('B')} sx={{ borderRadius: '16px' }}> {/* 수정된 부분 */}
+            <Card onClick={() => handleOptionSelect('B')} sx={{ borderRadius: '16px' }}>
               <CardActionArea>
                 <CardMedia
                   component="img"
@@ -100,7 +100,7 @@ function FoodProblem() {
                 />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
-                    {quizData.optionB}
+                    오른쪽 사진 {/* 수정된 부분 */}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     {quizData.descriptionB}
