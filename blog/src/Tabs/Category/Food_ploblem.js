@@ -15,21 +15,16 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 
 function FoodProblem() {
-  const [currentQuestion, setCurrentQuestion] = useState(null);
-  const [selectedExplanation, setSelectedExplanation] = useState(null);
+  const [quizData, setQuizData] = useState(null);
+  const [selectedOption, setSelectedOption] = useState(null);
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
 
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
-        const response = await axios.get('https://valanse.site/quiz/1', {
-          headers: {
-            'accept': 'application/json;charset=UTF-8',
-            // Add any necessary headers here
-          }
-        });
-        setCurrentQuestion(response.data); // 변경된 부분
+        const response = await axios.get('https://valanse.site/quiz/1');
+        setQuizData(response.data.data);
       } catch (error) {
         console.error('Error fetching quiz data:', error.message);
       }
@@ -38,24 +33,23 @@ function FoodProblem() {
     fetchQuizData();
   }, []);
 
-  const handleExplanationSelect = (explanation) => {
-    setSelectedExplanation(explanation);
+  const handleOptionSelect = (option) => {
+    setSelectedOption(option);
   };
 
-  const handleQuestionLike = () => {
+  const handleOptionLike = () => {
     setLikes(likes + 1);
   };
 
-  const handleQuestionDislike = () => {
+  const handleOptionDislike = () => {
     setDislikes(dislikes + 1);
   };
 
   const handleNext = () => {
-    // Logic for moving to the next question
-    setSelectedExplanation(null);
+    setSelectedOption(null);
   };
 
-  if (!currentQuestion || !currentQuestion.explanations) {
+  if (!quizData) {
     return <div>Loading...</div>;
   }
 
@@ -64,37 +58,58 @@ function FoodProblem() {
       <Grid container spacing={2} justifyContent="center">
         <Grid item xs={12} style={{ height: '30px' }} />
         <Grid item xs={12}>
-          <Typography variant="h4" align="center">{currentQuestion.question}</Typography> {/* 변경된 부분 */}
+          <Typography variant="h4" align="center">{quizData.content}</Typography>
         </Grid>
         <Grid item xs={12} textAlign="center">
-          <IconButton onClick={handleQuestionLike}>
+          <IconButton onClick={handleOptionLike}>
             <ThumbUpIcon /> {likes}
           </IconButton>
-          <IconButton onClick={handleQuestionDislike}>
+          <IconButton onClick={handleOptionDislike}>
             <ThumbDownIcon /> {dislikes}
           </IconButton>
         </Grid>
-        {currentQuestion.explanations.map((explanation, index) => (
-          <Grid key={index} item xs={5}>
-            <Card sx={{ maxWidth: 500 }} onClick={() => handleExplanationSelect(explanation)}>
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  height="300"
-                  image={"http://via.placeholder.com/200x150"}
-                  alt="Explanation Image"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {explanation}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-        ))}
         <Grid item xs={12} textAlign="center">
-          <Button variant="contained" color="primary" onClick={handleNext} disabled={!selectedExplanation}>
+          <Card sx={{ maxWidth: 500 }} onClick={() => handleOptionSelect('A')}>
+            <CardActionArea>
+              <CardMedia
+                component="img"
+                height="300"
+                image={quizData.imageA}
+                alt="Option A Image"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  {quizData.optionA}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {quizData.descriptionA}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        </Grid>
+        <Grid item xs={12} textAlign="center">
+          <Card sx={{ maxWidth: 500 }} onClick={() => handleOptionSelect('B')}>
+            <CardActionArea>
+              <CardMedia
+                component="img"
+                height="300"
+                image={quizData.imageB}
+                alt="Option B Image"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  {quizData.optionB}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {quizData.descriptionB}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        </Grid>
+        <Grid item xs={12} textAlign="center">
+          <Button variant="contained" color="primary" onClick={handleNext} disabled={!selectedOption}>
             Next
           </Button>
         </Grid>
