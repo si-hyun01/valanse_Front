@@ -108,12 +108,17 @@ const Header = () => {
                         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
                             <Nav className="ml-auto">
                                 {isLoggedIn ? (
-                                    <Nav.Link>
-                                        <Button variant="secondary" onClick={handleLogout}>Logout</Button>
-                                    </Nav.Link>
+                                    <>
+                                        <Nav.Link>
+                                            <Button variant="secondary" onClick={handleLogout}>로그아웃</Button>
+                                        </Nav.Link>
+                                        <Nav.Link as={Link} to="/mypage">
+                                            <Button variant="secondary">마이페이지</Button>
+                                        </Nav.Link>
+                                    </>
                                 ) : (
                                     <Nav.Link>
-                                        <Button variant="secondary" onClick={toggleSignUpModal}>Login</Button>
+                                        <Button variant="secondary" onClick={toggleSignUpModal}>로그인</Button>
                                     </Nav.Link>
                                 )}
                                 <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} />
