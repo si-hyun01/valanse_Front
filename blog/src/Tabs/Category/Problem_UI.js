@@ -36,17 +36,32 @@ function ProblemUI() {
       const response = await axios.get('https://valanse.site/quiz/' + (quizData ? quizData.quizId + 1 : 1));
       const data = response.data.data;
       if (!data || Object.keys(data).length === 0) { // 데이터가 비어있는 경우
-        setQuizData(null);
-        setShowNoProblemDialog(true);
+        fetchNextQuiz(); // 다음 퀴즈 가져오기
         return;
       }
       setQuizData(data);
     } catch (error) {
       console.error('Error fetching quiz data:', error.message);
       if (error.response && error.response.status === 404) { // 퀴즈가 없는 경우
+        fetchNextQuiz(); // 다음 퀴즈 가져오기
+      }
+    }
+  };
+
+  const fetchNextQuiz = async () => {
+    try {
+      const response = await axios.get('https://valanse.site/quiz/' + (quizData ? quizData.quizId + 1 : 1));
+      const data = response.data.data;
+      if (!data || Object.keys(data).length === 0) { // 데이터가 없거나 내용이 없는 경우
         setQuizData(null);
         setShowNoProblemDialog(true);
+        console.log("No more quizzes available.");
+        return;
       }
+      setQuizData(data);
+    } catch (error) {
+      console.error('Error fetching next quiz data:', error.message);
+      setQuizData(null);
     }
   };
 
