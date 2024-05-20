@@ -5,8 +5,7 @@ import Header from './Header';
 import Footer from './Footer';
 import Popularity from '../Tabs/popularity';
 import Notice from '../Tabs/notinoti'
-import Ploblem_UI from "../Tabs/Category/Ploblem_UI";
-import Food_ploblem from "../Tabs/Category/Food_ploblem"
+import Problem_UI from "../Tabs/Category/Problem_UI"
 import Make_ploblem from "../Tabs/make_ploblem"
 import Love_ploblem from "../Tabs/Category/Love_ploblem"
 import Entire from "../Tabs/entire";
@@ -151,13 +150,13 @@ const Layout = () => {
                 )}
                 {selectedCategory && (
                     <div>
-                        {selectedCategory === '축구' && <Ploblem_UI />}
-                        {selectedCategory === '음식' && <Food_ploblem />}
+                        {selectedCategory === '축구' && <Problem_UI />}
+                        {selectedCategory === '음식' && <Problem_UI />}
                         {selectedCategory === '연애' && <Love_ploblem />}
-                        {selectedCategory === '노래' && <Ploblem_UI />}
-                        {selectedCategory === '생존' && <Ploblem_UI />}
-                        {selectedCategory === '드라마&영화' && <Ploblem_UI />}
-                        {selectedCategory === '일상' && <Ploblem_UI />}
+                        {selectedCategory === '노래' && <Problem_UI />}
+                        {selectedCategory === '생존' && <Problem_UI />}
+                        {selectedCategory === '드라마&영화' && <Problem_UI />}
+                        {selectedCategory === '일상' && <Problem_UI />}
                     </div>
                 )}
 

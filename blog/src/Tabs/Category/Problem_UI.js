@@ -18,7 +18,7 @@ import {
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 
-function FoodProblem() {
+function ProblemUI() {
   const [quizData, setQuizData] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
   const [likes, setLikes] = useState(0);
@@ -150,4 +150,4 @@ function FoodProblem() {
   );
 }
 
-export default FoodProblem;
+export default ProblemUI;
