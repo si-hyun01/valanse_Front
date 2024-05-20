@@ -69,35 +69,7 @@ const Layout = () => {
         setSelectedCategory(category);
         setActiveTab('카테고리');
         setCategoryOpen(false);
-        // URL에 한글이 아닌 영어로 변환하여 처리
-        let categorySlug = '';
-        switch (category) {
-            case '축구':
-                categorySlug = 'soccer';
-                break;
-            case '음식':
-                categorySlug = 'food';
-                break;
-            case '연애':
-                categorySlug = 'love';
-                break;
-            case '노래':
-                categorySlug = 'song';
-                break;
-            case '생존':
-                categorySlug = 'survival';
-                break;
-            case '드라마&영화':
-                categorySlug = 'drama-movie';
-                break;
-            case '일상':
-                categorySlug = 'daily';
-                break;
-            default:
-                categorySlug = '';
-                break;
-        }
-        navigate(`/category/${categorySlug}`);
+        navigate(`/category/${category}`);
     };
 
     const categories = [
@@ -192,7 +164,6 @@ const Layout = () => {
                                 style={{
                                     width: '100%',
                                     backgroundColor: activeTab === '문제 만들기'
-                                   
                                     ? 'rgba(0, 0, 255, 0.3)' : 'initial',
                                     fontWeight: 'bold',
                                     color: 'black',
@@ -213,7 +184,8 @@ const Layout = () => {
                                 }}
                                 onClick={() => handleTabChange('공지')}
                             >
-                                공지
+                               
+                               공지
                             </button>
                         </li>
                     </ul>
