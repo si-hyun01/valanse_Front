@@ -122,20 +122,6 @@ const Header = () => {
                     </Container>
                 </Navbar>
             </header>
-            {stateToken && (
-                <div style={{ textAlign: 'center', margin: '20px' }}>
-                    <h3>State Token: {stateToken}</h3>
-                </div>
-            )}
-            {accessToken ? (
-                <div style={{ textAlign: 'center', margin: '20px' }}>
-                    <h3>액세스 토큰 가져오기 성공</h3>
-                </div>
-            ) : (
-                <div style={{ textAlign: 'center', margin: '20px' }}>
-                    <h3>로그인 안한 상황</h3>
-                </div>
-            )}
         </>
     );
 };
