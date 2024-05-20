@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Button, Container, Grid, TextField, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Button, Container, Grid, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-
-function CreateQuestionPage({ onCreate }) {
+function CreateQuestionPage({ onCreate, selectedCategory }) {
     const [question, setQuestion] = useState('');
     const [story1, setStory1] = useState('');
     const [story2, setStory2] = useState('');
@@ -13,6 +12,7 @@ function CreateQuestionPage({ onCreate }) {
 
     const handleCreate = () => {
         onCreate({
+            category: selectedCategory,
             question,
             options: [
                 { text: story1, image: story1Image },
@@ -129,13 +129,42 @@ const ImageUpload = ({ setImage }) => {
 };
 
 function App() {
+    const [selectedCategory, setSelectedCategory] = useState('');
+
     const handleCreateQuestion = (newQuestion) => {
         console.log('New question created:', newQuestion);
     };
 
+    const handleCategoryChange = (event) => {
+        setSelectedCategory(event.target.value);
+    };
+
     return (
         <div>
-            <CreateQuestionPage onCreate={handleCreateQuestion} />
+            <Container maxWidth="md">
+                <Grid container spacing={2} justifyContent="center">
+                    <Grid item xs={12} style={{ height: '30px' }} />
+                    <Grid item xs={12}>
+                        <FormControl fullWidth>
+                            <InputLabel>카테고리 선택</InputLabel>
+                            <Select
+                                value={selectedCategory}
+                                onChange={handleCategoryChange}
+                                label="카테고리 선택"
+                            >
+                                <MenuItem value="축구">축구</MenuItem>
+                                <MenuItem value="음식">음식</MenuItem>
+                                <MenuItem value="연애">연애</MenuItem>
+                                <MenuItem value="노래">노래</MenuItem>
+                                <MenuItem value="생존">생존</MenuItem>
+                                <MenuItem value="드라마&영화">드라마&영화</MenuItem>
+                                <MenuItem value="일상">일상</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                </Grid>
+                {selectedCategory && <CreateQuestionPage onCreate={handleCreateQuestion} selectedCategory={selectedCategory} />}
+            </Container>
         </div>
     );
 }
