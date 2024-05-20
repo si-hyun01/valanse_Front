@@ -26,6 +26,7 @@ function ProblemUI() {
   const [dislikes, setDislikes] = useState(0);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false); // 선택 확인 다이얼로그 상태 추가
+  const [currentQuizId, setCurrentQuizId] = useState(9); // 현재 퀴즈 ID 설정
 
   useEffect(() => {
     fetchQuizData();
@@ -33,7 +34,7 @@ function ProblemUI() {
 
   const fetchQuizData = async () => {
     try {
-      const response = await axios.get(`https://valanse.site/quiz/${quizData ? quizData.quizId + 1 : 1}`);
+      const response = await axios.get(`https://valanse.site/quiz/${currentQuizId}`);
       const data = response.data.data;
       if (!data || Object.keys(data).length === 0) { // 데이터가 비어있는 경우
         setQuizData(null);
@@ -66,21 +67,15 @@ function ProblemUI() {
   const handleNext = () => {
     setSelectedOption(null);
     setShowConfirmDialog(false);
+    setCurrentQuizId(currentQuizId + 1); // 다음 퀴즈 ID 설정
     fetchQuizData(); // 다음 퀴즈 가져오기
   };
 
   const handlePrevious = () => {
-    const previousQuizId = quizData ? quizData.quizId - 1 : 1;
-    if (previousQuizId < 1) return; // 첫 번째 퀴즈에서 이전 버튼 클릭 시 무시
-    axios.get(`https://valanse.site/quiz/${previousQuizId}`)
-      .then(response => {
-        const data = response.data.data;
-        if (!data || Object.keys(data).length === 0) return; // 이전 퀴즈가 없는 경우 무시
-        setQuizData(data);
-      })
-      .catch(error => {
-        console.error('Error fetching previous quiz data:', error.message);
-      });
+    const previousQuizId = currentQuizId - 1;
+    if (previousQuizId < 9) return; // 퀴즈 ID가 9보다 작으면 무시
+    setCurrentQuizId(previousQuizId);
+    fetchQuizData(); // 이전 퀴즈 가져오기
   };
 
   const handleCloseNoProblemDialog = () => {
@@ -151,7 +146,7 @@ function ProblemUI() {
                 variant="contained"
                 color="primary"
                 onClick={handlePrevious}
-                disabled={quizData ? quizData.quizId === 1 : true}
+                disabled={currentQuizId === 9}
                 startIcon={<ArrowBackIcon />} // ArrowBack 아이콘 추가
               >
                 Previous
@@ -194,11 +189,9 @@ function ProblemUI() {
           <Button onClick={handleCloseConfirmDialog} color="primary">
             취소
           </Button>
-          <Button onClick={handleConfirmSelection}
-            color="primary"
-            autoFocus>
+          <Button onClick={handleConfirmSelection} color="primary" autoFocus>
             확인
-          </Button>
+            </Button>
         </DialogActions>
       </Dialog>
     </>
