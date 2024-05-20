@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // ArrowBack 아이콘 추가
 
 function ProblemUI() {
   const [quizData, setQuizData] = useState(null);
@@ -146,7 +147,13 @@ function ProblemUI() {
               </Card>
             </Grid>
             <Grid item xs={12} textAlign="center">
-              <Button variant="contained" color="primary" onClick={handlePrevious} disabled={quizData ? quizData.quizId === 1 : true}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handlePrevious}
+                disabled={quizData ? quizData.quizId === 1 : true}
+                startIcon={<ArrowBackIcon />} // ArrowBack 아이콘 추가
+              >
                 Previous
               </Button>
             </Grid>
@@ -180,7 +187,7 @@ function ProblemUI() {
         <DialogTitle id="confirm-dialog-title">선택 확인</DialogTitle>
         <DialogContent>
           <Typography variant="body1" id="confirm-dialog-description">
-            선택한 옵션: {selectedOption}. 정말 선택하시겠습니까?
+            선택지: {selectedOption}. 정말 선택하시겠습니까?
           </Typography>
         </DialogContent>
         <DialogActions>
