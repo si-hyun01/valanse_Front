@@ -36,7 +36,12 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
         };
 
         try {
-            const response = await axios.post('https://valanse.site/quiz/register', quizData);
+            const response = await axios.post('https://valanse.site/quiz/register', quizData, {
+                headers: {
+                    'Content-Type': 'application/json;charset=UTF-8',
+                    'accept': 'application/json;charset=UTF-8'
+                }
+            });
             console.log('Quiz created successfully:', response.data);
         } catch (error) {
             console.error('Error creating quiz:', error);
@@ -134,7 +139,7 @@ const ImageUpload = ({ setImage }) => {
     return (
         <Grid container alignItems="center" justifyContent="space-around">
             <Grid item>
-                <img src={uploadImgUrl || "https://via.placeholder.com/200x150"} alt="사진 업로드 해주세요" style={{ width: '200px', height: '150px' }} />
+                <img src={uploadImgUrl || "http://via.placeholder.com/200x150"} alt="사진 업로드 해주세요" style={{ width: '200px', height: '150px' }} />
             </Grid>
             <Grid item>
                 <Button variant="contained" color="primary" component="label" startIcon={<CloudUploadIcon />}>
