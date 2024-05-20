@@ -33,7 +33,7 @@ function ProblemUI() {
 
   const fetchQuizData = async () => {
     try {
-      const response = await axios.get('https://valanse.site/quiz/9');
+      const response = await axios.get(`https://valanse.site/quiz/${quizData ? quizData.quizId + 1 : 1}`);
       const data = response.data.data;
       if (!data || Object.keys(data).length === 0) { // 데이터가 비어있는 경우
         setQuizData(null);
@@ -72,7 +72,7 @@ function ProblemUI() {
   const handlePrevious = () => {
     const previousQuizId = quizData ? quizData.quizId - 1 : 1;
     if (previousQuizId < 1) return; // 첫 번째 퀴즈에서 이전 버튼 클릭 시 무시
-    axios.get('https://valanse.site/quiz/' + previousQuizId)
+    axios.get(`https://valanse.site/quiz/${previousQuizId}`)
       .then(response => {
         const data = response.data.data;
         if (!data || Object.keys(data).length === 0) return; // 이전 퀴즈가 없는 경우 무시
@@ -194,7 +194,8 @@ function ProblemUI() {
           <Button onClick={handleCloseConfirmDialog} color="primary">
             취소
           </Button>
-          <Button onClick={handleConfirmSelection} color="primary"
+          <Button onClick={handleConfirmSelection}
+            color="primary"
             autoFocus>
             확인
           </Button>
