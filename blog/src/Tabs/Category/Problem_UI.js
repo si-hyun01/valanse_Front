@@ -7,10 +7,6 @@ import {
   CardContent,
   CardMedia,
   Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Grid,
   IconButton,
   Typography
@@ -23,8 +19,6 @@ function ProblemUI() {
   const [quizData, setQuizData] = useState(null);
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
-  const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
 
   useEffect(() => {
@@ -54,20 +48,18 @@ function ProblemUI() {
       const data = response.data.data;
       if (!data || Object.keys(data).length === 0 || !data.content) { // 데이터가 없거나 내용이 없는 경우
         setQuizData(null);
-        setShowNoProblemDialog(true);
+        console.log("No more quizzes available.");
         return;
       }
       setQuizData(data);
     } catch (error) {
       console.error('Error fetching next quiz data:', error.message);
       setQuizData(null);
-      setShowNoProblemDialog(true);
     }
   };
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
-    setShowConfirmDialog(true);
   };
 
   const handleOptionLike = () => {
@@ -80,20 +72,7 @@ function ProblemUI() {
 
   const handleNext = () => {
     setSelectedOption(null);
-    setShowConfirmDialog(false);
     fetchQuizData(); // 다음 퀴즈 가져오기
-  };
-
-  const handleCloseNoProblemDialog = () => {
-    setShowNoProblemDialog(false);
-  };
-
-  const handleCloseConfirmDialog = () => {
-    setShowConfirmDialog(false);
-  };
-
-  const handleConfirmSelection = () => {
-    handleNext(); // 선택 확인 후 다음 퀴즈로 이동
   };
 
   return (
@@ -161,45 +140,6 @@ function ProblemUI() {
           </Grid>
         </Container>
       </Card>
-      <Dialog
-        open={showNoProblemDialog}
-        onClose={handleCloseNoProblemDialog}
-        aria-labelledby="no-problem-dialog-title"
-        aria-describedby="no-problem-dialog-description"
-      >
-        <DialogTitle id="no-problem-dialog-title">문제가 없습니다.</DialogTitle>
-        <DialogContent>
-          <Typography variant="body1" id="no-problem-dialog-description">
-            현재 문제가 더 이상 제공되지 않습니다.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseNoProblemDialog} color="primary">
-            확인
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog
-        open={showConfirmDialog}
-        onClose={handleCloseConfirmDialog}
-        aria-labelledby="confirm-dialog-title"
-        aria-describedby="confirm-dialog-description"
-      >
-        <DialogTitle id="confirm-dialog-title">선택 확인</DialogTitle>
-        <DialogContent>
-          <Typography variant="body1" id="confirm-dialog-description">
-            선택지: {selectedOption}. 정말 선택하시겠습니까?
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseConfirmDialog} color="primary">
-            취소
-          </Button>
-          <Button onClick={handleConfirmSelection} color="primary" autoFocus>
-            확인
-          </Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 }
