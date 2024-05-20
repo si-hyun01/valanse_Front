@@ -10,9 +10,6 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Layout />} />
-        <Route path="/MakePloblem" element={<문제만들기 />} />
-        <Route path="/notinoti" element={<공지게시판 />} />
-        <Route path="/noti_write" element={<공지작성페이지 />} />
         <Route path="/category/:categoryName" element={<Layout />} />
       </Routes>
     </Router>

@@ -9,8 +9,7 @@ import Problem_UI from '../Tabs/Category/Problem_UI';
 import Make_ploblem from '../Tabs/make_ploblem';
 import Love_ploblem from '../Tabs/Category/Love_ploblem';
 import Entire from '../Tabs/entire';
-
-import Soccer_image from './img/SoccerImage.jpg';
+import Soccer_Image from './img/SoccerImage.jpg';
 import Food_Image from './img/FoodImage.jpg';
 import Love_Image from './img/LoveImage.png';
 import Song_Image from './img/SongImage.png';
@@ -65,6 +64,32 @@ const Layout = () => {
         navigate(`/category/${category}`);
     };
 
+    const categories = [
+        { name: '축구', image: Soccer_Image },
+        { name: '음식', image: Food_Image },
+        { name: '연애', image: Love_Image },
+        { name: '노래', image: Song_Image },
+        { name: '생존', image: Survival_Image },
+        { name: '드라마&영화', image: Actor_Image },
+        { name: '일상', image: Daily_Image },
+    ];
+
+    const renderCategoryButtons = () => {
+        return categories.map((category, index) => (
+            <li key={index} className="col-4 mb-3 d-flex flex-column align-items-center">
+                <button
+                    onClick={() => handleCategorySelect(category.name)}
+                    style={{ background: 'black', padding: 0, border: 'none' }}
+                >
+                    <div style={{ width: '150px', height: '150px', overflow: 'hidden' }}>
+                        <img src={category.image} alt={category.name} style={{ width: '100%', height: '150px' }} />
+                    </div>
+                    <span style={{ color: 'white' }}>{category.name}</span>
+                </button>
+            </li>
+        ));
+    };
+
     return (
         <>
             <Container style={{ maxWidth: '80%' }}>
@@ -105,86 +130,7 @@ const Layout = () => {
                                         style={{ top: '100%', left: 0, minWidth: '600px', background: 'pink' }}
                                     >
                                         <ul className="list-unstyled m-0 d-flex flex-wrap">
-                                            <li className="col-4 mb-3 d-flex flex-column align-items-center">
-                                                <button
-                                                    onClick={() => handleCategorySelect('축구')}
-                                                    style={{ background: 'black', padding: 0, border: 'none' }}
-                                                >
-                                                    <div style={{ width: '150px', height: '150px', overflow: 'hidden' }}>
-                                                        <img src={Soccer_image} alt="축구" style={{ width: '100%', height: '150px' }} />
-                                                    </div>
-                                                    <span style={{ color: 'white' }}>축구</span>
-                                                </button>
-                                            </li>
-                                            <li className="col-4 mb-3 d-flex flex-column align-items-center">
-                                                <button
-                                                    onClick={() => handleCategorySelect('음식')}
-                                                    style={{ background: 'black', padding: 0, border: 'none' }}
-                                                >
-                                                    <div style={{ width: '150px', height: '150px', overflow: 'hidden' }}>
-                                                        <img src={Food_Image} alt="음식" style={{ width: '100%', height: '150px' }} />
-                                                    </div>
-                                                    <span style={{ color: 'white' }}>음식</span>
-                                                </button>
-                                            </li>
-                                            <li className="col-4 mb-3 d-flex flex-column align-items-center">
-                                                <button
-                                                    onClick={() => handleCategorySelect('연애')}
-                                                    style={{ background: 'black', padding: 0, border: 'none' }}
-                                                >
-                                                    <div style={{ width: '150px', height: '150px', overflow: 'hidden' }}>
-                                                        <img src={Love_Image} alt="연애" style={{ width: '100%', height: '150px' }} />
-                                                    </div>
-                                                    <span style={{ color: 'white' }}>연애</span>
-                                                </button>
-                                            </li>
-                                            <li className="col-4 mb-3 d-flex flex-column align-items-center">
-                                                <button
-                                                    onClick={() => handleCategorySelect('노래')}
-                                                    style={{ background: 'black', padding: 0, border: 'none' }}
-                                                >
-                                                    <div style={{ width: '150px', height: '150px', overflow: 'hidden' }}>
-                                                        <img src={Song_Image} alt="노래" style={{ width: '100%', height: '150px' }} />
-                                                    </div>
-                                                    <span style={{ color: 'white' }}>노래</span>
-                                                </button>
-                                            </li>
-                                            <li className="col-4 mb-3 d-flex flex-column align-items-center">
-                                                <button
-                                                    onClick={() => handleCategorySelect('생존')}
-                                                    style={{ background: 'black', padding: 0, border: 'none' }}
-                                                >
-                                                    <div style={{ width: '150px', height: '150px', overflow: 'hidden' }}>
-                                                        <img src={Survival_Image} alt="생존" style={{ width: '100%', height: '150px' }} />
-                                                    </div>
-                                                    <span style={{ color: 'white' }}>생존</span>
-                                                </button>
-                                            </li>
-                                            <li className="col-4 mb-3 d-flex flex-column align-items-center">
-                                                <button
-                                                    onClick={() => handleCategorySelect('드라마&영화')}
-                                                    style={{ background: 'black', padding: 0, border: 'none' }}
-                                                >
-                                                    <div style={{ width: '150px', height: '150px', overflow: 'hidden' }}>
-                                                        <img src={Actor_Image} alt="드라마&영화" style={{ width: '100%', height: '150px' }} />
-                                                    </div>
-                                                    <span style={{ color: 'white' }}>드라마&영화</span>
-                                                </button>
-                                            </li>
-                                            <li className="col-4 mb-3 d-flex flex-column align-items-center">
-                                                <button
-                                                    onClick={() => handleCategorySelect('일상')}
-                                                    style={{ background: 'black', padding: 0, border: 'none' }}
-                                                >
-                                                    <div style={{
-                                                        width: '150px', height: '150px', overflow: 'hidden'
-                                                    }}>
-                                                        <img src={Daily_Image} alt="일상" style={{ width: '100%', height: '150px' }} />
-                                                    </div>
-                                                    <span style={{ color: 'white' }}>일상</span>
-                                                </button>
-                                            </li>
-                                            {/* 나머지 카테고리 이미지 및 스타일 추가 */}
+                                            {renderCategoryButtons()}
                                         </ul>
                                     </div>
                                 )}
@@ -209,7 +155,8 @@ const Layout = () => {
                                 className={`nav-link ${activeTab === '문제 만들기' && 'active'}`}
                                 style={{
                                     width: '100%',
-                                    backgroundColor: activeTab === '문제 만들기' ? 'rgba(0, 0, 255, 0.3)' : 'initial',
+                                    backgroundColor: activeTab === '문제 만들기'
+                                    ? 'rgba(0, 0, 255, 0.3)' : 'initial',
                                     fontWeight: 'bold',
                                     color: 'black',
                                 }}
