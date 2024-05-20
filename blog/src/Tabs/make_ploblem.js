@@ -1,62 +1,48 @@
 import React, { useState } from 'react';
-import { Button, Container, Grid, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Button, Container, Grid, TextField, Dialog, DialogTitle, DialogContent, DialogActions, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 function CreateQuestionPage({ onCreate, selectedCategory }) {
     const [question, setQuestion] = useState('');
     const [story1, setStory1] = useState('');
     const [story2, setStory2] = useState('');
-    const [story1Image, setStory1Image] = useState('');
-    const [story2Image, setStory2Image] = useState('');
+    const [story1Image, setStory1Image] = useState(null);
+    const [story2Image, setStory2Image] = useState(null);
     const [openDialog, setOpenDialog] = useState(false);
 
     const handleCreate = async () => {
-        const newQuestion = {
-            category: selectedCategory,
-            question,
-            options: [
-                { text: story1, image: story1Image },
-                { text: story2, image: story2Image }
-            ]
+        const formData = new FormData();
+        const quizRegisterDto = {
+            content: question,
+            optionA: story1,
+            optionB: story2,
+            descriptionA: story1,
+            descriptionB: story2,
+            category: [selectedCategory]
         };
-        onCreate(newQuestion);
 
-        const quizData = {
-            quizRegisterDto: {
-                content: question,
-                optionA: story1,
-                optionB: story2,
-                descriptionA: story1,
-                descriptionB: story2,
-                category: [selectedCategory]
-            },
-            image_A: story1Image,
-            image_B: story2Image
-        };
+        formData.append('quizRegisterDto', new Blob([JSON.stringify(quizRegisterDto)], { type: 'application/json' }));
+        formData.append('image_A', story1Image);
+        formData.append('image_B', story2Image);
 
         try {
-            const response = await axios.post('https://valanse.site/quiz/register', quizData, {
+            const response = await axios.post('https://valanse.site/quiz/register', formData, {
                 headers: {
-                    'Content-Type': 'application/json;charset=UTF-8',
-                    'accept': 'application/json;charset=UTF-8'
+                    'Authorization': Cookies.get('access_token'),
+                    'Content-Type': 'multipart/form-data'
                 }
             });
             console.log('Quiz created successfully:', response.data);
+            setOpenDialog(true);
         } catch (error) {
-            console.error('Error creating quiz:', error);
+            console.error('Error creating quiz:', error.response ? error.response.data : error.message);
         }
-
-        setQuestion('');
-        setStory1('');
-        setStory2('');
-        setStory1Image('');
-        setStory2Image('');
-        setOpenDialog(true); // 다이얼로그 표시
     };
 
     const handleCloseDialog = () => {
-        setOpenDialog(false); // 다이얼로그 닫기
+        setOpenDialog(false);
     };
 
     return (
@@ -128,18 +114,18 @@ const ImageUpload = ({ setImage }) => {
     const onchangeImageUpload = (e) => {
         const { files } = e.target;
         const uploadFile = files[0];
+        setImage(uploadFile);
         const reader = new FileReader();
         reader.readAsDataURL(uploadFile);
         reader.onloadend = () => {
             setUploadImgUrl(reader.result);
-            setImage(reader.result);
         };
     };
 
     return (
         <Grid container alignItems="center" justifyContent="space-around">
             <Grid item>
-                <img src={uploadImgUrl || "https://via.placeholder.com/200x150"} alt="사진 업로드 해주세요" style={{ width: '200px', height: '150px' }} />
+                <img src={uploadImgUrl || "http://via.placeholder.com/200x150"} alt="사진 업로드 해주세요" style={{ width: '200px', height: '150px' }} />
             </Grid>
             <Grid item>
                 <Button variant="contained" color="primary" component="label" startIcon={<CloudUploadIcon />}>
