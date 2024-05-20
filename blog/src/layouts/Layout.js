@@ -196,7 +196,7 @@ const Layout = () => {
                         <div>
                             {selectedCategory === '축구' && <Problem_UI />}
                             {selectedCategory === '음식' && <Problem_UI />}
-                            {selectedCategory === '연애' && <Love_ploblem />}
+                            {selectedCategory === '연애' && <Problem_UI />}
                             {selectedCategory === '노래' && <Problem_UI />}
                             {selectedCategory === '생존' && <Problem_UI />}
                             {selectedCategory === '드라마&영화' && <Problem_UI />}
