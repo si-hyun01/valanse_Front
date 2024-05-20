@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Container } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import Header from './Header';
@@ -20,11 +20,11 @@ import Daily_Image from './img/DailyImage.jpg';
 const Layout = () => {
     const navigate = useNavigate();
     const { categoryName } = useParams();
-    const [selectedCategory, setSelectedCategory] = useState(categoryName || null);
-    const [activeTab, setActiveTab] = useState('전체');
-    const [isCategoryOpen, setCategoryOpen] = useState(false);
+    const [selectedCategory, setSelectedCategory] = React.useState(categoryName || null);
+    const [activeTab, setActiveTab] = React.useState('전체');
+    const [isCategoryOpen, setCategoryOpen] = React.useState(false);
 
-    useEffect(() => {
+    React.useEffect(() => {
         const closeDropdown = (e) => {
             if (isCategoryOpen && !e.target.closest('.position-relative')) {
                 setCategoryOpen(false);
@@ -38,7 +38,7 @@ const Layout = () => {
         };
     }, [isCategoryOpen]);
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (categoryName) {
             setSelectedCategory(categoryName);
             setActiveTab('카테고리');
@@ -49,6 +49,14 @@ const Layout = () => {
         setActiveTab(tab);
         setSelectedCategory(null);
         if (tab === '전체') {
+            navigate('/');
+        } else if (tab === '문제 만들기') {
+            navigate('/problems');
+        } else if (tab === '공지') {
+            navigate('/notice');
+        } else if (tab === '인기') {
+            navigate('/popularity');
+        } else {
             navigate('/');
         }
     };
@@ -61,7 +69,35 @@ const Layout = () => {
         setSelectedCategory(category);
         setActiveTab('카테고리');
         setCategoryOpen(false);
-        navigate(`/category/${category}`);
+        // URL에 한글이 아닌 영어로 변환하여 처리
+        let categorySlug = '';
+        switch (category) {
+            case '축구':
+                categorySlug = 'soccer';
+                break;
+            case '음식':
+                categorySlug = 'food';
+                break;
+            case '연애':
+                categorySlug = 'love';
+                break;
+            case '노래':
+                categorySlug = 'song';
+                break;
+            case '생존':
+                categorySlug = 'survival';
+                break;
+            case '드라마&영화':
+                categorySlug = 'drama-movie';
+                break;
+            case '일상':
+                categorySlug = 'daily';
+                break;
+            default:
+                categorySlug = '';
+                break;
+        }
+        navigate(`/category/${categorySlug}`);
     };
 
     const categories = [
@@ -156,6 +192,7 @@ const Layout = () => {
                                 style={{
                                     width: '100%',
                                     backgroundColor: activeTab === '문제 만들기'
+                                   
                                     ? 'rgba(0, 0, 255, 0.3)' : 'initial',
                                     fontWeight: 'bold',
                                     color: 'black',
