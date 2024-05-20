@@ -64,11 +64,29 @@ function ProblemUI() {
     setDislikes(dislikes + 1);
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     setSelectedOption(null);
     setShowConfirmDialog(false);
-    setCurrentQuizId(currentQuizId + 1); // 다음 퀴즈 ID 설정
-    fetchQuizData(); // 다음 퀴즈 가져오기
+    const nextQuizId = currentQuizId + 1;
+    try {
+      const response = await axios.get(`https://valanse.site/quiz/${nextQuizId}`);
+      const data = response.data.data;
+      if (!data || Object.keys(data).length === 0) {
+        // 데이터가 비어있는 경우
+        setQuizData(null);
+        setShowNoProblemDialog(true);
+      } else {
+        setCurrentQuizId(nextQuizId);
+        setQuizData(data);
+      }
+    } catch (error) {
+      console.error('Error fetching next quiz data:', error.message);
+      if (error.response && error.response.status === 404) {
+        // 퀴즈가 없는 경우
+        setQuizData(null);
+        setShowNoProblemDialog(true);
+      }
+    }
   };
 
   const handlePrevious = () => {
@@ -113,7 +131,7 @@ function ProblemUI() {
               </IconButton>
             </Grid>
             <Grid item xs={6} textAlign="center">
-              <Card onClick={() => handleOptionSelect('A')} sx={{ borderRadius: '16px' }}>
+              <              Card onClick={() => handleOptionSelect('A')} sx={{ borderRadius: '16px' }}>
                 <CardActionArea>
                   <CardMedia
                     component="img"
@@ -196,7 +214,7 @@ function ProblemUI() {
           </Button>
           <Button onClick={handleConfirmSelection} color="primary" autoFocus>
             확인
-            </Button>
+          </Button>
         </DialogActions>
       </Dialog>
     </>
@@ -204,3 +222,4 @@ function ProblemUI() {
 }
 
 export default ProblemUI;
+
