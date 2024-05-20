@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // ArrowBack 아이콘 추가
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 function ProblemUI() {
   const [quizData, setQuizData] = useState(null);
@@ -25,17 +25,17 @@ function ProblemUI() {
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false); // 선택 확인 다이얼로그 상태 추가
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   useEffect(() => {
     fetchQuizData();
   }, []);
 
-  const fetchQuizData = async () => {
+  const fetchQuizData = async (quizId = 1) => {
     try {
-      const response = await axios.get('https://valanse.site/quiz/' + (quizData ? quizData.quizId + 1 : 1));
+      const response = await axios.get(`https://valanse.site/quiz/${quizId}`);
       const data = response.data.data;
-      if (!data || Object.keys(data).length === 0) { // 데이터가 비어있는 경우
+      if (!data || Object.keys(data).length === 0) {
         setQuizData(null);
         setShowNoProblemDialog(true);
         return;
@@ -43,7 +43,7 @@ function ProblemUI() {
       setQuizData(data);
     } catch (error) {
       console.error('Error fetching quiz data:', error.message);
-      if (error.response && error.response.status === 404) { // 퀴즈가 없는 경우
+      if (error.response && error.response.status === 404) {
         setQuizData(null);
         setShowNoProblemDialog(true);
       }
@@ -52,7 +52,7 @@ function ProblemUI() {
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
-    setShowConfirmDialog(true); // 선택 확인 다이얼로그 열기
+    setShowConfirmDialog(true);
   };
 
   const handleOptionLike = () => {
@@ -64,23 +64,16 @@ function ProblemUI() {
   };
 
   const handleNext = () => {
+    const nextQuizId = quizData ? quizData.quizId + 1 : 1;
     setSelectedOption(null);
     setShowConfirmDialog(false);
-    fetchQuizData(); // 다음 퀴즈 가져오기
+    fetchQuizData(nextQuizId);
   };
 
   const handlePrevious = () => {
     const previousQuizId = quizData ? quizData.quizId - 1 : 1;
-    if (previousQuizId < 1) return; // 첫 번째 퀴즈에서 이전 버튼 클릭 시 무시
-    axios.get('https://valanse.site/quiz/' + previousQuizId)
-      .then(response => {
-        const data = response.data.data;
-        if (!data || Object.keys(data).length === 0) return; // 이전 퀴즈가 없는 경우 무시
-        setQuizData(data);
-      })
-      .catch(error => {
-        console.error('Error fetching previous quiz data:', error.message);
-      });
+    if (previousQuizId < 1) return;
+    fetchQuizData(previousQuizId);
   };
 
   const handleCloseNoProblemDialog = () => {
@@ -92,7 +85,7 @@ function ProblemUI() {
   };
 
   const handleConfirmSelection = () => {
-    handleNext(); // 선택 확인 후 다음 퀴즈로 이동
+    handleNext();
   };
 
   return (
@@ -152,7 +145,7 @@ function ProblemUI() {
                 color="primary"
                 onClick={handlePrevious}
                 disabled={quizData ? quizData.quizId === 1 : true}
-                startIcon={<ArrowBackIcon />} // ArrowBack 아이콘 추가
+                startIcon={<ArrowBackIcon />}
               >
                 Previous
               </Button>
@@ -165,7 +158,7 @@ function ProblemUI() {
         onClose={handleCloseNoProblemDialog}
         aria-labelledby="no-problem-dialog-title"
         aria-describedby="no-problem-dialog-description"
-        >
+      >
         <DialogTitle id="no-problem-dialog-title">문제가 없습니다.</DialogTitle>
         <DialogContent>
           <Typography variant="body1" id="no-problem-dialog-description">
