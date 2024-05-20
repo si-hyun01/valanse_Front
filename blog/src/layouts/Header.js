@@ -74,7 +74,7 @@ const Header = () => {
                 setIsLoggedIn(false);
                 setAccessToken('');
                 setStateToken(''); // 로그아웃 후에 상태 토큰도 제거합니다.
-                navigate('/'); // 로그아웃 후에 원래 메인 홈페이지로 이동합니다.
+                window.location.href = 'https://valanse.vercel.app/'; // 로그아웃 후에 원래 메인 홈페이지로 이동합니다.
             }
         } catch (error) {
             console.error('Error during logout:', error.message);
