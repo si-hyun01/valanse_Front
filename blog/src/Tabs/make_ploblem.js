@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Container, Grid, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import axios from 'axios';
 
 function CreateQuestionPage({ onCreate, selectedCategory }) {
     const [question, setQuestion] = useState('');
@@ -10,15 +11,37 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     const [story2Image, setStory2Image] = useState('');
     const [openDialog, setOpenDialog] = useState(false);
 
-    const handleCreate = () => {
-        onCreate({
+    const handleCreate = async () => {
+        const newQuestion = {
             category: selectedCategory,
             question,
             options: [
                 { text: story1, image: story1Image },
                 { text: story2, image: story2Image }
             ]
-        });
+        };
+        onCreate(newQuestion);
+
+        const quizData = {
+            quizRegisterDto: {
+                content: question,
+                optionA: story1,
+                optionB: story2,
+                descriptionA: story1,
+                descriptionB: story2,
+                category: [selectedCategory]
+            },
+            image_A: story1Image,
+            image_B: story2Image
+        };
+
+        try {
+            const response = await axios.post('https://valanse.site/quiz/register', quizData);
+            console.log('Quiz created successfully:', response.data);
+        } catch (error) {
+            console.error('Error creating quiz:', error);
+        }
+
         setQuestion('');
         setStory1('');
         setStory2('');
