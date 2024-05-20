@@ -24,6 +24,7 @@ function ProblemUI() {
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false); // 선택 확인 다이얼로그 상태 추가
 
   useEffect(() => {
     fetchQuizData();
@@ -41,7 +42,7 @@ function ProblemUI() {
       setQuizData(data);
     } catch (error) {
       console.error('Error fetching quiz data:', error.message);
-      if (error.response.status === 404) { // 퀴즈가 없는 경우
+      if (error.response && error.response.status === 404) { // 퀴즈가 없는 경우
         setQuizData(null);
         setShowNoProblemDialog(true);
       }
@@ -50,6 +51,7 @@ function ProblemUI() {
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
+    setShowConfirmDialog(true); // 선택 확인 다이얼로그 열기
   };
 
   const handleOptionLike = () => {
@@ -62,6 +64,7 @@ function ProblemUI() {
 
   const handleNext = () => {
     setSelectedOption(null);
+    setShowConfirmDialog(false);
     fetchQuizData(); // 다음 퀴즈 가져오기
   };
 
@@ -81,6 +84,14 @@ function ProblemUI() {
 
   const handleCloseNoProblemDialog = () => {
     setShowNoProblemDialog(false);
+  };
+
+  const handleCloseConfirmDialog = () => {
+    setShowConfirmDialog(false);
+  };
+
+  const handleConfirmSelection = () => {
+    handleNext(); // 선택 확인 후 다음 퀴즈로 이동
   };
 
   return (
@@ -138,9 +149,6 @@ function ProblemUI() {
               <Button variant="contained" color="primary" onClick={handlePrevious} disabled={quizData ? quizData.quizId === 1 : true}>
                 Previous
               </Button>
-              <Button variant="contained" color="primary" onClick={handleNext} disabled={!selectedOption}>
-                Next
-              </Button>
             </Grid>
           </Grid>
         </Container>
@@ -159,6 +167,27 @@ function ProblemUI() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseNoProblemDialog} color="primary">
+            확인
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={showConfirmDialog}
+        onClose={handleCloseConfirmDialog}
+        aria-labelledby="confirm-dialog-title"
+        aria-describedby="confirm-dialog-description"
+      >
+        <DialogTitle id="confirm-dialog-title">선택 확인</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1" id="confirm-dialog-description">
+            선택한 옵션: {selectedOption}. 정말 선택하시겠습니까?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirmDialog} color="primary">
+            취소
+          </Button>
+          <Button onClick={handleConfirmSelection} color="primary" autoFocus>
             확인
           </Button>
         </DialogActions>
