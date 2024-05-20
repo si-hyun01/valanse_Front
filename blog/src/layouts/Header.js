@@ -9,26 +9,12 @@ import axios from 'axios';
 import SignUpmodel from "../modal/SignUpmodel";
 import Cookies from 'js-cookie';
 
-// Axios 인터셉터 설정
-axios.interceptors.request.use(
-    config => {
-        const token = Cookies.get('access_token');
-        if (token) {
-            config.headers['Authorization'] = token;
-        }
-        return config;
-    },
-    error => {
-        return Promise.reject(error);
-    }
-);
-
 const Header = () => {
     const [showSignUpModal, setShowSignUpModal] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false); 
     const [stateToken, setStateToken] = useState('');
     const [accessToken, setAccessToken] = useState('');
-    const navigate = useNavigate(); // useNavigate 훅을 사용하여 navigate 함수를 가져옵니다.
+    const navigate = useNavigate();
 
     useEffect(() => {
         const accessTokenCookie = Cookies.get('access_token');
@@ -41,6 +27,25 @@ const Header = () => {
         if (token) {
             getAccessToken(token);
         }
+
+        // 페이지가 처음 로드될 때만 인터셉터를 설정합니다.
+        const interceptor = axios.interceptors.request.use(
+            config => {
+                const token = Cookies.get('access_token');
+                if (token) {
+                    config.headers['Authorization'] = token;
+                }
+                return config;
+            },
+            error => {
+                return Promise.reject(error);
+            }
+        );
+
+        // 컴포넌트가 언마운트될 때 인터셉터를 제거합니다.
+        return () => {
+            axios.interceptors.request.eject(interceptor);
+        };
     }, []);
 
     const getAccessToken = async (stateToken) => {
@@ -53,7 +58,7 @@ const Header = () => {
             });
             const token = response.data.data;
             setAccessToken(token);
-            Cookies.set('access_token', token); // 액세스 토큰을 쿠키에 저장합니다.
+            Cookies.set('access_token', token);
             setIsLoggedIn(true);
         } catch (error) {
             console.error('Error getting access token:', error.message);
@@ -85,7 +90,6 @@ const Header = () => {
         setShowSignUpModal(!showSignUpModal);
     };
 
-    // 로고 클릭 시 '전체' 탭으로 이동하는 함수
     const handleLogoClick = () => {
         window.location.href = 'https://valanse.vercel.app/';
     };
@@ -95,7 +99,6 @@ const Header = () => {
             <header>
                 <Navbar bg="light" expand="lg">
                     <Container>
-                        {/* 로고 클릭 이벤트 추가 */}
                         <Navbar.Brand onClick={handleLogoClick}>
                             <img src={valanse_logo} alt="Valanse Logo" style={{ cursor: 'pointer' }} />
                         </Navbar.Brand>
