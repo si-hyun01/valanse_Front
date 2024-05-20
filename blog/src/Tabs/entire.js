@@ -16,14 +16,6 @@ const EnterPage = () => (
         {/* 우측에 인기랭킹 배치 */}
         <Popularity />
       </Grid>
-      <Grid item xs={12}>
-        {/* 아래쪽에 저울 이미지 배치 */}
-        <img
-          src={ScaleImage}
-          alt="저울 이미지"
-          style={{ width: '50%', height: 'auto' }}
-        />
-      </Grid>
     </Grid>
   </Container>
 );
