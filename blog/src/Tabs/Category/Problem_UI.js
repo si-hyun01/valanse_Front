@@ -199,7 +199,7 @@ function ProblemUI() {
             확인
           </Button>
         </DialogActions>
-        </Dialog>
+      </Dialog>
     </>
   );
 }
