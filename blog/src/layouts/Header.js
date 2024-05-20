@@ -85,13 +85,19 @@ const Header = () => {
         setShowSignUpModal(!showSignUpModal);
     };
 
+    // 로고 클릭 시 '전체' 탭으로 이동하는 함수
+    const handleLogoClick = () => {
+        window.location.href = 'https://valanse.vercel.app/';
+    };
+
     return (
         <>
             <header>
                 <Navbar bg="light" expand="lg">
                     <Container>
-                        <Navbar.Brand as={Link} to="/">
-                            <img src={valanse_logo} alt="Valanse Logo" />
+                        {/* 로고 클릭 이벤트 추가 */}
+                        <Navbar.Brand onClick={handleLogoClick}>
+                            <img src={valanse_logo} alt="Valanse Logo" style={{ cursor: 'pointer' }} />
                         </Navbar.Brand>
                         <Navbar.Toggle aria-controls="basic-navbar-nav" />
                         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './layouts/Layout';
 import NoticeBoard from '../src/Tabs/notinoti';
 import NoticeWrite from '../src/Tabs/noti_write';
@@ -8,7 +8,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Layout />} />
+        <Route path="/" element={<Layout activeTab="인기" />} />
         <Route path="/category/:categoryName" element={<Layout />} />
         <Route path="/problems" element={<Layout />} />
         <Route path="/notice" element={<Layout />} />
