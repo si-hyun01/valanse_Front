@@ -33,35 +33,20 @@ function ProblemUI() {
 
   const fetchQuizData = async () => {
     try {
-      const response = await axios.get('https://valanse.site/quiz/' + (quizData ? quizData.quizId + 1 : 1));
+      const response = await axios.get('https://valanse.site/quiz/9');
       const data = response.data.data;
       if (!data || Object.keys(data).length === 0) { // 데이터가 비어있는 경우
-        fetchNextQuiz(); // 다음 퀴즈 가져오기
+        setQuizData(null);
+        setShowNoProblemDialog(true);
         return;
       }
       setQuizData(data);
     } catch (error) {
       console.error('Error fetching quiz data:', error.message);
       if (error.response && error.response.status === 404) { // 퀴즈가 없는 경우
-        fetchNextQuiz(); // 다음 퀴즈 가져오기
-      }
-    }
-  };
-
-  const fetchNextQuiz = async () => {
-    try {
-      const response = await axios.get('https://valanse.site/quiz/' + (quizData ? quizData.quizId + 1 : 1));
-      const data = response.data.data;
-      if (!data || Object.keys(data).length === 0) { // 데이터가 없거나 내용이 없는 경우
         setQuizData(null);
         setShowNoProblemDialog(true);
-        console.log("No more quizzes available.");
-        return;
       }
-      setQuizData(data);
-    } catch (error) {
-      console.error('Error fetching next quiz data:', error.message);
-      setQuizData(null);
     }
   };
 
@@ -180,7 +165,7 @@ function ProblemUI() {
         onClose={handleCloseNoProblemDialog}
         aria-labelledby="no-problem-dialog-title"
         aria-describedby="no-problem-dialog-description"
-        >
+      >
         <DialogTitle id="no-problem-dialog-title">문제가 없습니다.</DialogTitle>
         <DialogContent>
           <Typography variant="body1" id="no-problem-dialog-description">
@@ -209,7 +194,8 @@ function ProblemUI() {
           <Button onClick={handleCloseConfirmDialog} color="primary">
             취소
           </Button>
-          <Button onClick={handleConfirmSelection} color="primary" autoFocus>
+          <Button onClick={handleConfirmSelection} color="primary"
+            autoFocus>
             확인
           </Button>
         </DialogActions>
