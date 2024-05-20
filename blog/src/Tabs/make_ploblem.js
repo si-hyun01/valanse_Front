@@ -12,6 +12,14 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     const [story2Image, setStory2Image] = useState(null);
     const [openDialog, setOpenDialog] = useState(false);
 
+    const resetForm = () => {
+        setQuestion('');
+        setStory1('');
+        setStory2('');
+        setStory1Image(null);
+        setStory2Image(null);
+    };
+
     const handleCreate = async () => {
         const formData = new FormData();
         const quizRegisterDto = {
@@ -36,6 +44,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
             });
             console.log('Quiz created successfully:', response.data);
             setOpenDialog(true);
+            resetForm(); // Reset the form after successful creation
         } catch (error) {
             console.error('Error creating quiz:', error.response ? error.response.data : error.message);
         }
