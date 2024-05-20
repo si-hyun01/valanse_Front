@@ -65,6 +65,20 @@ function ProblemUI() {
     fetchQuizData(); // 다음 퀴즈 가져오기
   };
 
+  const handlePrevious = () => {
+    const previousQuizId = quizData ? quizData.quizId - 1 : 1;
+    if (previousQuizId < 1) return; // 첫 번째 퀴즈에서 이전 버튼 클릭 시 무시
+    axios.get('https://valanse.site/quiz/' + previousQuizId)
+      .then(response => {
+        const data = response.data.data;
+        if (!data || Object.keys(data).length === 0) return; // 이전 퀴즈가 없는 경우 무시
+        setQuizData(data);
+      })
+      .catch(error => {
+        console.error('Error fetching previous quiz data:', error.message);
+      });
+  };
+
   const handleCloseNoProblemDialog = () => {
     setShowNoProblemDialog(false);
   };
@@ -121,6 +135,9 @@ function ProblemUI() {
               </Card>
             </Grid>
             <Grid item xs={12} textAlign="center">
+              <Button variant="contained" color="primary" onClick={handlePrevious} disabled={quizData ? quizData.quizId === 1 : true}>
+                Previous
+              </Button>
               <Button variant="contained" color="primary" onClick={handleNext} disabled={!selectedOption}>
                 Next
               </Button>
