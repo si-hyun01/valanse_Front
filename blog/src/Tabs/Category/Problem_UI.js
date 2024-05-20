@@ -21,32 +21,47 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 function ProblemUI() {
   const [quizData, setQuizData] = useState(null);
-  const [selectedOption, setSelectedOption] = useState(null);
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
 
   useEffect(() => {
     fetchQuizData();
   }, []);
 
-  const fetchQuizData = async (quizId = 1) => {
+  const fetchQuizData = async () => {
     try {
-      const response = await axios.get(`https://valanse.site/quiz/${quizId}`);
+      const response = await axios.get('https://valanse.site/quiz/' + (quizData ? quizData.quizId + 1 : 1));
       const data = response.data.data;
-      if (!data || Object.keys(data).length === 0) {
+      if (!data || Object.keys(data).length === 0 || !data.content) { // 데이터가 없거나 내용이 없는 경우
+        fetchNextQuiz(); // 다음 퀴즈 가져오기
+        return;
+      }
+      setQuizData(data);
+    } catch (error) {
+      console.error('Error fetching quiz data:', error.message);
+      if (error.response && error.response.status === 404) { // 퀴즈가 없는 경우
+        fetchNextQuiz(); // 다음 퀴즈 가져오기
+      }
+    }
+  };
+
+  const fetchNextQuiz = async () => {
+    try {
+      const response = await axios.get('https://valanse.site/quiz/' + (quizData ? quizData.quizId + 1 : 1));
+      const data = response.data.data;
+      if (!data || Object.keys(data).length === 0 || !data.content) { // 데이터가 없거나 내용이 없는 경우
         setQuizData(null);
         setShowNoProblemDialog(true);
         return;
       }
       setQuizData(data);
     } catch (error) {
-      console.error('Error fetching quiz data:', error.message);
-      if (error.response && error.response.status === 404) {
-        setQuizData(null);
-        setShowNoProblemDialog(true);
-      }
+      console.error('Error fetching next quiz data:', error.message);
+      setQuizData(null);
+      setShowNoProblemDialog(true);
     }
   };
 
@@ -64,16 +79,9 @@ function ProblemUI() {
   };
 
   const handleNext = () => {
-    const nextQuizId = quizData ? quizData.quizId + 1 : 1;
     setSelectedOption(null);
     setShowConfirmDialog(false);
-    fetchQuizData(nextQuizId);
-  };
-
-  const handlePrevious = () => {
-    const previousQuizId = quizData ? quizData.quizId - 1 : 1;
-    if (previousQuizId < 1) return;
-    fetchQuizData(previousQuizId);
+    fetchQuizData(); // 다음 퀴즈 가져오기
   };
 
   const handleCloseNoProblemDialog = () => {
@@ -85,7 +93,7 @@ function ProblemUI() {
   };
 
   const handleConfirmSelection = () => {
-    handleNext();
+    handleNext(); // 선택 확인 후 다음 퀴즈로 이동
   };
 
   return (
@@ -143,11 +151,11 @@ function ProblemUI() {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={handlePrevious}
-                disabled={quizData ? quizData.quizId === 1 : true}
+                onClick={handleNext}
+                disabled={!quizData}
                 startIcon={<ArrowBackIcon />}
               >
-                Previous
+                Next
               </Button>
             </Grid>
           </Grid>
@@ -191,7 +199,7 @@ function ProblemUI() {
             확인
           </Button>
         </DialogActions>
-      </Dialog>
+        </Dialog>
     </>
   );
 }
