@@ -47,14 +47,12 @@ function ProblemUI() {
       const response = await axios.get('https://valanse.site/quiz/' + (quizData ? quizData.quizId + 1 : 1));
       const data = response.data.data;
       if (!data || Object.keys(data).length === 0 || !data.content) { // 데이터가 없거나 내용이 없는 경우
-        setQuizData(null);
         console.log("No more quizzes available.");
         return;
       }
       setQuizData(data);
     } catch (error) {
       console.error('Error fetching next quiz data:', error.message);
-      setQuizData(null);
     }
   };
 
