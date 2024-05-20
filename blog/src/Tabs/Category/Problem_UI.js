@@ -87,7 +87,12 @@ function ProblemUI() {
   };
 
   const handleConfirmSelection = () => {
-    handleNext(); // 선택 확인 후 다음 퀴즈로 이동
+    if (selectedOption) {
+      handleNext(); // 선택 확인 후 다음 퀴즈로 이동
+    } else {
+      // 선택지를 선택하지 않았을 경우에 대한 처리
+      console.error('Please select an option.');
+    }
   };
 
   return (
