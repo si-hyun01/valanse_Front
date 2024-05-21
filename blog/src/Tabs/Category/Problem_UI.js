@@ -19,7 +19,7 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-const LAST_QUIZ_ID = 3; // 마지막 퀴즈 ID를 상수로 정의
+const LAST_QUIZ_ID = 50; // 마지막 퀴즈 ID를 상수로 정의
 
 function ProblemUI() {
   const [quizData, setQuizData] = useState(null);
