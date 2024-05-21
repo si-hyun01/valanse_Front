@@ -26,7 +26,7 @@ function ProblemUI() {
   const [dislikes, setDislikes] = useState(0);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false); // 선택 확인 다이얼로그 상태 추가
-  const [currentQuizId, setCurrentQuizId] = useState(9); // 현재 퀴즈 ID 설정
+  const [currentQuizId, setCurrentQuizId] = useState(1); // 현재 퀴즈 ID 설정
 
   useEffect(() => {
     fetchQuizData(currentQuizId);
