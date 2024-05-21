@@ -15,12 +15,12 @@ connection.connect((err) => {
   }
   console.log('Connected to the database as id ' + connection.threadId);
 
-  // Query to get data from the quiz table
+  // 퀴즈 테이블 쿼리 get
   connection.query('SELECT * FROM quiz', (error, results) => {
     if (error) throw error;
     console.log('Data from quiz table: ', results);
 
-    // Close the connection after the query
+    // 쿼리 연결하고 닫기
     connection.end((err) => {
       if (err) {
         console.error('Error ending the connection:', err.stack);

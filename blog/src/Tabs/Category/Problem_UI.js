@@ -19,7 +19,7 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-const LAST_QUIZ_ID = 20; // 마지막 퀴즈 ID를 상수로 정의
+const LAST_QUIZ_ID = 20; // 마지막 퀴즈 ID를 상수로 정의해서 대충 ID 20까지 URL 요청하기 위해 만들어둠.
 
 function ProblemUI() {
   const [quizData, setQuizData] = useState(null);
@@ -121,7 +121,7 @@ function ProblemUI() {
                 <CardActionArea>
                   <CardMedia
                     component="img"
-                    height="300"
+                    height="400"
                     image={quizData ? quizData.imageA : ''}
                     alt=""
                   />
@@ -138,7 +138,7 @@ function ProblemUI() {
                 <CardActionArea>
                   <CardMedia
                     component="img"
-                    height="300"
+                    height="400"
                     image={quizData ? quizData.imageB : ''}
                     alt=""
                   />
