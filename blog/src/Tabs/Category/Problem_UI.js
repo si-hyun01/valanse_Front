@@ -29,12 +29,12 @@ function ProblemUI() {
   const [currentQuizId, setCurrentQuizId] = useState(9); // 현재 퀴즈 ID 설정
 
   useEffect(() => {
-    fetchQuizData();
-  }, []);
+    fetchQuizData(currentQuizId);
+  }, [currentQuizId]);
 
-  const fetchQuizData = async () => {
+  const fetchQuizData = async (quizId) => {
     try {
-      const response = await axios.get(`https://valanse.site/quiz/${currentQuizId}`);
+      const response = await axios.get(`https://valanse.site/quiz/${quizId}`);
       const data = response.data.data;
       if (!data || Object.keys(data).length === 0) { // 데이터가 비어있는 경우
         setQuizData(null);
@@ -45,7 +45,8 @@ function ProblemUI() {
     } catch (error) {
       console.error('Error fetching quiz data:', error.message);
       if (error.response && error.response.status === 404) { // 퀴즈가 없는 경우
-        setQuizData(null);
+        handleNext(); // 다음 퀴즈로 이동
+      } else {
         setShowNoProblemDialog(true);
       }
     }
@@ -64,36 +65,16 @@ function ProblemUI() {
     setDislikes(dislikes + 1);
   };
 
-  const handleNext = async () => {
+  const handleNext = () => {
     setSelectedOption(null);
     setShowConfirmDialog(false);
-    const nextQuizId = currentQuizId + 1;
-    try {
-      const response = await axios.get(`https://valanse.site/quiz/${nextQuizId}`);
-      const data = response.data.data;
-      if (!data || Object.keys(data).length === 0) {
-        // 데이터가 비어있는 경우
-        setQuizData(null);
-        setShowNoProblemDialog(true);
-      } else {
-        setCurrentQuizId(nextQuizId);
-        setQuizData(data);
-      }
-    } catch (error) {
-      console.error('Error fetching next quiz data:', error.message);
-      if (error.response && error.response.status === 404) {
-        // 퀴즈가 없는 경우
-        setQuizData(null);
-        setShowNoProblemDialog(true);
-      }
-    }
+    setCurrentQuizId((prevQuizId) => prevQuizId + 1); // 다음 퀴즈 ID 설정
   };
 
   const handlePrevious = () => {
     const previousQuizId = currentQuizId - 1;
     if (previousQuizId < 9) return; // 퀴즈 ID가 9보다 작으면 무시
     setCurrentQuizId(previousQuizId);
-    fetchQuizData(); // 이전 퀴즈 가져오기
   };
 
   const handleCloseNoProblemDialog = () => {
@@ -105,12 +86,7 @@ function ProblemUI() {
   };
 
   const handleConfirmSelection = () => {
-    if (selectedOption) {
-      handleNext(); // 선택 확인 후 다음 퀴즈로 이동
-    } else {
-      // 선택지를 선택하지 않았을 경우에 대한 처리
-      console.error('Please select an option.');
-    }
+    handleNext(); // 선택 확인 후 다음 퀴즈로 이동
   };
 
   return (
@@ -131,7 +107,7 @@ function ProblemUI() {
               </IconButton>
             </Grid>
             <Grid item xs={6} textAlign="center">
-              <              Card onClick={() => handleOptionSelect('A')} sx={{ borderRadius: '16px' }}>
+              <Card onClick={() => handleOptionSelect('A')} sx={{ borderRadius: '16px' }}>
                 <CardActionArea>
                   <CardMedia
                     component="img"
@@ -222,4 +198,3 @@ function ProblemUI() {
 }
 
 export default ProblemUI;
-
