@@ -26,7 +26,7 @@ function ProblemUI() {
   const [dislikes, setDislikes] = useState(0);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false); // 선택 확인 다이얼로그 상태 추가
-  const [currentQuizId, setCurrentQuizId] = useState(1); // 현재 퀴즈 ID 설정
+  const [currentQuizId, setCurrentQuizId] = useState(9); // 현재 퀴즈 ID 설정
 
   useEffect(() => {
     fetchQuizData(currentQuizId);
@@ -43,10 +43,10 @@ function ProblemUI() {
       }
       setQuizData(data);
     } catch (error) {
-      console.error('Error fetching quiz data:', error.message);
       if (error.response && error.response.status === 404) { // 퀴즈가 없는 경우
         handleNext(); // 다음 퀴즈로 이동
       } else {
+        console.error('Error fetching quiz data:', error.message); // 다른 오류는 콘솔에 출력
         setShowNoProblemDialog(true);
       }
     }
