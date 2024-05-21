@@ -17,7 +17,9 @@ import {
 } from '@mui/material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // ArrowBack 아이콘 추가
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
+const LAST_QUIZ_ID = 3; // 마지막 퀴즈 ID를 상수로 정의
 
 function ProblemUI() {
   const [quizData, setQuizData] = useState(null);
@@ -25,28 +27,32 @@ function ProblemUI() {
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false); // 선택 확인 다이얼로그 상태 추가
-  const [currentQuizId, setCurrentQuizId] = useState(1); // 현재 퀴즈 ID 설정
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [currentQuizId, setCurrentQuizId] = useState(1);
 
   useEffect(() => {
-    fetchQuizData(currentQuizId);
+    if (currentQuizId <= LAST_QUIZ_ID) {
+      fetchQuizData(currentQuizId);
+    } else {
+      setShowNoProblemDialog(true); // 마지막 퀴즈를 넘어가면 다이얼로그 표시
+    }
   }, [currentQuizId]);
 
   const fetchQuizData = async (quizId) => {
     try {
       const response = await axios.get(`https://valanse.site/quiz/${quizId}`);
       const data = response.data.data;
-      if (!data || Object.keys(data).length === 0) { // 데이터가 비어있는 경우
+      if (!data || Object.keys(data).length === 0) {
         setQuizData(null);
         setShowNoProblemDialog(true);
         return;
       }
       setQuizData(data);
     } catch (error) {
-      if (error.response && error.response.status === 404) { // 퀴즈가 없는 경우
-        handleNext(); // 다음 퀴즈로 이동
+      if (error.response && error.response.status === 404) {
+        handleNext();
       } else {
-        console.error('Error fetching quiz data:', error.message); // 다른 오류는 콘솔에 출력
+        console.error('Error fetching quiz data:', error.message);
         setShowNoProblemDialog(true);
       }
     }
@@ -54,7 +60,7 @@ function ProblemUI() {
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
-    setShowConfirmDialog(true); // 선택 확인 다이얼로그 열기
+    setShowConfirmDialog(true);
   };
 
   const handleOptionLike = () => {
@@ -66,14 +72,18 @@ function ProblemUI() {
   };
 
   const handleNext = () => {
-    setSelectedOption(null);
-    setShowConfirmDialog(false);
-    setCurrentQuizId((prevQuizId) => prevQuizId + 1); // 다음 퀴즈 ID 설정
+    if (currentQuizId < LAST_QUIZ_ID) {
+      setSelectedOption(null);
+      setShowConfirmDialog(false);
+      setCurrentQuizId((prevQuizId) => prevQuizId + 1);
+    } else {
+      setShowNoProblemDialog(true);
+    }
   };
 
   const handlePrevious = () => {
     const previousQuizId = currentQuizId - 1;
-    if (previousQuizId < 1) return; // 퀴즈 ID가 1보다 작으면 무시
+    if (previousQuizId < 1) return;
     setCurrentQuizId(previousQuizId);
   };
 
@@ -86,7 +96,7 @@ function ProblemUI() {
   };
 
   const handleConfirmSelection = () => {
-    handleNext(); // 선택 확인 후 다음 퀴즈로 이동
+    handleNext();
   };
 
   return (
@@ -146,7 +156,7 @@ function ProblemUI() {
                 color="primary"
                 onClick={handlePrevious}
                 disabled={currentQuizId === 1}
-                startIcon={<ArrowBackIcon />} // ArrowBack 아이콘 추가
+                startIcon={<ArrowBackIcon />}
               >
                 Previous
               </Button>
