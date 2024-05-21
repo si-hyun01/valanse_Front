@@ -73,7 +73,7 @@ function ProblemUI() {
 
   const handlePrevious = () => {
     const previousQuizId = currentQuizId - 1;
-    if (previousQuizId < 9) return; // 퀴즈 ID가 9보다 작으면 무시
+    if (previousQuizId < 1) return; // 퀴즈 ID가 1보다 작으면 무시
     setCurrentQuizId(previousQuizId);
   };
 
@@ -145,7 +145,7 @@ function ProblemUI() {
                 variant="contained"
                 color="primary"
                 onClick={handlePrevious}
-                disabled={currentQuizId === 9}
+                disabled={currentQuizId === 1}
                 startIcon={<ArrowBackIcon />} // ArrowBack 아이콘 추가
               >
                 Previous
