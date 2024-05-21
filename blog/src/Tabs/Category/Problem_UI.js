@@ -19,8 +19,6 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-const LAST_QUIZ_ID = 50; // 마지막 퀴즈 ID를 상수로 정의
-
 function ProblemUI() {
   const [quizData, setQuizData] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -29,14 +27,28 @@ function ProblemUI() {
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [currentQuizId, setCurrentQuizId] = useState(1);
+  const [totalQuizzes, setTotalQuizzes] = useState(0);
 
   useEffect(() => {
-    if (currentQuizId <= LAST_QUIZ_ID) {
+    fetchTotalQuizzes();
+  }, []);
+
+  useEffect(() => {
+    if (currentQuizId <= totalQuizzes) {
       fetchQuizData(currentQuizId);
     } else {
-      setShowNoProblemDialog(true); // 마지막 퀴즈를 넘어가면 다이얼로그 표시
+      setShowNoProblemDialog(true);
     }
-  }, [currentQuizId]);
+  }, [currentQuizId, totalQuizzes]);
+
+  const fetchTotalQuizzes = async () => {
+    try {
+      const response = await axios.get('https://valanse.site/quiz/count');
+      setTotalQuizzes(response.data.total); // 서버에서 퀴즈의 총 개수를 받아옴
+    } catch (error) {
+      console.error('Error fetching total quizzes:', error.message);
+    }
+  };
 
   const fetchQuizData = async (quizId) => {
     try {
@@ -72,7 +84,7 @@ function ProblemUI() {
   };
 
   const handleNext = () => {
-    if (currentQuizId < LAST_QUIZ_ID) {
+    if (currentQuizId < totalQuizzes) {
       setSelectedOption(null);
       setShowConfirmDialog(false);
       setCurrentQuizId((prevQuizId) => prevQuizId + 1);
