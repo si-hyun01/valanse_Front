@@ -125,7 +125,7 @@ function ProblemUI() {
                     image={quizData ? quizData.imageA : ''}
                     alt=""
                   />
-                  <CardContent>
+                  <CardContent sx={{ height: '100px' }}>
                     <Typography gutterBottom variant="h5" component="div">
                       {quizData ? quizData.descriptionA : ''}
                     </Typography>
@@ -142,7 +142,7 @@ function ProblemUI() {
                     image={quizData ? quizData.imageB : ''}
                     alt=""
                   />
-                  <CardContent>
+                  <CardContent sx={{ height: '100px' }}>
                     <Typography gutterBottom variant="h5" component="div">
                       {quizData ? quizData.descriptionB : ''}
                     </Typography>
