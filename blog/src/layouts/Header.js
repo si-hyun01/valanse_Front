@@ -70,7 +70,7 @@ const Header = () => {
             if (accessTokenCookie) {
                 await axios.post('https://valanse.site/token/logout', null, {
                     headers: {
-                        'Authorization': `Bearer ${accessTokenCookie}`,
+                        'Authorization': accessTokenCookie,
                         'Content-Type': 'application/json'
                     }
                 });
