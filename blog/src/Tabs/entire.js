@@ -8,7 +8,7 @@ import PopularArt from "../components/PopularArt";
 const EnterPage = () => (
   <Grid container spacing={1} alignItems="center">
     <Grid item xs={12}>
-      <div style={{ backgroundColor: 'black'}}>
+    <div style={{ backgroundColor: '#333333' }}>
         <SliderContainer />
       </div>
     </Grid>
