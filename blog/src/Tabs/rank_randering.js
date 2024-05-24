@@ -1,7 +1,7 @@
 import React from "react";
 import { Typography, Card, CardContent, CardHeader, Divider, Avatar } from "@mui/material";
 import "./mainpage.css";
-import rank_icon from "../layouts/img/ranking.png"
+import rank_icon from "../layouts/img/ranking.png";
 
 const Popularity = () => {
     // 정적 데이터
@@ -21,11 +21,11 @@ const Popularity = () => {
     // 정렬된 데이터 가져오기
     const sortedData = allData.slice().sort((a, b) => b.likes - a.likes); // 좋아요 수로 내림차순 정렬
 
-    // 상위 8개의 데이터 추출
-    const topSixData = sortedData.slice(0, 10);
+    // 상위 6개의 데이터 추출
+    const topSixData = sortedData.slice(0, 6);
 
     return (
-        <Card elevation={3} className="main-card" >
+        <Card style={{ height: '500px' }}>
             <CardHeader
                 title="현재 인기 랭킹"
                 titleTypographyProps={{ variant: "h5", className: "rank_title", color: "black", fontWeight: "bold" }} // 글자 굵기 설정
@@ -36,9 +36,9 @@ const Popularity = () => {
             />
             <CardContent>
                 {topSixData.map((item, index) => (
-                    <div key={item.id} style={{ marginBottom: "10px", display: "flex", alignItems: "center" }}>
-                        <Avatar variant="square" sx={{ width: 30, height: 30, backgroundColor: "blue" }}>{index + 1}</Avatar>
-                        <Typography variant="body1" className="rank_title_under_text" style={{ marginLeft: "10px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.title}</Typography>
+                    <div key={item.id} style={{ marginBottom: "15px", display: "flex" }}>
+                        <Avatar variant="square" sx={{ width: 30, height: 30, backgroundColor: "blue", marginRight: "10px" }}>{index + 1}</Avatar>
+                        <Typography variant="body1" className="rank_title_under_text" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.title}</Typography>
                         <Divider sx={{ borderBottomWidth: "3px", borderColor: "black" }} />
                     </div>
                 ))}

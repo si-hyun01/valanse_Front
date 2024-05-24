@@ -99,8 +99,8 @@ const Header = () => {
     return (
         <>
             <header>
-                <Navbar bg="light" expand="lg">
-                    <Container>
+            <Navbar bg="white" expand="lg">
+            <Container style={{ maxWidth: '80%' }}>
                         {/* 로고 클릭 이벤트 추가 */}
                         <Navbar.Brand onClick={handleLogoClick}>
                             <img src={valanse_logo} alt="Valanse Logo" style={{ cursor: 'pointer' }} />

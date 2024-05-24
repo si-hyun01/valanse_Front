@@ -7,7 +7,6 @@ import Popularity from '../Tabs/popularity';
 import Notice from '../Tabs/notinoti';
 import Problem_UI from '../Tabs/Category/Problem_UI';
 import Make_ploblem from '../Tabs/make_ploblem';
-import Love_ploblem from '../Tabs/Category/Love_ploblem';
 import Entire from '../Tabs/entire';
 import Soccer_Image from './img/SoccerImage.jpg';
 import Food_Image from './img/FoodImage.jpg';
@@ -16,6 +15,7 @@ import Song_Image from './img/SongImage.png';
 import Actor_Image from './img/actor.png';
 import Survival_Image from './img/Survival.jpg';
 import Daily_Image from './img/DailyImage.jpg';
+import Background from './img/green_line.jpg'; // 배경은 이미지로 쓸지 말지 일단 지켜보고 놔둘게요
 
 const Layout = () => {
     const navigate = useNavigate();
@@ -99,26 +99,26 @@ const Layout = () => {
     };
 
     return (
-        <>
-            <Container style={{ maxWidth: '80%' }}>
-                <Header />
-                <div>
+        <div style={{ backgroundColor: 'black', backgroundSize: 'cover' }}>
+            <Header />
+            <div style={{ backgroundColor: 'black',  backgroundSize: 'cover', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <ul className="nav nav-tabs">
-                        <li className="nav-item" style={{ width: '200px' }}>
+                        <li className="nav-item" style={{ width: '230px' }}>
                             <button
                                 className={`nav-link ${activeTab === '전체' && 'active'}`}
                                 style={{
                                     width: '100%',
                                     backgroundColor: activeTab === '전체' ? 'rgba(0, 0, 255, 0.3)' : 'initial',
                                     fontWeight: 'bold',
-                                    color: 'black',
+                                    color: 'white',
+                                    borderRadius: '0', // 사각형으로 만들기 위해 borderRadius를 0으로 설정
                                 }}
                                 onClick={() => handleTabChange('전체')}
                             >
                                 전체
                             </button>
                         </li>
-                        <li className="nav-item" style={{ width: 200 }}>
+                        <li className="nav-item" style={{ width: 230 }}>
                             <div className="position-relative" style={{ zIndex: 999 }}>
                                 <button
                                     className={`nav-link ${activeTab === '카테고리' && 'active'}`}
@@ -126,7 +126,8 @@ const Layout = () => {
                                         width: '100%',
                                         backgroundColor: activeTab === '카테고리' ? 'rgba(0, 0, 255, 0.3)' : 'initial',
                                         fontWeight: 'bold',
-                                        color: 'black',
+                                        color: 'white',
+                                        borderRadius: '0', // 사각형으로 만들기 위해 borderRadius를 0으로 설정
                                     }}
                                     onClick={handleCategoryToggle}
                                 >
@@ -144,52 +145,55 @@ const Layout = () => {
                                 )}
                             </div>
                         </li>
-                        <li className="nav-item" style={{ width: '200px' }}>
+                        <li className="nav-item" style={{ width: '230px' }}>
                             <button
                                 className={`nav-link ${activeTab === '인기' && 'active'}`}
                                 style={{
                                     width: '100%',
                                     backgroundColor: activeTab === '인기' ? 'rgba(0, 0, 255, 0.3)' : 'initial',
                                     fontWeight: 'bold',
-                                    color: 'black',
+                                    color: 'white',
+                                    borderRadius: '0', // 사각형으로 만들기 위해 borderRadius를 0으로 설정
                                 }}
                                 onClick={() => handleTabChange('인기')}
                             >
                                 인기
                             </button>
                         </li>
-                        <li className="nav-item" style={{ width: '200px' }}>
+                        <li className="nav-item" style={{ width: '230px' }}>
                             <button
                                 className={`nav-link ${activeTab === '문제 만들기' && 'active'}`}
                                 style={{
                                     width: '100%',
                                     backgroundColor: activeTab === '문제 만들기'
-                                    ? 'rgba(0, 0, 255, 0.3)' : 'initial',
+                                        ? 'rgba(0, 0, 255, 0.3)' : 'initial',
                                     fontWeight: 'bold',
-                                    color: 'black',
+                                    color: 'white',
+                                    borderRadius: '0', // 사각형으로 만들기 위해 borderRadius를 0으로 설정
                                 }}
                                 onClick={() => handleTabChange('문제 만들기')}
                             >
                                 문제 만들기
                             </button>
                         </li>
-                        <li className="nav-item" style={{ width: '200px' }}>
+                        <li className="nav-item" style={{ width: '230px' }}>
                             <button
                                 className={`nav-link ${activeTab === '공지' && 'active'}`}
                                 style={{
                                     width: '100%',
                                     backgroundColor: activeTab === '공지' ? 'rgba(0, 0, 255, 0.3)' : 'initial',
                                     fontWeight: 'bold',
-                                    color: 'black',
+                                    color: 'white',
+                                    borderRadius: '0', // 사각형으로 만들기 위해 borderRadius를 0으로 설정
                                 }}
                                 onClick={() => handleTabChange('공지')}
                             >
-                               
-                               공지
+                                공지
                             </button>
                         </li>
                     </ul>
                 </div>
+  
                 <div>
                     {activeTab === '전체' && <Entire />}
                     {selectedCategory && (
@@ -208,8 +212,8 @@ const Layout = () => {
                     {activeTab === '공지' && <Notice />}
                 </div>
                 <Footer />
-            </Container>
-        </>
+
+        </div>
     );
 };
 
