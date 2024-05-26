@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Container, Grid, TextField, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -8,6 +8,27 @@ function NoticeWrite() {
     const [content, setContent] = useState('');
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogMessage, setDialogMessage] = useState('');
+    const [accessToken, setAccessToken] = useState('');
+
+    useEffect(() => {
+        const fetchAccessToken = async () => {
+            try {
+                const response = await axios.post('https://valanse.site/token/get', null, {
+                    headers: {
+                        'stateToken': stateToken,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const token = response.data.data;
+                setAccessToken(token);
+            } catch (error) {
+                console.error('Error getting access token:', error.message);
+            }
+        };
+
+        // 페이지가 처음 로드될 때 액세스 토큰을 가져옴
+        fetchAccessToken();
+    }, []);
 
     const handleAddNotice = async () => {
         if (title.trim() !== '' && content.trim() !== '') {
@@ -21,7 +42,7 @@ function NoticeWrite() {
                     headers: {
                         'accept': 'application/json;charset=UTF-8',
                         'Content-Type': 'application/json;charset=UTF-8',
-                        'Authorization': Cookies.get('access_token') // 액세스 토큰 추가
+                        'Authorization': `Bearer ${accessToken}` // 액세스 토큰 추가
                     }
                 });
 
