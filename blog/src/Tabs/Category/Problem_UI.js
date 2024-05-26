@@ -100,8 +100,47 @@ function ProblemUI() {
   };
 
   return (
-    <>
-      <Card sx={{ bgcolor: '#f5f5f5', borderRadius: '16px' }}>
+    <Container maxWidth="lg">
+      <Dialog
+        open={showNoProblemDialog}
+        onClose={handleCloseNoProblemDialog}
+        aria-labelledby="no-problem-dialog-title"
+        aria-describedby="no-problem-dialog-description"
+      >
+        <DialogTitle id="no-problem-dialog-title">문제가 없습니다.</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1" id="no-problem-dialog-description">
+            현재 문제가 더 이상 제공되지 않습니다.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseNoProblemDialog} color="primary">
+            확인
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={showConfirmDialog}
+        onClose={handleCloseConfirmDialog}
+        aria-labelledby="confirm-dialog-title"
+        aria-describedby="confirm-dialog-description"
+      >
+        <DialogTitle id="confirm-dialog-title">선택 확인</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1" id="confirm-dialog-description">
+            선택지: {selectedOption}. 정말 선택하시겠습니까?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirmDialog} color="primary">
+            취소
+          </Button>
+          <Button onClick={handleConfirmSelection} color="primary" autoFocus>
+            확인
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Card sx={{ bgcolor: '#f5f5f5', borderRadius: '16px', mt: 4 }}>
         <Container maxWidth="lg">
           <Grid container spacing={2} justifyContent="center">
             <Grid item xs={12} style={{ height: '30px' }} />
@@ -164,46 +203,7 @@ function ProblemUI() {
           </Grid>
         </Container>
       </Card>
-      <Dialog
-        open={showNoProblemDialog}
-        onClose={handleCloseNoProblemDialog}
-        aria-labelledby="no-problem-dialog-title"
-        aria-describedby="no-problem-dialog-description"
-      >
-        <DialogTitle id="no-problem-dialog-title">문제가 없습니다.</DialogTitle>
-        <DialogContent>
-          <Typography variant="body1" id="no-problem-dialog-description">
-            현재 문제가 더 이상 제공되지 않습니다.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseNoProblemDialog} color="primary">
-            확인
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog
-        open={showConfirmDialog}
-        onClose={handleCloseConfirmDialog}
-        aria-labelledby="confirm-dialog-title"
-        aria-describedby="confirm-dialog-description"
-      >
-        <DialogTitle id="confirm-dialog-title">선택 확인</DialogTitle>
-        <DialogContent>
-          <Typography variant="body1" id="confirm-dialog-description">
-            선택지: {selectedOption}. 정말 선택하시겠습니까?
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseConfirmDialog} color="primary">
-            취소
-          </Button>
-          <Button onClick={handleConfirmSelection} color="primary" autoFocus>
-            확인
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
+    </Container>
   );
 }
 
