@@ -5,6 +5,7 @@ import Header from '../layouts/Header';
 import Footer from '../layouts/Footer';
 import './notii.css';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import axios from 'axios';
 
 const NoticeWrite = () => {
     const [newNotice, setNewNotice] = useState('');
@@ -21,23 +22,21 @@ const NoticeWrite = () => {
             };
 
             try {
-                const response = await fetch('https://valanse.site/notice/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json;charset=UTF-8',
-                    },
-                    body: JSON.stringify({ noticeRegisterDto }),
-                });
+                const response = await axios.post('https://valanse.site/notice/register', { noticeRegisterDto });
 
-                if (response.ok) {
+                if (response.status === 200) {
                     setDialogMessage('공지사항이 성공적으로 등록되었습니다.');
-                    setDialogOpen(true);
                 } else {
                     setDialogMessage('공지사항 등록에 실패하였습니다.');
-                    setDialogOpen(true);
                 }
+                setDialogOpen(true);
             } catch (error) {
-                setDialogMessage('공지사항 등록 중 에러가 발생하였습니다.');
+                if (error.response && error.response.status === 302) {
+                    setDialogMessage('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+                    setTimeout(() => navigate('/login'), 2000);
+                } else {
+                    setDialogMessage('공지사항 등록 중 에러가 발생하였습니다.');
+                }
                 setDialogOpen(true);
             }
         }
