@@ -33,7 +33,7 @@ const NoticeWrite = () => {
                     },
                     {
                         headers: {
-                            Authorization: `Bearer ${accessToken}`,
+                            'Authorization': Cookies.get('access_token'),
                             'Content-Type': 'application/json'
                         }
                     }
