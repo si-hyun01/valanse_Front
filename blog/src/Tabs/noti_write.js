@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Container, Grid, TextField, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 function NoticeWrite() {
     const [title, setTitle] = useState('');
@@ -20,7 +21,7 @@ function NoticeWrite() {
                     headers: {
                         'accept': 'application/json;charset=UTF-8',
                         'Content-Type': 'application/json;charset=UTF-8',
-                        // 다른 헤더들 추가
+                        'Authorization': Cookies.get('access_token') // 액세스 토큰 추가
                     }
                 });
 
