@@ -136,7 +136,7 @@ const Layout = () => {
                                 {isCategoryOpen && (
                                     <div
                                         className="position-absolute p-2 rounded"
-                                        style={{ top: '100%', left: 0, minWidth: '600px', background: 'pink' }}
+                                        style={{ top: '100%', left: 0, minWidth: '600px', background: '#333333' }}
                                     >
                                         <ul className="list-unstyled m-0 d-flex flex-wrap">
                                             {renderCategoryButtons()}

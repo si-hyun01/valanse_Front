@@ -81,7 +81,7 @@ const SliderContainer = () => {
       zIndex,
       borderRadius: "20px",
       width: `${cardWidth}px`,
-      height: "400px",
+      height: "300px",
       position: "absolute",
       opacity,
     };
@@ -95,11 +95,12 @@ const SliderContainer = () => {
       style={{
         position: "relative",
         width: "100%",
-        height: "700px",
+        height: "500px",
         overflow: "hidden",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        backgroundColor: "#1a1a1a", // 배경색 설정
       }}
     >
       <div
