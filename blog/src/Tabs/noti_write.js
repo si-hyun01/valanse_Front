@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, Container, Grid, TextField, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -8,21 +8,17 @@ function NoticeWrite() {
     const [content, setContent] = useState('');
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogMessage, setDialogMessage] = useState('');
-    const [accessToken, setAccessToken] = useState('');
-
-    useEffect(() => {
-        const fetchAccessToken = async () => {
-            const token = Cookies.get('access_token');
-            if (token) {
-                setAccessToken(token);
-            }
-        };
-        fetchAccessToken();
-    }, []);
 
     const handleAddNotice = async () => {
         if (title.trim() !== '' && content.trim() !== '') {
             try {
+                const accessToken = Cookies.get('access_token');
+                if (!accessToken) {
+                    setDialogMessage('로그인 후에 공지를 작성할 수 있습니다.');
+                    setDialogOpen(true);
+                    return;
+                }
+
                 const response = await axios.post('https://valanse.site/notice/register', {
                     noticeRegisterDto: {
                         title: title,
@@ -32,7 +28,7 @@ function NoticeWrite() {
                     headers: {
                         'accept': 'application/json;charset=UTF-8',
                         'Content-Type': 'application/json;charset=UTF-8',
-                        'Authorization': `accessToken` // 액세스 토큰 추가
+                        'Authorization': accessToken // 액세스 토큰 추가
                     }
                 });
 
