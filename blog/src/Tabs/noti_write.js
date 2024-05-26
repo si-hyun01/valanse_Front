@@ -1,32 +1,26 @@
 import React, { useState } from 'react';
-import { Container, Typography, TextField, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-import { useNavigate } from 'react-router-dom'; 
-import Header from '../layouts/Header';
-import Footer from '../layouts/Footer';
-import './notii.css';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Button, Container, Grid, TextField, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 
-const NoticeWrite = () => {
-    const [newNotice, setNewNotice] = useState('');
-    const [newNoticeContent, setNewNoticeContent] = useState('');
+function NoticeWrite() {
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogMessage, setDialogMessage] = useState('');
-    const navigate = useNavigate(); 
 
     const handleAddNotice = async () => {
-        if (newNotice.trim() !== '' && newNoticeContent.trim() !== '') {
-            const noticeRegisterDto = {
-                title: newNotice,
-                content: newNoticeContent,
-            };
-
+        if (title.trim() !== '' && content.trim() !== '') {
             try {
-                const response = await axios.post('https://valanse.site/notice/register', noticeRegisterDto, {
+                const response = await axios.post('https://valanse.site/notice/register', {
+                    noticeRegisterDto: {
+                        title: title,
+                        content: content
+                    }
+                }, {
                     headers: {
-                        'Authorization': Cookies.get('access_token'),
-                        'Content-Type': 'application/json'
+                        'accept': 'application/json;charset=UTF-8',
+                        'Content-Type': 'application/json;charset=UTF-8',
+                        // 다른 헤더들 추가
                     }
                 });
 
@@ -37,71 +31,63 @@ const NoticeWrite = () => {
                 }
                 setDialogOpen(true);
             } catch (error) {
-                if (error.response && error.response.status === 302) {
-                    setDialogMessage('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
-                    setTimeout(() => navigate('/login'), 2000);
-                } else {
-                    setDialogMessage('공지사항 등록 중 에러가 발생하였습니다.');
-                }
+                console.error('Error adding notice:', error);
+                setDialogMessage('공지사항 등록 중 에러가 발생하였습니다.');
                 setDialogOpen(true);
             }
+        } else {
+            setDialogMessage('제목과 내용을 입력해주세요.');
+            setDialogOpen(true);
         }
     };
 
-    const handleDialogClose = () => {
+    const handleCloseDialog = () => {
         setDialogOpen(false);
         if (dialogMessage === '공지사항이 성공적으로 등록되었습니다.') {
-            navigate('/');
+            // 등록 성공 시 추가 작업 수행
         }
     };
 
     return (
-        <>
-            <Header />
-            <Container maxWidth="md" className="notii">
-                <Typography variant="h4" className="notii-title2">
-                    공지게시판
-                </Typography>
-                <Button variant="contained" className="button1_write" style={{ backgroundColor: 'white', boxShadow: 'none' }} onClick={() => navigate(-1)} >
-                    <ArrowBackIcon style={{ color: 'black', fontSize: '24px' }} />
-                    <span style={{ color: 'black', fontWeight: 'bold', fontSize: '20px' }}>뒤로가기</span>
-                </Button>
-                <div className="textfield1">
+        <Container maxWidth="md">
+            <Grid container spacing={2}>
+                <Grid item xs={12}>
                     <TextField
                         label="제목"
                         fullWidth
-                        value={newNotice}
-                        onChange={(e) => setNewNotice(e.target.value)}
-                        variant="outlined"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
                     />
-                </div>
-                <div className="textfield2">
+                </Grid>
+                <Grid item xs={12}>
                     <TextField
                         label="내용"
                         fullWidth
                         multiline
-                        rows={12}
-                        value={newNoticeContent}
-                        onChange={(e) => setNewNoticeContent(e.target.value)}
-                        variant="outlined"
+                        rows={8}
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
                     />
-                </div>
-                <Button variant="contained" className="notii-button2" color="primary" onClick={handleAddNotice}>
-                    작성
-                </Button>
-            </Container>
-            <Footer />
-            <Dialog open={dialogOpen} onClose={handleDialogClose}>
-                <DialogTitle>공지사항 등록</DialogTitle>
+                </Grid>
+                <Grid item xs={12}>
+                    <Button variant="contained" color="primary" onClick={handleAddNotice}>
+                        등록
+                    </Button>
+                </Grid>
+            </Grid>
+            <Dialog open={dialogOpen} onClose={handleCloseDialog}>
+                <DialogTitle>알림</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>{dialogMessage}</DialogContentText>
+                    {dialogMessage}
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleDialogClose} color="primary">확인</Button>
+                    <Button onClick={handleCloseDialog} color="primary">
+                        확인
+                    </Button>
                 </DialogActions>
             </Dialog>
-        </>
+        </Container>
     );
-};
+}
 
 export default NoticeWrite;
