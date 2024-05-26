@@ -21,7 +21,7 @@ const NoticeWrite = () => {
             };
 
             try {
-                const response = await fetch('http://valanse.site/notice/register', {
+                const response = await fetch('https://valanse.site/notice/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json;charset=UTF-8',
