@@ -6,6 +6,7 @@ import Footer from '../layouts/Footer';
 import './notii.css';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const NoticeWrite = () => {
     const [newNotice, setNewNotice] = useState('');
@@ -22,7 +23,12 @@ const NoticeWrite = () => {
             };
 
             try {
-                const response = await axios.post('https://valanse.site/notice/register', noticeRegisterDto);
+                const response = await axios.post('https://valanse.site/notice/register', noticeRegisterDto, {
+                    headers: {
+                        'Authorization': Cookies.get('access_token'),
+                        'Content-Type': 'application/json'
+                    }
+                });
 
                 if (response.status === 200) {
                     setDialogMessage('공지사항이 성공적으로 등록되었습니다.');
