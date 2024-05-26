@@ -32,7 +32,7 @@ function NoticeWrite() {
                     headers: {
                         'accept': 'application/json;charset=UTF-8',
                         'Content-Type': 'application/json;charset=UTF-8',
-                        'Authorization': `Bearer ${accessToken}` // 액세스 토큰 추가
+                        'Authorization': `accessToken` // 액세스 토큰 추가
                     }
                 });
 
