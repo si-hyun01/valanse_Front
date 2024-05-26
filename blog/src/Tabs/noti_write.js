@@ -24,7 +24,7 @@ const NoticeWrite = () => {
                 }
 
                 const response = await axios.post(
-                    'http://valanse.site/notice/register',
+                    'https://valanse.site/notice/register',
                     {
                         noticeRegisterDto: {
                             title: newNotice,
