@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Typography, TextField, Button } from '@mui/material';
+import { Container, Typography, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Header from '../layouts/Header';
 import Footer from '../layouts/Footer';
@@ -11,14 +11,20 @@ import Cookies from 'js-cookie';
 const NoticeWrite = () => {
     const [newNotice, setNewNotice] = useState('');
     const [newNoticeContent, setNewNoticeContent] = useState('');
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [dialogTitle, setDialogTitle] = useState('');
+    const [dialogContent, setDialogContent] = useState('');
     const navigate = useNavigate();
+
+    const handleDialogClose = () => {
+        setDialogOpen(false);
+    };
 
     const handleAddNotice = async () => {
         if (newNotice.trim() !== '' && newNoticeContent.trim() !== '') {
             try {
-                const accessToken = Cookies.get('access_token'); // 쿠키에서 액세스 토큰 가져오기
+                const accessToken = Cookies.get('access_token');
                 if (!accessToken) {
-                    // 로그인되어 있지 않은 경우 처리
                     console.error('User is not logged in');
                     return;
                 }
@@ -40,13 +46,18 @@ const NoticeWrite = () => {
                 );
 
                 if (response.status === 200) {
-                    // 공지 작성 후 홈페이지로 이동
+                    setDialogTitle('Success');
+                    setDialogContent('공지가 성공적으로 추가되었습니다.');
+                    setDialogOpen(true);
                     navigate('/');
                 } else {
                     console.error('Failed to add notice');
                 }
             } catch (error) {
                 console.error('Error occurred while adding notice:', error);
+                setDialogTitle('Error');
+                setDialogContent('공지 추가 중 오류가 발생했습니다.');
+                setDialogOpen(true);
             }
         }
     };
@@ -92,6 +103,17 @@ const NoticeWrite = () => {
                 </Button>
             </Container>
             <Footer />
+            <Dialog open={dialogOpen} onClose={handleDialogClose}>
+                <DialogTitle>{dialogTitle}</DialogTitle>
+                <DialogContent>
+                    <Typography>{dialogContent}</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDialogClose} color="primary">
+                        확인
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 };
