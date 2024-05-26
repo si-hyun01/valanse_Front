@@ -22,7 +22,7 @@ const NoticeWrite = () => {
             };
 
             try {
-                const response = await axios.post('https://valanse.site/notice/register', { noticeRegisterDto });
+                const response = await axios.post('https://valanse.site/notice/register', { data: noticeRegisterDto });
 
                 if (response.status === 200) {
                     setDialogMessage('공지사항이 성공적으로 등록되었습니다.');
