@@ -8,7 +8,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Layout activeTab="인기" />} />
+        <Route path="/" element={<Layout activeTab="전체" />} />
         <Route path="/category/:categoryName" element={<Layout />} />
         <Route path="/problems" element={<Layout />} />
         <Route path="/notice" element={<Layout />} />
