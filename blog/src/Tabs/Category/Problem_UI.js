@@ -13,18 +13,20 @@ import {
   DialogTitle,
   Grid,
   IconButton,
+  TextField,
   Typography
 } from '@mui/material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import saveUserAnswer from "../../components/comments";
+import saveUserAnswer from './saveUserAnswer';  // 새롭게 추가된 라인
 
 const LAST_QUIZ_ID = 20;
 
 function ProblemUI() {
   const [quizData, setQuizData] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
+  const [comment, setComment] = useState('');
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
@@ -75,6 +77,7 @@ function ProblemUI() {
   const handleNext = () => {
     if (currentQuizId < LAST_QUIZ_ID) {
       setSelectedOption(null);
+      setComment('');
       setShowConfirmDialog(false);
       setCurrentQuizId((prevQuizId) => prevQuizId + 1);
     } else {
@@ -106,7 +109,8 @@ function ProblemUI() {
         answeredAt: new Date().toISOString(),
         timeSpent: 0,
         preference: 0,
-        difficultyLevel: 0
+        difficultyLevel: 0,
+        comment: comment // 댓글 추가
       }
     };
 
@@ -208,6 +212,15 @@ function ProblemUI() {
                   </CardContent>
                 </CardActionArea>
               </Card>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="댓글"
+                variant="outlined"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+              />
             </Grid>
             <Grid item xs={12} textAlign="center">
               <Button
