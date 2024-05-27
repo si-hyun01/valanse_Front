@@ -35,8 +35,10 @@ const NoticeWrite = () => {
                 const response = await axios.post(
                     'https://valanse.site/notice/register',
                     {
-                        title: newNotice,
-                        content: newNoticeContent
+                        noticeRegisterDto: {
+                            title: newNotice,
+                            content: newNoticeContent
+                        }
                     },
                     {
                         headers: {
@@ -45,6 +47,7 @@ const NoticeWrite = () => {
                         }
                     }
                 );
+                
 
                 if (response.status === 200) {
                     setDialogTitle('Success');
