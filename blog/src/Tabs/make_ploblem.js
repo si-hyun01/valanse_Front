@@ -3,6 +3,7 @@ import { Button, Container, Grid, TextField, Dialog, DialogTitle, DialogContent,
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import saveUserAnswer from "../components/comments";
 
 function CreateQuestionPage({ onCreate, selectedCategory }) {
     const [question, setQuestion] = useState('');
@@ -28,8 +29,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
             optionB: story2,
             descriptionA: story1,
             descriptionB: story2,
-            category: [selectedCategory],
-            like_count: 0 // like_count 필드를 추가하여 기본값 0 설정
+            category: [selectedCategory]
         };
 
         formData.append('quizRegisterDto', new Blob([JSON.stringify(quizRegisterDto)], { type: 'application/json' }));
@@ -61,7 +61,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
                 <Grid item xs={12} style={{ height: '30px' }} />
                 <Grid item xs={12}>
                     <TextField
-                        style={{ backgroundColor: 'gray' }} 
+                    style={{ backgroundColor: 'gray' }} 
                         label="문제 제목을 작성해주세요"
                         fullWidth
                         multiline
@@ -72,7 +72,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
                 </Grid>
                 <Grid item xs={6}>
                     <TextField
-                        style={{ backgroundColor: 'gray' }}
+                    style={{ backgroundColor: 'gray' }}
                         label="아래 사진과 함께 상황을 설명해주세요"
                         fullWidth
                         multiline
@@ -83,7 +83,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
                 </Grid>
                 <Grid item xs={6}>
                     <TextField
-                        style={{ backgroundColor: 'gray' }}
+                    style={{ backgroundColor: 'gray' }}
                         label="아래 사진과 함께 상황을 설명해주세요"
                         fullWidth
                         multiline
@@ -173,12 +173,13 @@ function App() {
                     <Grid item xs={12} style={{ height: '30px' }} />
                     <Grid item xs={12}>
                         <FormControl fullWidth style={{ backgroundColor: 'gray' }}>
-                            <InputLabel style={{ color: 'white' }}>카테고리 선택</InputLabel>
+                        <InputLabel style={{ color: 'white' }}>카테고리 선택</InputLabel>
                             <Select
                                 value={selectedCategory}
                                 onChange={handleCategoryChange}
                                 label="카테고리 선택"
                             >
+                                {/* 메뉴 아이템들은 기본적으로 흰색 배경을 가지고 있으므로 수정이 필요하지 않습니다. */}
                                 <MenuItem value="축구">축구</MenuItem>
                                 <MenuItem value="음식">음식</MenuItem>
                                 <MenuItem value="연애">연애</MenuItem>
@@ -188,6 +189,7 @@ function App() {
                                 <MenuItem value="일상">일상</MenuItem>
                             </Select>
                         </FormControl>
+
                     </Grid>
                 </Grid>
                 {selectedCategory && <CreateQuestionPage onCreate={handleCreateQuestion} selectedCategory={selectedCategory} />}
