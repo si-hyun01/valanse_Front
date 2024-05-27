@@ -61,13 +61,19 @@ const NoticeBoard = () => {
   useEffect(() => {
     const fetchNotices = async () => {
       let fetchedNotices = [];
-      try {
-        for (let i = 1; i <= 20; i++) {
+      const maxNoticeId = 20; // Max notice ID to check
+      for (let i = 1; i <= maxNoticeId; i++) {
+        try {
           const response = await axios.get(`https://valanse.site/notice/${i}`);
           fetchedNotices.push(response.data);
+        } catch (error) {
+          if (error.response && error.response.status === 404) {
+            // Ignore 404 errors and continue
+            continue;
+          } else {
+            console.error('Error fetching notice:', error);
+          }
         }
-      } catch (error) {
-        console.error('Error fetching notices:', error);
       }
       setNotices(fetchedNotices);
     };
