@@ -32,18 +32,16 @@ const NoticeWrite = () => {
                     return;
                 }
 
-                const noticeData = {
-                    noticeRegisterDto: {
-                        title: newNotice,
-                        content: newNoticeContent
-                    }
-                };
+                // 변경된 부분: FormData 객체를 생성하여 공지사항 데이터를 넣음
+                const noticeData = new FormData();
+                noticeData.append('title', newNotice);
+                noticeData.append('content', newNoticeContent);
 
                 const config = {
                     headers: {
                         'Authorization': `Bearer ${accessToken}`,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
+                        // 변경된 부분: Content-Type을 multipart/form-data로 설정
+                        'Content-Type': 'multipart/form-data',
                     },
                 };
 
