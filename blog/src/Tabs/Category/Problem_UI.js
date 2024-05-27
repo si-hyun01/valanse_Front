@@ -19,7 +19,7 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-const LAST_QUIZ_ID = 20; // 마지막 퀴즈 ID를 상수로 정의해서 대충 ID 20까지 URL 요청하기 위해 만들어둠.
+const LAST_QUIZ_ID = 20;
 
 function ProblemUI() {
   const [quizData, setQuizData] = useState(null);
@@ -34,7 +34,7 @@ function ProblemUI() {
     if (currentQuizId <= LAST_QUIZ_ID) {
       fetchQuizData(currentQuizId);
     } else {
-      setShowNoProblemDialog(true); // 마지막 퀴즈를 넘어가면 다이얼로그 표시
+      setShowNoProblemDialog(true);
     }
   }, [currentQuizId]);
 
@@ -172,39 +172,40 @@ function ProblemUI() {
                 </CardActionArea>
               </Card>
             </Grid>
-            <Grid item xs={6} textAlign="center">
-              <Card onClick={() => handleOptionSelect('B')} sx={{ borderRadius: '16px' }}>
-                <CardActionArea>
-                  <CardMedia
-                    component="img"
-                    height="400"
-                    image={quizData ? quizData.imageB : ''}
-                    alt=""
-                  />
-                  <CardContent sx={{ height: '100px' }}>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {quizData ? quizData.descriptionB : ''}
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Grid>
-            <Grid item xs={12} textAlign="center">
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handlePrevious}
-                disabled={currentQuizId === 1}
-                startIcon={<ArrowBackIcon />}
-              >
-                Previous
-              </Button>
-            </Grid>
-          </Grid>
-        </Container>
-      </Card>
-    </Container>
-  );
+            <Grid item xs={6}
+textAlign="center">
+<Card onClick={() => handleOptionSelect('B')} sx={{ borderRadius: '16px' }}>
+  <CardActionArea>
+    <CardMedia
+      component="img"
+      height="400"
+      image={quizData ? quizData.imageB : ''}
+      alt=""
+    />
+    <CardContent sx={{ height: '100px' }}>
+      <Typography gutterBottom variant="h5" component="div">
+        {quizData ? quizData.descriptionB : ''}
+      </Typography>
+    </CardContent>
+  </CardActionArea>
+</Card>
+</Grid>
+<Grid item xs={12} textAlign="center">
+<Button
+  variant="contained"
+  color="primary"
+  onClick={handlePrevious}
+  disabled={currentQuizId === 1}
+  startIcon={<ArrowBackIcon />}
+>
+  Previous
+</Button>
+</Grid>
+</Grid>
+</Container>
+</Card>
+</Container>
+);
 }
 
 export default ProblemUI;
