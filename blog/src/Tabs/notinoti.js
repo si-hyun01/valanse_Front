@@ -5,20 +5,6 @@ import axios from 'axios';
 import './notii.css'; // CSS 파일 
 
 const NoticeDetail = ({ notice, onDelete, onGoBack }) => {
-  useEffect(() => {
-    // 공지 상세 내용을 확인할 때만 조회수를 올리는 함수 호출
-    increaseViews();
-  }, []);
-
-  const increaseViews = async () => {
-    try {
-      // 공지 조회수를 올리는 요청
-      await axios.put(`https://valanse.site/notice/${notice.noticeId}/views`);
-    } catch (error) {
-      console.error('Error increasing views:', error);
-    }
-  };
-
   return (
     <div className="notii">
       <Typography variant="h6" gutterBottom>{notice.title}</Typography>
@@ -68,6 +54,7 @@ const NoticeBoard = () => {
   const [showDetail, setShowDetail] = useState(false);
 
   const handleNoticeClick = (notice) => {
+    increaseViews(notice); // 공지 클릭으로 조회수 증가
     setSelectedNotice(notice);
     setShowDetail(true);
   };
@@ -106,6 +93,15 @@ const NoticeBoard = () => {
 
     fetchNotices();
   }, []);
+
+  const increaseViews = async (notice) => {
+    try {
+      // 공지 조회수를 올리는 요청
+      await axios.put(`https://valanse.site/notice/${notice.noticeId}/views`);
+    } catch (error) {
+      console.error('Error increasing views:', error);
+    }
+  };
 
   return (
     <Container maxWidth="md" className="notii">
