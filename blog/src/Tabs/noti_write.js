@@ -31,7 +31,7 @@ const NoticeWrite = () => {
                     setDialogOpen(true);
                     return;
                 }
-
+    
                 const response = await axios.post(
                     'https://valanse.site/notice/register',
                     {
@@ -72,6 +72,7 @@ const NoticeWrite = () => {
             setDialogOpen(true);
         }
     };
+    
 
     return (
         <>
