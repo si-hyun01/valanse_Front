@@ -42,7 +42,7 @@ const NoticeWrite = () => {
                     },
                     {
                         headers: {
-                            'Authorization': Cookies.get('access_token'),
+                            'Authorization': `Bearer ${Cookies.get('access_token')}`,
                             'Content-Type': 'application/json;charset=UTF-8',
                             'Accept': 'application/json;charset=UTF-8'
                         }
