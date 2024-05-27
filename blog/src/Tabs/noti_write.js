@@ -31,17 +31,19 @@ const NoticeWrite = () => {
                     setDialogOpen(true);
                     return;
                 }
+
+                // Create FormData and append fields
+                const formData = new FormData();
+                formData.append('title', newNotice);
+                formData.append('content', newNoticeContent);
     
                 const response = await axios.post(
                     'https://valanse.site/notice/register',
-                    {
-                        title: newNotice,
-                        content: newNoticeContent
-                    },
+                    formData,
                     {
                         headers: {
                             'Authorization': `Bearer ${accessToken}`,
-                            'Content-Type': 'application/json;charset=UTF-8',
+                            'Content-Type': 'multipart/form-data',
                             'Accept': 'application/json;charset=UTF-8'
                         }
                     }
