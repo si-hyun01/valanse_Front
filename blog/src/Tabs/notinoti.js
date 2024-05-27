@@ -3,22 +3,15 @@ import { Container, Typography, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './notii.css'; // CSS 파일 
-import { useNavigate } from 'react-router-dom'; // useNavigate 추가
 
-const NoticeDetail = ({ notice, onDelete }) => {
-  const navigate = useNavigate(); // useNavigate를 이용하여 네비게이션 설정
-
-  const handleGoBack = () => {
-    navigate(-1); // 뒤로가기
-  };
-
+const NoticeDetail = ({ notice, onDelete, onGoBack }) => {
   return (
     <div className="notii">
       <Typography variant="h6" gutterBottom>{notice.title}</Typography>
       <Typography variant="subtitle2">글번호: {notice.noticeId}</Typography>
       <Typography variant="subtitle2">등록일: {notice.createdAt}</Typography>
       <Typography variant="body1">{notice.content}</Typography>
-      <Button onClick={handleGoBack} aria-label="go-back" color="primary">
+      <Button onClick={onGoBack} aria-label="go-back" color="primary">
         뒤로가기
       </Button>
       <Button onClick={() => onDelete(notice)} aria-label="delete" color="error">
@@ -58,16 +51,21 @@ const NoticeList = ({ notices, onItemClick }) => {
 const NoticeBoard = () => {
   const [notices, setNotices] = useState([]);
   const [selectedNotice, setSelectedNotice] = useState(null);
-
-  const navigate = useNavigate(); // useNavigate를 이용하여 네비게이션 설정
+  const [showDetail, setShowDetail] = useState(false);
 
   const handleNoticeClick = (notice) => {
     setSelectedNotice(notice);
+    setShowDetail(true);
   };
 
   const handleDeleteNotice = (notice) => {
     setNotices(notices.filter(item => item !== notice));
     setSelectedNotice(null);
+    setShowDetail(false);
+  };
+
+  const handleGoBack = () => {
+    setShowDetail(false);
   };
 
   useEffect(() => {
@@ -100,7 +98,7 @@ const NoticeBoard = () => {
       <Typography variant="h4" className="notii-title">
         공지게시판
       </Typography>
-      {!selectedNotice ? (
+      {!showDetail ? (
         <>
           <NoticeList notices={notices} onItemClick={handleNoticeClick} />
           <Button variant="contained" color="primary" component={Link} to="/noti_write" className="notii-button">
@@ -108,7 +106,7 @@ const NoticeBoard = () => {
           </Button>
         </>
       ) : (
-        <NoticeDetail notice={selectedNotice} onDelete={handleDeleteNotice} />
+        <NoticeDetail notice={selectedNotice} onDelete={handleDeleteNotice} onGoBack={handleGoBack} />
       )}
     </Container>
   );
