@@ -35,7 +35,7 @@ const NoticeWrite = () => {
                 const response = await axios.post(
                     'https://valanse.site/notice/register',
                     {
-                        title: newNotice, // 서버가 기대하는 키 이름으로 변경
+                        title: newNotice,
                         content: newNoticeContent
                     },
                     {
