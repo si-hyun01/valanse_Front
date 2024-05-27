@@ -1,124 +1,40 @@
 .notii {
-    padding: 80px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  margin-bottom: 20px;
 }
 
-
-/*noti_ write.js*/
-.notii-title2 {
-    text-align: center;
-}
-
-/*notinoti.js*/
 .notii-title {
-    text-align: center;
-}
-
-.notii-button {
-    padding: 10px;
-    background-color: #007bff;
-    color: #fff;
-    position: relative;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    float: right;
-    /* 50px만큼 아래로 이동 */
+  margin-bottom: 20px;
 }
 
 .notii-table {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    /* 테이블 위의 상단 여백 조절 */
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .notii-table table {
-    width: 100%;
-    /* 테이블의 너비를 부모 요소에 맞춤 */
-    border-collapse: collapse;
-    /* 경계선 */
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.notii-table th,
-.notii-table td {
-    border: 1px solid #dddddd;
-    /* 경계선 px조절 */
-    /* 테이블 셀 경계선 스타일 지정 */
-    padding: 8px;
-    /* 셀 안 여백 설정 */
-    text-align: left;
-    /* 셀 텍스트 정렬 설정 */
+.notii-table th, .notii-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
 }
 
 .notii-table th {
-    background-color: #f2f2f2;
-    /* 테이블 배경색 지정 */
-    width: 500;
-
+  background-color: #f5f5f5;
 }
 
-.notii-table th:nth-child(1) {
-    width: 10%;
-    /* 작성자 테이블의 너비를 조절합니다. */
+.notii-table tbody tr:hover {
+  background-color: #f0f0f0;
+  cursor: pointer;
 }
 
-.notii-table th:nth-child(2) {
-    width: 60%;
-    /* 제목 테이블의 너비를 조절합니다. */
-}
-
-.notii-table th:nth-child(3) {
-    width: 20%;
-    /* 날짜 테이블의 너비를 조절합니다. */
-}
-
-.notii-table th:nth-child(4) {
-    width: 10%;
-    /* 조회수 테이블의 너비를 조절합니다. */
-}
-
-
-
-.notii-list {
-    padding: 0;
-}
-
-.notii-item {
-    cursor: pointer;
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
-}
-
-.notii-item:hover {
-    background-color: #f0f0f0;
-}
-
-.notii-item .notii-title {
-    font-weight: bold;
-}
-
-.notii-item .notii-details {
-    font-size: 0.9rem;
-    color: #666;
-}
-
-
-.textfield1 {
-    background-color: #f0f0f0;
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
-.textfield2 {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    background-color: #f0f0f0;
-}
-
-.notii-button2 {
-    background-color: #007bff;
-    color: #fff;
-    float: right;
-}
-
-.button1_write {
-    right: 18px;
+.notii-button {
+  margin-top: 20px;
 }
