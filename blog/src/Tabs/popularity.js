@@ -46,7 +46,6 @@ const Popularity = () => {
                                     <img src={item.imageA} alt="Option A" style={{ marginRight: '10px', width: '150px', height: 'auto' }} />
                                     <div>
                                         <h5>{item.content}</h5>
-                                        <p>{item.descriptionA}</p>
                                     </div>
                                 </div>
                             </td>
