@@ -42,7 +42,7 @@ const NoticeWrite = () => {
                     },
                     {
                         headers: {
-                            'Authorization': `Bearer ${accessToken}`, // 'Bearer '를 추가하여 토큰을 전달
+                            'Authorization': Cookies.get('access_token'),
                             'Content-Type': 'application/json'
                         }
                     }
