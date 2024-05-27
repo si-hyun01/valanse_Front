@@ -23,15 +23,15 @@ const Popularity = () => {
     };
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <div style={{ color: 'white', fontWeight: 'bold' }}>Loading...</div>;
     }
 
     if (error) {
-        return <div>Error: {error}</div>;
+        return <div style={{ color: 'white', fontWeight: 'bold' }}>Error: {error}</div>;
     }
 
     if (quizData.length === 0) {
-        return <div>No quiz data available.</div>;
+        return <div style={{ color: 'white', fontWeight: 'bold' }}>No quiz data available.</div>;
     }
 
     return (
@@ -40,18 +40,18 @@ const Popularity = () => {
                 <tbody>
                     {quizData.map((item) => (
                         <tr key={item.quizId}>
-                            <td style={{ width: '50px', verticalAlign: 'middle', textAlign: 'center', border: '1px solid #dee2e6' }}>{item.quizId}</td>
-                            <td style={{ width: '400px', border: '1px solid #dee2e6', borderRight: 'none' }}>
+                            <td style={{ width: '50px', verticalAlign: 'middle', textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>{item.quizId}</td>
+                            <td style={{ width: '400px', border: '1px solid #dee2e6', borderRight: 'none', color: 'white', fontWeight: 'bold' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <img src={item.imageA} alt="Option A" style={{ marginRight: '10px', width: '150px', height: 'auto' }} />
                                     <div>
-                                        <h5>{item.content}</h5>
+                                        <h5 style={{ color: 'white', fontWeight: 'bold' }}>{item.content}</h5>
                                     </div>
                                 </div>
                             </td>
-                            <td style={{ width: '200px', verticalAlign: 'bottom', textAlign: 'right', border: '1px solid #dee2e6', borderLeft: 'none', paddingTop: '20px' }}>
+                            <td style={{ width: '200px', verticalAlign: 'bottom', textAlign: 'right', border: '1px solid #dee2e6', borderLeft: 'none', paddingTop: '20px', color: 'white', fontWeight: 'bold' }}>
                                 <div style={{ minWidth: '100px' }}>
-                                    <div style={{ fontSize: '12px', marginRight: '10px' }}>선호도: {item.preference}</div>
+                                    <div style={{ fontSize: '12px', marginRight: '10px', color: 'white', fontWeight: 'bold' }}>선호도: {item.preference}</div>
                                 </div>
                             </td>
                         </tr>
