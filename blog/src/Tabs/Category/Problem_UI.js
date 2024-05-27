@@ -26,6 +26,8 @@ function ProblemUI() {
   const [selectedOption, setSelectedOption] = useState(null);
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
+  const [liked, setLiked] = useState(false);
+  const [disliked, setDisliked] = useState(false);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [currentQuizId, setCurrentQuizId] = useState(1);
@@ -48,6 +50,10 @@ function ProblemUI() {
         return;
       }
       setQuizData(data);
+      setLikes(data.preference);
+      setDislikes(0);
+      setLiked(false);
+      setDisliked(false);
     } catch (error) {
       if (error.response && error.response.status === 404) {
         handleNext();
@@ -63,12 +69,46 @@ function ProblemUI() {
     setShowConfirmDialog(true);
   };
 
-  const handleOptionLike = () => {
-    setLikes(likes + 1);
+  const handleOptionLike = async () => {
+    try {
+      if (liked) {
+        await axios.post(`https://valanse.site/quiz/${currentQuizId}/decrease-preference`);
+        setLikes(likes - 1);
+        setLiked(false);
+      } else {
+        if (disliked) {
+          await axios.post(`https://valanse.site/quiz/${currentQuizId}/increase-preference`);
+          setDislikes(dislikes - 1);
+          setDisliked(false);
+        }
+        await axios.post(`https://valanse.site/quiz/${currentQuizId}/increase-preference`);
+        setLikes(likes + 1);
+        setLiked(true);
+      }
+    } catch (error) {
+      console.error('Error updating preference:', error.message);
+    }
   };
 
-  const handleOptionDislike = () => {
-    setDislikes(dislikes + 1);
+  const handleOptionDislike = async () => {
+    try {
+      if (disliked) {
+        await axios.post(`https://valanse.site/quiz/${currentQuizId}/increase-preference`);
+        setDislikes(dislikes - 1);
+        setDisliked(false);
+      } else {
+        if (liked) {
+          await axios.post(`https://valanse.site/quiz/${currentQuizId}/decrease-preference`);
+          setLikes(likes - 1);
+          setLiked(false);
+        }
+        await axios.post(`https://valanse.site/quiz/${currentQuizId}/decrease-preference`);
+        setDislikes(dislikes + 1);
+        setDisliked(true);
+      }
+    } catch (error) {
+      console.error('Error updating preference:', error.message);
+    }
   };
 
   const handleNext = () => {
@@ -149,10 +189,10 @@ function ProblemUI() {
             </Grid>
             <Grid item xs={12} textAlign="center">
               <IconButton onClick={handleOptionLike}>
-                <ThumbUpIcon /> {likes}
+                <ThumbUpIcon color={liked ? 'primary' : 'inherit'} /> {likes}
               </IconButton>
               <IconButton onClick={handleOptionDislike}>
-                <ThumbDownIcon /> {dislikes}
+                <ThumbDownIcon color={disliked ? 'primary' : 'inherit'} /> {dislikes}
               </IconButton>
             </Grid>
             <Grid item xs={6} textAlign="center">
