@@ -31,26 +31,31 @@ const NoticeWrite = () => {
                     setDialogOpen(true);
                     return;
                 }
-
-                // 변경된 부분: FormData 객체를 생성하여 공지사항 데이터를 넣음
+    
+                // FormData 객체 생성
                 const noticeData = new FormData();
-                noticeData.append('title', newNotice);
-                noticeData.append('content', newNoticeContent);
-
+                // noticeRegisterDto 객체 생성
+                const noticeRegisterDto = {
+                    title: newNotice,
+                    content: newNoticeContent
+                };
+                // FormData에 noticeRegisterDto 추가
+                noticeData.append('noticeRegisterDto', JSON.stringify(noticeRegisterDto));
+    
                 const config = {
                     headers: {
                         'Authorization': `Bearer ${accessToken}`,
-                        // 변경된 부분: Content-Type을 multipart/form-data로 설정
+                        // Content-Type 변경
                         'Content-Type': 'multipart/form-data',
                     },
                 };
-
+    
                 const response = await axios.post(
                     'https://valanse.site/notice/register',
                     noticeData,
                     config
                 );
-
+    
                 if (response.status === 200 || response.status === 201) {
                     setDialogTitle('Success');
                     setDialogContent('공지가 성공적으로 추가되었습니다.');
