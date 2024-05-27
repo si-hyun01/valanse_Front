@@ -75,6 +75,7 @@ function ProblemUI() {
     if (currentQuizId < LAST_QUIZ_ID) {
       setSelectedOption(null);
       setShowConfirmDialog(false);
+      saveAnswerToServer(); // 퀴즈 이동 전에 답변 저장
       setCurrentQuizId((prevQuizId) => prevQuizId + 1);
     } else {
       setShowNoProblemDialog(true);
@@ -96,7 +97,28 @@ function ProblemUI() {
   };
 
   const handleConfirmSelection = () => {
+    saveAnswerToServer(); // 확인 버튼 클릭 시 답변 저장
     handleNext();
+  };
+
+  const saveAnswerToServer = async () => {
+    try {
+      const answerData = {
+        userAnswerDto: {
+          answerId: 0,
+          userId: 0, // 사용자 ID를 여기에 넣어주세요.
+          quizId: currentQuizId, // 현재 퀴즈 ID를 사용하여 댓글을 구분합니다.
+          selectedOption: selectedOption,
+          answeredAt: new Date().toISOString(),
+          timeSpent: 0,
+          preference: 0,
+          difficultyLevel: 0
+        }
+      };
+      await saveUserAnswer(answerData);
+    } catch (error) {
+      console.error('Error saving user answer:', error.message);
+    }
   };
 
   return (
@@ -158,7 +180,7 @@ function ProblemUI() {
             <Grid item xs={6} textAlign="center">
               <Card onClick={() => handleOptionSelect('A')} sx={{ borderRadius: '16px' }}>
                 <CardActionArea>
-                  <CardMedia
+                <CardMedia
                     component="img"
                     height="400"
                     image={quizData ? quizData.imageA : ''}
