@@ -47,7 +47,6 @@ const NoticeWrite = () => {
                         }
                     }
                 );
-                
 
                 if (response.status === 200) {
                     setDialogTitle('Success');
