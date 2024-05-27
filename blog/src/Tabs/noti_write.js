@@ -32,19 +32,17 @@ const NoticeWrite = () => {
                     return;
                 }
 
-                const noticeData = {
-                    title: newNotice,
-                    content: newNoticeContent
-                };
+                const formData = new FormData();
+                formData.append('title', newNotice);
+                formData.append('content', newNoticeContent);
 
                 const response = await axios.post(
                     'https://valanse.site/notice/register',
-                    noticeData,
+                    formData,
                     {
                         headers: {
                             'Authorization': `Bearer ${accessToken}`,
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
+                            'Content-Type': 'multipart/form-data', // FormData로 전송할 때는 Content-Type을 multipart/form-data로 설정합니다.
                         },
                     }
                 );
