@@ -54,7 +54,6 @@ const NoticeBoard = () => {
   const [showDetail, setShowDetail] = useState(false);
 
   const handleNoticeClick = (notice) => {
-    increaseViews(notice); // 공지 클릭으로 조회수 증가
     setSelectedNotice(notice);
     setShowDetail(true);
   };
@@ -93,15 +92,6 @@ const NoticeBoard = () => {
 
     fetchNotices();
   }, []);
-
-  const increaseViews = async (notice) => {
-    try {
-      // 공지 조회수를 올리는 요청
-      await axios.put(`https://valanse.site/notice/${notice.noticeId}/views`);
-    } catch (error) {
-      console.error('Error increasing views:', error);
-    }
-  };
 
   return (
     <Container maxWidth="md" className="notii">
