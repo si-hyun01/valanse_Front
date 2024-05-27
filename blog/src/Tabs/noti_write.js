@@ -32,19 +32,17 @@ const NoticeWrite = () => {
                     return;
                 }
     
-                // 객체를 JSON으로 변환하여 전송
-                const noticeRegisterDto = JSON.stringify({
-                    title: newNotice,
-                    content: newNoticeContent,
-                });
+                const formData = new FormData();
+                formData.append('title', newNotice);
+                formData.append('content', newNoticeContent);
     
                 const response = await axios.post(
                     'https://valanse.site/notice/register',
-                    noticeRegisterDto,
+                    formData,
                     {
                         headers: {
                             'Authorization': `Bearer ${accessToken}`,
-                            'Content-Type': 'application/json', // 'application/json'으로 변경
+                            'Content-Type': 'multipart/form-data',
                             'Accept': 'application/json',
                         },
                     }
@@ -73,7 +71,6 @@ const NoticeWrite = () => {
             setDialogOpen(true);
         }
     };
-    
     
     return (
         <>
