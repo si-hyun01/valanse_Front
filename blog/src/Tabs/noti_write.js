@@ -35,10 +35,8 @@ const NoticeWrite = () => {
                 const response = await axios.post(
                     'https://valanse.site/notice/register',
                     {
-                        noticeRegisterDto: {
-                            title: newNotice,
-                            content: newNoticeContent
-                        }
+                        title: newNotice,
+                        content: newNoticeContent
                     },
                     {
                         headers: {
