@@ -32,27 +32,21 @@ const NoticeWrite = () => {
                     return;
                 }
     
-                // FormData 객체 생성
-                const noticeData = new FormData();
-                // noticeRegisterDto 객체 생성
                 const noticeRegisterDto = {
                     title: newNotice,
                     content: newNoticeContent
                 };
-                // FormData에 noticeRegisterDto 추가
-                noticeData.append('noticeRegisterDto', JSON.stringify(noticeRegisterDto));
     
                 const config = {
                     headers: {
                         'Authorization': `Bearer ${accessToken}`,
-                        // Content-Type 변경
-                        'Content-Type': 'multipart/form-data',
+                        'Content-Type': 'application/json', // 변경된 부분
                     },
                 };
     
                 const response = await axios.post(
                     'https://valanse.site/notice/register',
-                    noticeData,
+                    noticeRegisterDto,
                     config
                 );
     
@@ -79,6 +73,7 @@ const NoticeWrite = () => {
             setDialogOpen(true);
         }
     };
+    
 
     return (
         <>
