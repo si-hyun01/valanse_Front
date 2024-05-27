@@ -35,7 +35,7 @@ const NoticeList = ({ notices, onItemClick }) => {
             <tr key={notice.noticeId} onClick={() => onItemClick(notice)}>
               <td>{notice.authorId}</td>
               <td>{notice.title}</td>
-              <td>{notice.createdAt}</td>
+              <td>{new Date(notice.createdAt).toLocaleDateString()}</td>
               <td>{notice.views}</td>
             </tr>
           ))}
@@ -65,7 +65,9 @@ const NoticeBoard = () => {
       for (let i = 1; i <= maxNoticeId; i++) {
         try {
           const response = await axios.get(`https://valanse.site/notice/${i}`);
-          fetchedNotices.push(response.data);
+          if (response.data && response.data.data) {
+            fetchedNotices.push(response.data.data);
+          }
         } catch (error) {
           if (error.response && error.response.status === 404) {
             // Ignore 404 errors and continue
@@ -79,7 +81,7 @@ const NoticeBoard = () => {
     };
 
     fetchNotices();
-  }, []); 
+  }, []);
 
   return (
     <Container maxWidth="md" className="notii">
