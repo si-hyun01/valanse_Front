@@ -35,7 +35,7 @@ const NoticeWrite = () => {
                 const response = await axios.post(
                     'https://valanse.site/notice/register',
                     {
-                        noticeRegisterDto: {
+                        NoticeRegisterDto: {
                             title: newNotice,
                             content: newNoticeContent
                         }
@@ -44,12 +44,12 @@ const NoticeWrite = () => {
                         headers: {
                             'Authorization': Cookies.get('access_token'),
                             'Content-Type': 'application/json;charset=UTF-8',
-                            'accept': 'application/json;charset=UTF-8'
+                            'Accept': 'application/json;charset=UTF-8'
                         }
                     }
                 );
 
-                if (response.status === 200) {
+                if (response.status === 200 || response.status === 201) {
                     setDialogTitle('Success');
                     setDialogContent('공지가 성공적으로 추가되었습니다.');
                     setDialogOpen(true);
