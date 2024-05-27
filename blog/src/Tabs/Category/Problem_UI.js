@@ -31,6 +31,7 @@ function ProblemUI() {
   const [dislikes, setDislikes] = useState(0);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [showCommentDialog, setShowCommentDialog] = useState(false);
   const [currentQuizId, setCurrentQuizId] = useState(1);
 
   useEffect(() => {
@@ -99,6 +100,10 @@ function ProblemUI() {
     setShowConfirmDialog(false);
   };
 
+  const handleCloseCommentDialog = () => {
+    setShowCommentDialog(false);
+  };
+
   const handleConfirmSelection = async () => {
     const answerData = {
       userAnswerDto: {
@@ -121,6 +126,34 @@ function ProblemUI() {
     }
 
     handleNext();
+  };
+
+  const handleConfirmComment = () => {
+    setShowCommentDialog(true);
+  };
+
+  const handleSubmitComment = async () => {
+    const commentData = {
+      userAnswerDto: {
+        answerId: 0,
+        userId: 0, // 사용자의 ID를 여기에 넣어주세요.
+        quizId: currentQuizId, // 현재 퀴즈의 ID
+        selectedOption: '', // 선택한 옵션 없음
+        answeredAt: new Date().toISOString(),
+        timeSpent: 0,
+        preference: 0,
+        difficultyLevel: 0,
+        comment: comment // 댓글 추가
+      }
+    };
+
+    try {
+      await saveUserAnswer(commentData);
+      setComment('');
+      setShowCommentDialog(false);
+    } catch (error) {
+      console.error('Error saving comment:', error);
+    }
   };
 
   return (
@@ -160,6 +193,27 @@ function ProblemUI() {
             취소
           </Button>
           <Button onClick={handleConfirmSelection} color="primary" autoFocus>
+            확인
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={showCommentDialog}
+        onClose={handleCloseCommentDialog}
+        aria-labelledby="comment-dialog-title"
+        aria-describedby="comment-dialog-description"
+      >
+        <DialogTitle id="comment-dialog-title">댓글 확인</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1" id="comment-dialog-description">
+            댓글: {comment}. 정말 올리시겠습니까?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseCommentDialog} color="primary">
+            취소
+          </Button>
+          <Button onClick={handleSubmitComment} color="primary" autoFocus>
             확인
           </Button>
         </DialogActions>
@@ -213,15 +267,6 @@ function ProblemUI() {
                 </CardActionArea>
               </Card>
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="댓글"
-                variant="outlined"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-              />
-            </Grid>
             <Grid item xs={12} textAlign="center">
               <Button
                 variant="contained"
@@ -236,6 +281,28 @@ function ProblemUI() {
           </Grid>
         </Container>
       </Card>
+      <Grid container spacing={2} justifyContent="center" sx={{ mt: 2 }}>
+        <Grid item xs={12} textAlign="center">
+          <TextField
+            label="댓글 작성"
+            variant="outlined"
+            fullWidth
+            multiline
+            rows={4}
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={12} textAlign="center">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleConfirmComment}
+          >
+            댓글 확인
+          </Button>
+        </Grid>
+      </Grid>
     </Container>
   );
 }
