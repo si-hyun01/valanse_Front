@@ -31,23 +31,24 @@ const NoticeWrite = () => {
                     setDialogOpen(true);
                     return;
                 }
-    
-                const formData = new FormData();
-                formData.append('title', newNotice);
-                formData.append('content', newNoticeContent);
-    
+
+                const noticeData = {
+                    title: newNotice,
+                    content: newNoticeContent
+                };
+
                 const response = await axios.post(
                     'https://valanse.site/notice/register',
-                    formData,
+                    noticeData,
                     {
                         headers: {
                             'Authorization': `Bearer ${accessToken}`,
-                            'Content-Type': 'multipart/form-data',
+                            'Content-Type': 'application/json',
                             'Accept': 'application/json',
                         },
                     }
                 );
-    
+
                 if (response.status === 200 || response.status === 201) {
                     setDialogTitle('Success');
                     setDialogContent('공지가 성공적으로 추가되었습니다.');
@@ -71,7 +72,7 @@ const NoticeWrite = () => {
             setDialogOpen(true);
         }
     };
-    
+
     return (
         <>
             <Header />
