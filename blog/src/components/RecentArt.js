@@ -9,7 +9,7 @@ const MyQuizzesPage = () => {
   const fetchRecentQuizzes = async () => {
     try {
       const accessToken = Cookies.get('access_token'); // 쿠키에서 액세스 토큰 가져오기
-      const response = await axios.get('https://valanse.site/quiz/sorted-by-created-at', {
+      const response = await axios.get('https://valanse.site/quiz/sort-by-created-at', {
         headers: {
           'Authorization': accessToken // 헤더에 액세스 토큰 추가
         }
