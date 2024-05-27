@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Typography, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import './notii.css'; // CSS 파일 
 
 const NoticeDetail = ({ notice, onDelete }) => {
   return (
     <div className="notii">
       <Typography variant="h6" gutterBottom>{notice.title}</Typography>
-      <Typography variant="subtitle2">글번호: {notice.id}</Typography>
-      <Typography variant="subtitle2">등록일: {notice.date}</Typography>
+      <Typography variant="subtitle2">글번호: {notice.noticeId}</Typography>
+      <Typography variant="subtitle2">등록일: {notice.createdAt}</Typography>
       <Typography variant="body1">{notice.content}</Typography>
       <Button onClick={() => onDelete(notice)} aria-label="delete" color="error">
         Delete
@@ -30,11 +31,11 @@ const NoticeList = ({ notices, onItemClick }) => {
           </tr>
         </thead>
         <tbody>
-          {notices.map((notice, index) => (
-            <tr key={index} onClick={() => onItemClick(notice)}>
-              <td>{notice.author}</td>
+          {notices.map((notice) => (
+            <tr key={notice.noticeId} onClick={() => onItemClick(notice)}>
+              <td>{notice.authorId}</td>
               <td>{notice.title}</td>
-              <td>{notice.date}</td>
+              <td>{notice.createdAt}</td>
               <td>{notice.views}</td>
             </tr>
           ))}
@@ -48,10 +49,6 @@ const NoticeBoard = () => {
   const [notices, setNotices] = useState([]);
   const [selectedNotice, setSelectedNotice] = useState(null);
 
-  const handleAddNotice = (newNotice) => {
-    setNotices([...notices, newNotice]);
-  };
-
   const handleNoticeClick = (notice) => {
     setSelectedNotice(notice);
   };
@@ -62,16 +59,21 @@ const NoticeBoard = () => {
   };
 
   useEffect(() => {
-    // 컴포넌트가 처음 마운트될 때만 실행되도록 함.
-    handleAddNotice({
-      id: 1,
-      author: '운영자',
-      title: '공지사항의 제목 나오는 곳입니다.',
-      date: '2024-04-08',
-      views: 0,
-      content: '공지 제목 눌러서 안에 내용이 나오나 테스트'
-    });
-  }, []); // 빈 배열을 전달하여 처음 마운트될 때만 실행
+    const fetchNotices = async () => {
+      let fetchedNotices = [];
+      try {
+        for (let i = 1; i <= 20; i++) {
+          const response = await axios.get(`https://valanse.site/notice/${i}`);
+          fetchedNotices.push(response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching notices:', error);
+      }
+      setNotices(fetchedNotices);
+    };
+
+    fetchNotices();
+  }, []); 
 
   return (
     <Container maxWidth="md" className="notii">
