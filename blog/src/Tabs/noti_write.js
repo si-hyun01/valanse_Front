@@ -32,17 +32,18 @@ const NoticeWrite = () => {
                     return;
                 }
     
+                // FormData 객체 생성
+                const formData = new FormData();
+                formData.append('title', newNotice);
+                formData.append('content', newNoticeContent);
+    
                 const response = await axios.post(
                     'https://valanse.site/notice/register',
-                    {
-                        title: newNotice,
-                        content: newNoticeContent
-                    },
+                    formData, // 여기서는 FormData 객체를 전송합니다.
                     {
                         headers: {
-                            'Authorization': `Bearer ${Cookies.get('access_token')}`,
-                            'Content-Type': 'application/json;charset=UTF-8',
-                            'Accept': 'application/json;charset=UTF-8'
+                            'Authorization': `Bearer ${accessToken}`,
+                            'Content-Type': 'multipart/form-data', // Content-Type을 multipart/form-data로 설정합니다.
                         }
                     }
                 );
@@ -70,6 +71,7 @@ const NoticeWrite = () => {
             setDialogOpen(true);
         }
     };
+    
     
 
     return (
