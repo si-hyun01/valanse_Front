@@ -51,7 +51,7 @@ const Popularity = () => {
                             </td>
                             <td style={{ width: '200px', verticalAlign: 'bottom', textAlign: 'right', border: '1px solid #dee2e6', borderLeft: 'none', paddingTop: '20px' }}>
                                 <div style={{ minWidth: '100px' }}>
-                                    <div style={{ fontSize: '12px', marginRight: '10px' }}>Likes: {item.preference}</div>
+                                    <div style={{ fontSize: '12px', marginRight: '10px' }}>선호도: {item.preference}</div>
                                 </div>
                             </td>
                         </tr>
