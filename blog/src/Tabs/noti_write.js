@@ -26,20 +26,21 @@ const NoticeWrite = () => {
                 const accessToken = Cookies.get('access_token');
                 if (!accessToken) {
                     console.error('User is not logged in');
+                    setDialogTitle('Error');
+                    setDialogContent('로그인이 필요합니다.');
+                    setDialogOpen(true);
                     return;
                 }
 
                 const response = await axios.post(
                     'https://valanse.site/notice/register',
                     {
-                        noticeRegisterDto: {
-                            title: newNotice,
-                            content: newNoticeContent
-                        }
+                        title: newNotice, // 서버가 기대하는 키 이름으로 변경
+                        content: newNoticeContent
                     },
                     {
                         headers: {
-                            'Authorization': Cookies.get('access_token'),
+                            'Authorization': `Bearer ${accessToken}`, // 'Bearer '를 추가하여 토큰을 전달
                             'Content-Type': 'application/json'
                         }
                     }
@@ -52,6 +53,9 @@ const NoticeWrite = () => {
                     navigate('/');
                 } else {
                     console.error('Failed to add notice');
+                    setDialogTitle('Error');
+                    setDialogContent('공지 추가에 실패했습니다.');
+                    setDialogOpen(true);
                 }
             } catch (error) {
                 console.error('Error occurred while adding notice:', error);
@@ -59,6 +63,10 @@ const NoticeWrite = () => {
                 setDialogContent('공지 추가 중 오류가 발생했습니다.');
                 setDialogOpen(true);
             }
+        } else {
+            setDialogTitle('Validation Error');
+            setDialogContent('제목과 내용을 모두 입력해야 합니다.');
+            setDialogOpen(true);
         }
     };
 
