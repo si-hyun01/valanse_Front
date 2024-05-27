@@ -13,7 +13,7 @@ const Popularity = () => {
     const fetchData = async () => {
         try {
             const response = await axios.get('https://valanse.site/quiz/sort-by-preference');
-            setQuizData(response.data);
+            setQuizData(response.data.data); // 변경된 부분: response.data.data로 변경
             setIsLoading(false);
         } catch (error) {
             console.error('Error fetching quiz data:', error.message);
