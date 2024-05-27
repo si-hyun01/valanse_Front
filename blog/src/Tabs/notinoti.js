@@ -5,12 +5,21 @@ import axios from 'axios';
 import './notii.css'; // CSS 파일 
 
 const NoticeDetail = ({ notice, onDelete, onGoBack }) => {
+  const formattedContent = notice.content.split('\n').map((line, index) => (
+    <React.Fragment key={index}>
+      {line}
+      <br />
+    </React.Fragment>
+  ));
+
   return (
     <div className="notii">
       <Typography variant="h6" gutterBottom>{notice.title}</Typography>
       <Typography variant="subtitle2">글번호: {notice.noticeId}</Typography>
       <Typography variant="subtitle2">등록일: {notice.createdAt}</Typography>
-      <Typography variant="body1">{notice.content}</Typography>
+      <Typography variant="body1">
+        {formattedContent}
+      </Typography>
       <Button onClick={onGoBack} aria-label="go-back" color="primary">
         뒤로가기
       </Button>
