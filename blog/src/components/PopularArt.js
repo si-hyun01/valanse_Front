@@ -39,8 +39,8 @@ const Popularity = () => {
             <h2 style={{ marginBottom: '10px', color: 'white' }}>인기 퀴즈</h2>
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                 {quizData.map((item, index) => (
-                    <div key={index} style={{ width: 'calc(33.33% - 20px)', margin: '10px', border: '1px solid #ccc', borderRadius: '5px', padding: '10px' }}>
-                        <img src={item.imageA} alt="Option A" style={{ width: '100%', height: 'auto' }} />
+                    <div key={index} style={{ width: 'calc(33.33% - 20px)', margin: '10px', border: '1px solid #ccc', borderRadius: '5px', padding: '10px', overflow: 'hidden' }}>
+                        <img src={item.imageA} alt="Option A" style={{ width: '100%', height: 'auto', objectFit: 'cover', maxHeight: '300px' }} />
                         <h3 style={{ marginTop: '10px', marginBottom: '5px', color: 'white' }}>{item.content}</h3>
                     </div>
                 ))}
