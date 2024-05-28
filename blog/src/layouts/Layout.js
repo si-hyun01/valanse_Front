@@ -99,9 +99,10 @@ const Layout = () => {
     };
 
     return (
+        <div>
+        <Header />
         <div style={{ backgroundColor: 'black', backgroundSize: 'cover' }}>
-            <Header />
-            <div style={{ backgroundColor: 'black', backgroundSize: 'cover', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div style={{ backgroundColor: 'black', backgroundSize: 'cover', display: 'flex', flexDirection: 'column', alignItems: 'center', border: '1px solid white' }}>
                 <ul className="nav nav-tabs" style={{ border: 'none' }}>
                     <li className="nav-item" style={{ width: '230px' }}>
                         <button
@@ -114,6 +115,7 @@ const Layout = () => {
                                 borderRadius: '0', // 사각형으로 만들기 위해 borderRadius를 0으로 설정
                                 height: '50px',
                                 fontSize: '20px',
+                                border: 'none'
                             }}
                             onClick={() => handleTabChange('전체')}
                         >
@@ -132,6 +134,7 @@ const Layout = () => {
                                     borderRadius: '0', // 사각형으로 만들기 위해 borderRadius를 0으로 설정
                                     height: '50px',
                                     fontSize: '20px',
+                                    border: 'none'
                                 }}
                                 onClick={handleCategoryToggle}
                             >
@@ -160,6 +163,7 @@ const Layout = () => {
                                 borderRadius: '0', // 사각형으로 만들기 위해 borderRadius를 0으로 설정
                                 height: '50px',
                                 fontSize: '20px',
+                                border: 'none'
                             }}
                             onClick={() => handleTabChange('인기')}
                         >
@@ -178,6 +182,7 @@ const Layout = () => {
                                 borderRadius: '0', // 사각형으로 만들기 위해 borderRadius를 0으로 설정
                                 height: '50px',
                                 fontSize: '20px',
+                                border: 'none'
                             }}
                             onClick={() => handleTabChange('문제 만들기')}
                         >
@@ -223,6 +228,7 @@ const Layout = () => {
                 {activeTab === '공지' && <Notice />}
             </div>
             <Footer />
+        </div>
         </div>
     );
 };
