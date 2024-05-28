@@ -34,7 +34,7 @@ const MyQuizzesPage = () => {
         {/* 상태에 저장된 최근 퀴즈 사진과 제목을 표시 */}
         {recentQuizzes.map((quiz, index) => (
           <div key={index} style={{ width: 'calc(33.33% - 20px)', margin: '10px', border: '1px solid #ccc', borderRadius: '5px', padding: '10px', overflow: 'hidden' }}>
-            <img src={quiz.imageA} alt={quiz.content} style={{ width: '400px', height: '250px', objectFit: 'cover' }} />
+            <img src={quiz.imageA} alt={quiz.content} style={{ width: '100%', height: '250px', objectFit: 'cover' }} />
             <h3 style={{ marginTop: '10px', marginBottom: '5px', color: 'white' }}>{quiz.content}</h3>
           </div>
         ))}
