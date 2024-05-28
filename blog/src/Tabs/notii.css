@@ -24,7 +24,8 @@
 .notii-table th, .notii-table td {
     border: 1px solid black;
     padding: 8px;
-    text-align: left;
+    text-align: center; /* 가운데 정렬 */
+    vertical-align: middle; /* 수직 가운데 정렬 */
 }
 
 .notii-table th {

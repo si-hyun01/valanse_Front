@@ -13,7 +13,7 @@ const NoticeDetail = ({ notice, onDelete, onGoBack }) => {
   ));
 
   return (
-    <div className="notii" style={{ color: 'black' }}>
+    <div className="notii">
       <Typography variant="h6" gutterBottom>{notice.title}</Typography>
       <Typography variant="subtitle2">글번호: {notice.noticeId}</Typography>
       <Typography variant="subtitle2">등록일: {notice.createdAt}</Typography>
@@ -32,7 +32,7 @@ const NoticeDetail = ({ notice, onDelete, onGoBack }) => {
 
 const NoticeList = ({ notices, onItemClick }) => {
   return (
-    <div className="notii-table" style={{ fontWeight: 'bold', color: 'black' }}>
+    <div className="notii-table">
       <table>
         <thead>
           <tr>
@@ -104,13 +104,13 @@ const NoticeBoard = () => {
 
   return (
     <Container maxWidth="md" className="notii" style={{ marginTop: '50px' }}>
-      <Typography variant="h4" className="notii-title" style={{ fontWeight: 'bold', color: 'black', marginBottom: '10px' }}>
+      <Typography variant="h4" className="notii-title">
         공지게시판
       </Typography>
       {!showDetail ? (
         <>
           <NoticeList notices={notices} onItemClick={handleNoticeClick} />
-          <Button variant="contained" color="primary" component={Link} to="/noti_write" className="notii-button" style={{ marginTop: '30px' }}>
+          <Button variant="contained" color="primary" component={Link} to="/noti_write" className="notii-button">
             공지 작성하기
           </Button>
         </>
