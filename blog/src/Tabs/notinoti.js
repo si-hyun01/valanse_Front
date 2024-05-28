@@ -184,7 +184,7 @@ const NoticeBoard = () => {
 
   return (
     <Container className="notii" style={{ marginTop: '50px', maxWidth: "80%" }}>
-      <Typography variant="h4" className="notii-title" style={{ fontWeight: 'bold', color: 'black', marginBottom: '10px', textAlign: 'center',fontSize: '25px' }}>
+      <Typography variant="h4" className="notii-title" style={{ fontWeight: 'bold', color: 'black', marginBottom: '10px', textAlign: 'center',fontSize: '2.5rem' }}>
         공지게시판
       </Typography>
       {!showDetail ? (
