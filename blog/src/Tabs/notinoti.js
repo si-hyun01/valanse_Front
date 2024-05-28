@@ -46,7 +46,7 @@ const NoticeList = ({ notices, onItemClick }) => {
           {notices.map((notice) => (
             <tr key={notice.noticeId} onClick={() => onItemClick(notice)}>
               <td>{notice.authorId}</td>
-              <td>{notice.title}</td>
+              <td className="title-cell">{notice.title}</td> {/* 제목 열에 클래스 추가 */}
               <td>{new Date(notice.createdAt).toLocaleDateString()}</td>
               <td>{notice.views}</td>
             </tr>

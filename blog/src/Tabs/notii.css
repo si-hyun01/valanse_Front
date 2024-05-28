@@ -1,42 +1,48 @@
 .notii {
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  margin-bottom: 20px;
-}
-
-.notii-title {
-  margin-bottom: 20px;
-}
-
-.notii-table {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.notii-table table {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    margin-bottom: 20px;
+  }
+  
+  .notii-title {
+    margin-bottom: 20px;
+  }
+  
+  .notii-table {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .notii-table table {
     width: 100%;
     border-collapse: collapse;
     border: 1px solid black;
-}
-
-.notii-table th, .notii-table td {
+  }
+  
+  .notii-table th, .notii-table td {
     border: 1px solid black;
     padding: 8px;
-    text-align: center; /* 가운데 정렬 */
     vertical-align: middle; /* 수직 가운데 정렬 */
-}
-
-.notii-table th {
+    text-align: center; /* 기본적으로 가운데 정렬 */
+  }
+  
+  .notii-table th {
     background-color: #f0f0f0;
-}
-
-.notii-table tbody tr:hover {
-  background-color: #f0f0f0;
-  cursor: pointer;
-}
-
-.notii-button {
-  margin-top: 20px;
-}
+  }
+  
+  .notii-table tbody tr:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+  }
+  
+  .notii-button {
+    margin-top: 20px;
+  }
+  
+  /* 제목 열의 td 요소만 왼쪽 정렬 */
+  .notii-table tbody td.title-cell {
+    text-align: left;
+  }
+  
