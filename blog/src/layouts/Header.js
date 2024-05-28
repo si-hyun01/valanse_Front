@@ -11,7 +11,7 @@ import Cookies from 'js-cookie';
 
 const Header = () => {
     const [showSignUpModal, setShowSignUpModal] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false); 
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [stateToken, setStateToken] = useState('');
     const [accessToken, setAccessToken] = useState('');
     const navigate = useNavigate(); // useNavigate 훅을 사용하여 navigate 함수를 가져옵니다.
@@ -99,12 +99,17 @@ const Header = () => {
     return (
         <>
             <header>
-            <Navbar bg="white" expand="lg">
-            <Container style={{ maxWidth: '80%' }}>
+                <Navbar bg="white" expand="lg">
+                    <Container style={{ maxWidth: '80%' }}>
                         {/* 로고 클릭 이벤트 추가 */}
                         <Navbar.Brand onClick={handleLogoClick}>
-                            <img src={valanse_logo} alt="Valanse Logo" style={{ cursor: 'pointer' }} />
+                            <img
+                                src={valanse_logo}
+                                alt="Valanse Logo"
+                                style={{ cursor: 'pointer', width: '150px', height: 'auto' }} 
+                            />
                         </Navbar.Brand>
+
                         <Navbar.Toggle aria-controls="basic-navbar-nav" />
                         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
                             <Nav className="ml-auto">
