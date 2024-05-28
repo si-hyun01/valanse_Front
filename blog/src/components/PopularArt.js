@@ -13,18 +13,16 @@ const Popularity = () => {
             setQuizData(response.data.data.slice(0, 3)); // 상위 3개 퀴즈만 설정
         } catch (error) {
             console.error('Error fetching quiz data:', error.message);
-
         }
     };
     
-
     return (
         <div style={{ marginTop: '20px', color: 'white' }}>
             <h2 style={{ marginBottom: '10px', color: 'white' }}>인기 퀴즈</h2>
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                 {quizData.map((item, index) => (
                     <div key={index} style={{ width: 'calc(33.33% - 20px)', margin: '10px', border: '1px solid #ccc', borderRadius: '5px', padding: '10px', overflow: 'hidden' }}>
-                        <img src={item.imageA} alt="Option A" style={{ width: '100%', height: 'auto', objectFit: 'cover', maxHeight: '300px' }} />
+                        <img src={item.imageA} alt="Option A" style={{ width: '100%', height: 'auto', objectFit: 'cover', maxHeight: '200px', maxWidth: '200px' }} />
                         <h3 style={{ marginTop: '10px', marginBottom: '5px', color: 'white' }}>{item.content}</h3>
                     </div>
                 ))}

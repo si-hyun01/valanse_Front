@@ -100,35 +100,16 @@ const Layout = () => {
 
     return (
         <div>
-        <Header style={{ position: 'sticky', top: 0, zIndex: 999 }} />
-        <div style={{ backgroundColor: 'black', backgroundSize: 'cover' }}>
-        <div style={{ backgroundColor: 'black', backgroundSize: 'cover', display: 'flex', flexDirection: 'column', alignItems: 'center', border: '1px solid white' }}>
-                <ul className="nav nav-tabs" style={{ border: 'none' }}>
-                    <li className="nav-item" style={{ width: '230px' }}>
-                        <button
-                            className={`nav-link ${activeTab === '전체' && 'active'}`}
-                            style={{
-                                width: '100%',
-                                backgroundColor: activeTab === '전체' ? 'rgba(0, 0, 255, 0.3)' : 'initial',
-                                fontWeight: 'bold',
-                                color: 'white',
-                                borderRadius: '0', // 사각형으로 만들기 위해 borderRadius를 0으로 설정
-                                height: '50px',
-                                fontSize: '20px',
-                                border: 'none'
-                            }}
-                            onClick={() => handleTabChange('전체')}
-                        >
-                            전체
-                        </button>
-                    </li>
-                    <li className="nav-item" style={{ width: 230 }}>
-                        <div className="position-relative" style={{ zIndex: 999 }}>
+            <Header />
+            <div style={{ backgroundColor: 'black', backgroundSize: 'cover' }}>
+                <div style={{ backgroundColor: 'black', backgroundSize: 'cover', display: 'flex', flexDirection: 'column', alignItems: 'center', border: '1px solid white' }}>
+                    <ul className="nav nav-tabs" style={{ border: 'none' }}>
+                        <li className="nav-item" style={{ width: '230px' }}>
                             <button
-                                className={`nav-link ${activeTab === '카테고리' && 'active'}`}
+                                className={`nav-link ${activeTab === '전체' && 'active'}`}
                                 style={{
                                     width: '100%',
-                                    backgroundColor: activeTab === '카테고리' ? 'rgba(0, 0, 255, 0.3)' : 'initial',
+                                    backgroundColor: activeTab === '전체' ? 'rgba(0, 0, 255, 0.3)' : 'initial',
                                     fontWeight: 'bold',
                                     color: 'white',
                                     borderRadius: '0', // 사각형으로 만들기 위해 borderRadius를 0으로 설정
@@ -136,99 +117,118 @@ const Layout = () => {
                                     fontSize: '20px',
                                     border: 'none'
                                 }}
-                                onClick={handleCategoryToggle}
+                                onClick={() => handleTabChange('전체')}
                             >
-                                카테고리
+                                전체
                             </button>
-                            {isCategoryOpen && (
-                                <div
-                                    className="position-absolute p-2 rounded"
-                                    style={{ top: '100%', left: 0, minWidth: '600px', background: '#333333' }}
+                        </li>
+                        <li className="nav-item" style={{ width: 230 }}>
+                            <div className="position-relative" style={{ zIndex: 999 }}>
+                                <button
+                                    className={`nav-link ${activeTab === '카테고리' && 'active'}`}
+                                    style={{
+                                        width: '100%',
+                                        backgroundColor: activeTab === '카테고리' ? 'rgba(0, 0, 255, 0.3)' : 'initial',
+                                        fontWeight: 'bold',
+                                        color: 'white',
+                                        borderRadius: '0', // 사각형으로 만들기 위해 borderRadius를 0으로 설정
+                                        height: '50px',
+                                        fontSize: '20px',
+                                        border: 'none'
+                                    }}
+                                    onClick={handleCategoryToggle}
                                 >
-                                    <ul className="list-unstyled m-0 d-flex flex-wrap">
-                                        {renderCategoryButtons()}
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
-                    </li>
-                    <li className="nav-item" style={{ width: '230px' }}>
-                        <button
-                            className={`nav-link ${activeTab === '인기' && 'active'}`}
-                            style={{
-                                width: '100%',
-                                backgroundColor: activeTab === '인기' ? 'rgba(0, 0, 255, 0.3)' : 'initial',
-                                fontWeight: 'bold',
-                                color: 'white',
-                                borderRadius: '0', // 사각형으로 만들기 위해 borderRadius를 0으로 설정
-                                height: '50px',
-                                fontSize: '20px',
-                                border: 'none'
-                            }}
-                            onClick={() => handleTabChange('인기')}
-                        >
-                            인기
-                        </button>
-                    </li>
-                    <li className="nav-item" style={{ width: '230px' }}>
-                        <button
-                            className={`nav-link ${activeTab === '문제 만들기' && 'active'}`}
-                            style={{
-                                width: '100%',
-                                backgroundColor: activeTab === '문제 만들기'
-                                    ? 'rgba(0, 0, 255, 0.3)' : 'initial',
-                                fontWeight: 'bold',
-                                color: 'white',
-                                borderRadius: '0', // 사각형으로 만들기 위해 borderRadius를 0으로 설정
-                                height: '50px',
-                                fontSize: '20px',
-                                border: 'none'
-                            }}
-                            onClick={() => handleTabChange('문제 만들기')}
-                        >
-                            문제 만들기
-                        </button>
-                    </li>
-                    <li className="nav-item" style={{ width: '230px' }}>
-                        <button
-                            className={`nav-link ${activeTab === '공지' && 'active'}`}
-                            style={{
-                                width: '100%',
-                                backgroundColor: activeTab === '공지' ? 'rgba(0, 0, 255, 0.3)' : 'initial',
-                                fontWeight: 'bold',
-                                color: 'white',
-                                borderRadius: '0', // 사각형으로 만들기 위해 borderRadius를 0으로 설정
-                                height: '50px',
-                                fontSize: '20px',
-                                border: 'none',
-                            }}
-                            onClick={() => handleTabChange('공지')}
-                        >
-                            공지
-                        </button>
-                    </li>
-                </ul>
-            </div>
+                                    카테고리
+                                </button>
+                                {isCategoryOpen && (
+                                    <div
+                                        className="position-absolute p-2 rounded"
+                                        style={{ top: '100%', left: 0, minWidth: '600px', background: '#333333' }}
+                                    >
+                                        <ul className="list-unstyled m-0 d-flex flex-wrap">
+                                            {renderCategoryButtons()}
+                                        </ul>
+                                    </div>
+                                )}
+                            </div>
+                        </li>
+                        <li className="nav-item" style={{ width: '230px' }}>
+                            <button
+                                className={`nav-link ${activeTab === '인기' && 'active'}`}
+                                style={{
+                                    width: '100%',
+                                    backgroundColor: activeTab === '인기' ? 'rgba(0, 0, 255, 0.3)' : 'initial',
+                                    fontWeight: 'bold',
+                                    color: 'white',
+                                    borderRadius: '0', // 사각형으로 만들기 위해 borderRadius를 0으로 설정
+                                    height: '50px',
+                                    fontSize: '20px',
+                                    border: 'none'
+                                }}
+                                onClick={() => handleTabChange('인기')}
+                            >
+                                인기
+                            </button>
+                        </li>
+                        <li className="nav-item" style={{ width: '230px' }}>
+                            <button
+                                className={`nav-link ${activeTab === '문제 만들기' && 'active'}`}
+                                style={{
+                                    width: '100%',
+                                    backgroundColor: activeTab === '문제 만들기'
+                                        ? 'rgba(0, 0, 255, 0.3)' : 'initial',
+                                    fontWeight: 'bold',
+                                    color: 'white',
+                                    borderRadius: '0', // 사각형으로 만들기 위해 borderRadius를 0으로 설정
+                                    height: '50px',
+                                    fontSize: '20px',
+                                    border: 'none'
+                                }}
+                                onClick={() => handleTabChange('문제 만들기')}
+                            >
+                                문제 만들기
+                            </button>
+                        </li>
+                        <li className="nav-item" style={{ width: '230px' }}>
+                            <button
+                                className={`nav-link ${activeTab === '공지' && 'active'}`}
+                                style={{
+                                    width: '100%',
+                                    backgroundColor: activeTab === '공지' ? 'rgba(0, 0, 255, 0.3)' : 'initial',
+                                    fontWeight: 'bold',
+                                    color: 'white',
+                                    borderRadius: '0', // 사각형으로 만들기 위해 borderRadius를 0으로 설정
+                                    height: '50px',
+                                    fontSize: '20px',
+                                    border: 'none',
+                                }}
+                                onClick={() => handleTabChange('공지')}
+                            >
+                                공지
+                            </button>
+                        </li>
+                    </ul>
+                </div>
 
-            <div>
-                {activeTab === '전체' && <Entire />}
-                {selectedCategory && (
-                    <div>
-                        {selectedCategory === '축구' && <Problem_UI />}
-                        {selectedCategory === '음식' && <Problem_UI />}
-                        {selectedCategory === '연애' && <Problem_UI />}
-                        {selectedCategory === '노래' && <Problem_UI />}
-                        {selectedCategory === '생존' && <Problem_UI />}
-                        {selectedCategory === '드라마&영화' && <Problem_UI />}
-                        {selectedCategory === '일상' && <Problem_UI />}
-                    </div>
-                )}
-                {activeTab === '인기' && <Popularity />}
-                {activeTab === '문제 만들기' && <Make_ploblem />}
-                {activeTab === '공지' && <Notice />}
+                <div>
+                    {activeTab === '전체' && <Entire />}
+                    {selectedCategory && (
+                        <div>
+                            {selectedCategory === '축구' && <Problem_UI />}
+                            {selectedCategory === '음식' && <Problem_UI />}
+                            {selectedCategory === '연애' && <Problem_UI />}
+                            {selectedCategory === '노래' && <Problem_UI />}
+                            {selectedCategory === '생존' && <Problem_UI />}
+                            {selectedCategory === '드라마&영화' && <Problem_UI />}
+                            {selectedCategory === '일상' && <Problem_UI />}
+                        </div>
+                    )}
+                    {activeTab === '인기' && <Popularity />}
+                    {activeTab === '문제 만들기' && <Make_ploblem />}
+                    {activeTab === '공지' && <Notice />}
+                </div>
+                <Footer />
             </div>
-            <Footer />
-        </div>
         </div>
     );
 };
