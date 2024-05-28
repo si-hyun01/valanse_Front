@@ -47,6 +47,6 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 200px; /* 원하는 최대 너비를 설정 */
+    max-width: 250px; /* 원하는 최대 너비를 설정 */
   }
   
