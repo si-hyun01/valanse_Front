@@ -183,7 +183,7 @@ const NoticeBoard = () => {
   }, []);
 
   return (
-    <Container maxWidth="70%" className="notii" style={{ marginTop: '50px' }}>
+    <Container className="notii" style={{ marginTop: '50px', maxWidth: "80%" }}>
       <Typography variant="h4" className="notii-title" style={{ fontWeight: 'bold', color: 'black', marginBottom: '10px' }}>
         공지게시판
       </Typography>
