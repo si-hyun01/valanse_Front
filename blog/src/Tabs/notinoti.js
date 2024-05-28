@@ -23,7 +23,7 @@ const NoticeDetail = ({ notice, onDelete, onGoBack }) => {
       <Button onClick={onGoBack} aria-label="go-back" color="primary">
         뒤로가기
       </Button>
-      <Button onClick={() => onDelete(notice)} aria-label="delete" color="error">
+      <Button onClick={() => onDelete(notice.noticeId)} aria-label="delete" color="error">
         Delete
       </Button>
     </div>
@@ -67,10 +67,20 @@ const NoticeBoard = () => {
     setShowDetail(true);
   };
 
-  const handleDeleteNotice = (notice) => {
-    setNotices(notices.filter(item => item !== notice));
-    setSelectedNotice(null);
-    setShowDetail(false);
+  const handleDeleteNotice = async (noticeId) => {
+    try {
+      await axios.delete(`https://valanse.site/notice/${noticeId}`, {
+        headers: {
+          'accept': 'application/json;charset=UTF-8'
+        }
+      });
+      setNotices(notices.filter(item => item.noticeId !== noticeId));
+      setSelectedNotice(null);
+      setShowDetail(false);
+    } catch (error) {
+      console.error('Error deleting notice:', error);
+      alert('Failed to delete the notice. Please try again.');
+    }
   };
 
   const handleGoBack = () => {
