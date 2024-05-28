@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 
 const Popularity = () => {
-    const [quizData, setQuizData] = useState([]);
+    const [quizData, setQuizData] = useState([{}, {}, {}]); // 초기 상태를 3개의 빈 객체로 설정
+
     useEffect(() => {
         fetchData();
     }, []);
@@ -22,8 +23,12 @@ const Popularity = () => {
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                 {quizData.map((item, index) => (
                     <div key={index} style={{ width: 'calc(33.33% - 20px)', margin: '10px', border: '1px solid #ccc', borderRadius: '5px', padding: '10px', overflow: 'hidden' }}>
-                        <img src={item.imageA} alt="Option A" style={{ width: '100%', height: '250px', objectFit: 'cover' }} />
-                        <h3 style={{ marginTop: '10px', marginBottom: '5px', color: 'white' }}>{item.content}</h3>
+                        {item.imageA ? (
+                            <img src={item.imageA} alt="Option A" style={{ width: '100%', height: '250px', objectFit: 'cover' }} />
+                        ) : (
+                            <div style={{ width: '100%', height: '250px', backgroundColor: '#ddd' }}></div>
+                        )}
+                        <h3 style={{ marginTop: '10px', marginBottom: '5px', color: 'white' }}>{item.content || '로그인 하세요'}</h3>
                     </div>
                 ))}
             </div>

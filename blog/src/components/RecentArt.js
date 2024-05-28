@@ -3,7 +3,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const MyQuizzesPage = () => {
-  const [recentQuizzes, setRecentQuizzes] = useState([]);
+  const [recentQuizzes, setRecentQuizzes] = useState([{}, {}, {}]); // 초기 상태를 3개의 빈 객체로 설정
 
   // 서버에서 최근에 만들어진 퀴즈 데이터를 가져오는 함수
   const fetchRecentQuizzes = async () => {
@@ -29,13 +29,17 @@ const MyQuizzesPage = () => {
 
   return (
     <div style={{ marginTop: '20px', color: 'white' }}>
-      <h2 style={{ marginBottom: '10px', color: 'white', fontWeight: 'bold'}}>최근 작품</h2>
+      <h2 style={{ marginBottom: '10px', color: 'white', fontWeight: 'bold' }}>최근 작품</h2>
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         {/* 상태에 저장된 최근 퀴즈 사진과 제목을 표시 */}
         {recentQuizzes.map((quiz, index) => (
           <div key={index} style={{ width: 'calc(33.33% - 20px)', margin: '10px', border: '1px solid #ccc', borderRadius: '5px', padding: '10px', overflow: 'hidden' }}>
-            <img src={quiz.imageA} alt={quiz.content} style={{ width: '100%', height: '250px', objectFit: 'cover' }} />
-            <h3 style={{ marginTop: '10px', marginBottom: '5px', color: 'white' }}>{quiz.content}</h3>
+            {quiz.imageA ? (
+              <img src={quiz.imageA} alt={quiz.content} style={{ width: '100%', height: '250px', objectFit: 'cover' }} />
+            ) : (
+              <div style={{ width: '100%', height: '250px', backgroundColor: '#ddd' }}></div> // 빈 사진
+            )}
+            <h3 style={{ marginTop: '10px', marginBottom: '5px', color: 'white' }}>{quiz.content || '로그인 하세요.'}</h3> {/* 데이터 없음 메시지 */}
           </div>
         ))}
       </div>
