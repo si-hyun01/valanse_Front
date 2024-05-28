@@ -22,7 +22,7 @@ const Popularity = () => {
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                 {quizData.map((item, index) => (
                     <div key={index} style={{ width: 'calc(33.33% - 20px)', margin: '10px', border: '1px solid #ccc', borderRadius: '5px', padding: '10px', overflow: 'hidden' }}>
-                        <img src={item.imageA} alt="Option A" style={{ width: '400px', height: '250px', objectFit: 'cover' }} />
+                        <img src={item.imageA} alt="Option A" style={{ width: '100%', height: '250px', objectFit: 'cover' }} />
                         <h3 style={{ marginTop: '10px', marginBottom: '5px', color: 'white' }}>{item.content}</h3>
                     </div>
                 ))}
