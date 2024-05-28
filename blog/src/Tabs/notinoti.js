@@ -155,7 +155,8 @@ const NoticeBoard = () => {
 
   const handleGoBack = () => {
     setShowDetail(false);
-    setSelectedNotice(null); // 이 부분 추가
+    setSelectedNotice(null);
+    fetchNotices();
   };
 
   useEffect(() => {
