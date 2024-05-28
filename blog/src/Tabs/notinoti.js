@@ -105,7 +105,7 @@ const NoticeBoard = () => {
       setNotices(
         notices.map(item =>
           item.noticeId === notice.noticeId
-            ? { ...item, views: item.views + 1 }
+            ? {item, views: item.views + 1 }
             : item
         )
       );
