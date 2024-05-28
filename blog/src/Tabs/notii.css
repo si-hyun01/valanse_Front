@@ -44,5 +44,9 @@
   /* 제목 열의 td 요소만 왼쪽 정렬 */
   .notii-table tbody td.title-cell {
     text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px; /* 원하는 최대 너비를 설정 */
   }
   

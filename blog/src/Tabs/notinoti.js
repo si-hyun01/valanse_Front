@@ -80,7 +80,7 @@ const NoticeBoard = () => {
   useEffect(() => {
     const fetchNotices = async () => {
       let fetchedNotices = [];
-      const maxNoticeId = 10; // 20개만 체크
+      const maxNoticeId = 10; // 10개만 체크
       for (let i = 1; i <= maxNoticeId; i++) {
         try {
           const response = await axios.get(`https://valanse.site/notice/${i}`);
