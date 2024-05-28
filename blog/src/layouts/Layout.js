@@ -223,7 +223,6 @@ const Layout = () => {
                 {activeTab === '공지' && <Notice />}
             </div>
             <Footer />
-
         </div>
     );
 };

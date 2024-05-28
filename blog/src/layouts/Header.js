@@ -3,7 +3,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
-import valanse_logo from "./img/valanse_logo.png";
+import valanse_logo from "./img/valanse_logo.jpg";
 import { Link, useNavigate } from 'react-router-dom'; // useNavigate를 추가합니다.
 import axios from 'axios';
 import SignUpmodel from "../modal/SignUpmodel";
