@@ -29,7 +29,7 @@ const MyQuizzesPage = () => {
 
   return (
     <div style={{ marginTop: '20px', color: 'white' }}>
-      <h2 style={{ marginBottom: '10px', color: 'white' }}>최근 작품</h2>
+      <h2 style={{ marginBottom: '10px', color: 'white', fontWeight: 'bold'}}>최근 작품</h2>
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         {/* 상태에 저장된 최근 퀴즈 사진과 제목을 표시 */}
         {recentQuizzes.map((quiz, index) => (

@@ -18,7 +18,7 @@ const Popularity = () => {
     
     return (
         <div style={{ marginTop: '20px', color: 'white' }}>
-            <h2 style={{ marginBottom: '10px', color: 'white' }}>인기 퀴즈</h2>
+            <h2 style={{ marginBottom: '10px', color: 'white', fontWeight: 'bold'}}>인기 퀴즈</h2>
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                 {quizData.map((item, index) => (
                     <div key={index} style={{ width: 'calc(33.33% - 20px)', margin: '10px', border: '1px solid #ccc', borderRadius: '5px', padding: '10px', overflow: 'hidden' }}>
