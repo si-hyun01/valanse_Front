@@ -100,7 +100,7 @@ const Layout = () => {
 
     return (
         <div>
-        <Header />
+        <Header style={{ position: 'fixed', top: 0, width: '100%', zIndex: 999 }} />
         <div style={{ backgroundColor: 'black', backgroundSize: 'cover' }}>
         <div style={{ backgroundColor: 'black', backgroundSize: 'cover', display: 'flex', flexDirection: 'column', alignItems: 'center', border: '1px solid white' }}>
                 <ul className="nav nav-tabs" style={{ border: 'none' }}>
@@ -123,7 +123,7 @@ const Layout = () => {
                         </button>
                     </li>
                     <li className="nav-item" style={{ width: 230 }}>
-                        <div className="position-relative" style={{ zIndex: 999 }}>
+                        <div className="position-relative" style={{ zIndex: 998 }}>
                             <button
                                 className={`nav-link ${activeTab === '카테고리' && 'active'}`}
                                 style={{
