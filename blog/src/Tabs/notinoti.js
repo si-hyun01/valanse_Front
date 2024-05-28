@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Button } from '@mui/material';
+import { Container, Typography, Button, TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './notii.css'; // CSS 파일 
 
-const NoticeDetail = ({ notice, onDelete, onGoBack }) => {
+const NoticeDetail = ({ notice, onDelete, onGoBack, onUpdate }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedTitle, setEditedTitle] = useState(notice.title);
+  const [editedContent, setEditedContent] = useState(notice.content);
+
+  const handleUpdate = () => {
+    onUpdate(notice.noticeId, editedTitle, editedContent);
+    setIsEditing(false);
+  };
+
   const formattedContent = notice.content.split('\n').map((line, index) => (
     <React.Fragment key={index}>
       {line}
@@ -14,18 +23,40 @@ const NoticeDetail = ({ notice, onDelete, onGoBack }) => {
 
   return (
     <div className="notii" style={{ color: 'black' }}>
-      <Typography variant="h6" gutterBottom>{notice.title}</Typography>
-      <Typography variant="subtitle2">글번호: {notice.noticeId}</Typography>
-      <Typography variant="subtitle2">등록일: {notice.createdAt}</Typography>
-      <Typography variant="body1">
-        {formattedContent}
-      </Typography>
-      <Button onClick={onGoBack} aria-label="go-back" color="primary">
-        뒤로가기
-      </Button>
-      <Button onClick={() => onDelete(notice.noticeId)} aria-label="delete" color="error">
-        Delete
-      </Button>
+      {isEditing ? (
+        <>
+          <TextField
+            label="Title"
+            value={editedTitle}
+            onChange={(e) => setEditedTitle(e.target.value)}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Content"
+            value={editedContent}
+            onChange={(e) => setEditedContent(e.target.value)}
+            multiline
+            rows={4}
+            fullWidth
+            margin="normal"
+          />
+          <Button onClick={handleUpdate} color="primary">확인</Button>
+          <Button onClick={() => setIsEditing(false)} color="secondary">취소</Button>
+        </>
+      ) : (
+        <>
+          <Typography variant="h6" gutterBottom>{notice.title}</Typography>
+          <Typography variant="subtitle2">글번호: {notice.noticeId}</Typography>
+          <Typography variant="subtitle2">등록일: {notice.createdAt}</Typography>
+          <Typography variant="body1">
+            {formattedContent}
+          </Typography>
+          <Button onClick={onGoBack} aria-label="go-back" color="primary">뒤로가기</Button>
+          <Button onClick={() => onDelete(notice.noticeId)} aria-label="delete" color="error">Delete</Button>
+          <Button onClick={() => setIsEditing(true)} aria-label="edit" color="primary">수정하기</Button>
+        </>
+      )}
     </div>
   );
 };
@@ -83,6 +114,25 @@ const NoticeBoard = () => {
     }
   };
 
+  const handleUpdateNotice = async (noticeId, title, content) => {
+    try {
+      await axios.patch(`https://valanse.site/notice/${noticeId}`, {
+        title,
+        content
+      }, {
+        headers: {
+          'accept': 'application/json;charset=UTF-8',
+          'Content-Type': 'application/json;charset=UTF-8'
+        }
+      });
+      setNotices(notices.map(notice => (notice.noticeId === noticeId ? { ...notice, title, content } : notice)));
+      setSelectedNotice({ ...selectedNotice, title, content });
+    } catch (error) {
+      console.error('Error updating notice:', error);
+      alert('Failed to update the notice. Please try again.');
+    }
+  };
+
   const handleGoBack = () => {
     setShowDetail(false);
   };
@@ -125,7 +175,12 @@ const NoticeBoard = () => {
           </Button>
         </>
       ) : (
-        <NoticeDetail notice={selectedNotice} onDelete={handleDeleteNotice} onGoBack={handleGoBack} />
+        <NoticeDetail
+          notice={selectedNotice}
+          onDelete={handleDeleteNotice}
+          onGoBack={handleGoBack}
+          onUpdate={handleUpdateNotice}
+        />
       )}
     </Container>
   );
