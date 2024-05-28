@@ -156,7 +156,6 @@ const NoticeBoard = () => {
   const handleGoBack = () => {
     setShowDetail(false);
     setSelectedNotice(null);
-    fetchNotices();
   };
 
   useEffect(() => {
