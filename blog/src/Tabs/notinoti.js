@@ -53,7 +53,7 @@ const NoticeDetail = ({ notice, onDelete, onGoBack, onUpdate }) => {
             {formattedContent}
           </Typography>
           <Button onClick={onGoBack} aria-label="go-back" color="primary">뒤로가기</Button>
-          <Button onClick={() => onDelete(notice.noticeId)} aria-label="delete" color="error">Delete</Button>
+          <Button onClick={() => onDelete(notice.noticeId)} aria-label="delete" color="error">삭제하기</Button>
           <Button onClick={() => setIsEditing(true)} aria-label="edit" color="primary">수정하기</Button>
         </>
       )}
@@ -93,9 +93,29 @@ const NoticeBoard = () => {
   const [selectedNotice, setSelectedNotice] = useState(null);
   const [showDetail, setShowDetail] = useState(false);
 
-  const handleNoticeClick = (notice) => {
-    setSelectedNotice(notice);
-    setShowDetail(true);
+  const handleNoticeClick = async (notice) => {
+    try {
+      // 공지사항 조회수 증가 API 호출
+      await axios.post(`https://valanse.site/notice/${notice.noticeId}/increase-view`, {
+        headers: {
+          'accept': 'application/json;charset=UTF-8'
+        }
+      });
+      // 조회수 증가 후 상태 업데이트
+      setNotices(
+        notices.map(item =>
+          item.noticeId === notice.noticeId
+            ? { ...item, views: item.views + 1 }
+            : item
+        )
+      );
+      // 상세 내용 표시
+      setSelectedNotice(notice);
+      setShowDetail(true);
+    } catch (error) {
+      console.error('Error increasing views:', error);
+      alert('Failed to increase views. Please try again.');
+    }
   };
 
   const handleDeleteNotice = async (noticeId) => {
@@ -170,7 +190,8 @@ const NoticeBoard = () => {
       {!showDetail ? (
         <>
           <NoticeList notices={notices} onItemClick={handleNoticeClick} />
-          <Button variant="contained" color="primary" component={Link} to="/noti_write" className="notii-button" style={{ marginTop: '30px' }}>
+          <Button variant="contained" color="primary" component={Link} to=
+            "/noti_write" className="notii-button" style={{ marginTop: '30px' }}>
             공지 작성하기
           </Button>
         </>
