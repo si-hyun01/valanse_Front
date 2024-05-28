@@ -92,7 +92,6 @@ const NoticeBoard = () => {
   const [notices, setNotices] = useState([]);
   const [selectedNotice, setSelectedNotice] = useState(null);
   const [showDetail, setShowDetail] = useState(false);
-  const [previousNotices, setPreviousNotices] = useState([]);
 
   const handleNoticeClick = async (notice) => {
     try {
@@ -103,11 +102,10 @@ const NoticeBoard = () => {
         }
       });
       // 조회수 증가 후 상태 업데이트
-      setPreviousNotices(notices); // 이전 공지 목록 저장
       setNotices(
         notices.map(item =>
           item.noticeId === notice.noticeId
-            ? {item, views: item.views + 1 }
+            ? { ...item, views: item.views + 1 }
             : item
         )
       );
@@ -157,8 +155,6 @@ const NoticeBoard = () => {
 
   const handleGoBack = () => {
     setShowDetail(false);
-    setSelectedNotice(null);
-    setNotices(previousNotices); // 이전 공지 목록으로 복구
   };
 
   useEffect(() => {
@@ -187,16 +183,15 @@ const NoticeBoard = () => {
   }, []);
 
   return (
-    <Container className="notii" style={{ marginTop: '50px', maxWidth: "80%" }}>
+    <Container maxWidth="md" className="notii" style={{ marginTop: '50px' }}>
       <Typography variant="h4" className="notii-title" style={{ fontWeight: 'bold', color: 'black', marginBottom: '10px' }}>
-        공지게시
-        판
+        공지게시판
       </Typography>
       {!showDetail ? (
         <>
           <NoticeList notices={notices} onItemClick={handleNoticeClick} />
-          <Button variant="contained" color="primary" component={Link} to=
-            "/noti_write" className="notii-button" style={{ marginTop: '30px' }}>
+          <Button variant="contained" color="primary" component={Link} to="/
+noti_write" className="notii-button" style={{ marginTop: '30px' }}>
             공지 작성하기
           </Button>
         </>
