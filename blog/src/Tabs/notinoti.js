@@ -189,9 +189,10 @@ const NoticeBoard = () => {
       </Typography>
       {!showDetail ? (
         <>
-          <NoticeList notices={notices} onItemClick={handleNoticeClick} />
-          <Button variant="contained" color="primary" component={Link} to="/
-noti_write" className="notii-button" style={{ marginTop: '30px' }}>
+          <
+            NoticeList notices={notices} onItemClick={handleNoticeClick} />
+          <Button variant="contained" color="primary" component={Link} to=
+            "/noti_write" className="notii-button" style={{ marginTop: '30px' }}>
             공지 작성하기
           </Button>
         </>
