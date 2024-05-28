@@ -16,14 +16,15 @@
 }
 
 .notii-table table {
-  width: 100%;
-  border-collapse: collapse;
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid black;
 }
 
 .notii-table th, .notii-table td {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  text-align: left;
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
 }
 
 .notii-table th {

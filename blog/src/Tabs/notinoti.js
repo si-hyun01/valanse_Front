@@ -80,7 +80,7 @@ const NoticeBoard = () => {
   useEffect(() => {
     const fetchNotices = async () => {
       let fetchedNotices = [];
-      const maxNoticeId = 20; // Max notice ID to check
+      const maxNoticeId = 10; // 20개만 체크
       for (let i = 1; i <= maxNoticeId; i++) {
         try {
           const response = await axios.get(`https://valanse.site/notice/${i}`);
@@ -89,7 +89,7 @@ const NoticeBoard = () => {
           }
         } catch (error) {
           if (error.response && error.response.status === 404) {
-            // Ignore 404 errors and continue
+            // 404 무시하기
             continue;
           } else {
             console.error('Error fetching notice:', error);
