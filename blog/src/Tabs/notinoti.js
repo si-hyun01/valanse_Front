@@ -105,7 +105,7 @@ const NoticeBoard = () => {
       setNotices(
         notices.map(item =>
           item.noticeId === notice.noticeId
-            ? { ...item, views: item.views + 1 }
+            ? {item, views: item.views + 1 }
             : item
         )
       );
@@ -145,8 +145,8 @@ const NoticeBoard = () => {
           'Content-Type': 'application/json;charset=UTF-8'
         }
       });
-      setNotices(notices.map(notice => (notice.noticeId === noticeId ? { ...notice, title, content } : notice)));
-      setSelectedNotice({ ...selectedNotice, title, content });
+      setNotices(notices.map(notice => (notice.noticeId === noticeId ? {notice, title, content } : notice)));
+      setSelectedNotice({selectedNotice, title, content });
     } catch (error) {
       console.error('Error updating notice:', error);
       alert('Failed to update the notice. Please try again.');
@@ -184,7 +184,7 @@ const NoticeBoard = () => {
 
   return (
     <Container className="notii" style={{ marginTop: '50px', maxWidth: "80%" }}>
-      <Typography variant="h4" className="notii-title" style={{ fontWeight: 'bold', color: 'black', marginBottom: '10px' }}>
+      <Typography variant="h4" className="notii-title" style={{ fontWeight: 'bold', color: 'black', marginBottom: '10px', textAlign: 'center',fontSize: '25px' }}>
         공지게시판
       </Typography>
       {!showDetail ? (
