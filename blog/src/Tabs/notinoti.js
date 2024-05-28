@@ -103,21 +103,23 @@ const NoticeBoard = () => {
         }
       });
       // 조회수 증가 후 상태 업데이트
-      const updatedNotices = notices.map(item =>
-        item.noticeId === notice.noticeId
-          ? {item, views: item.views + 1 }
-          : item
+      setPreviousNotices(notices); // 이전 공지 목록 저장
+      setNotices(
+        notices.map(item =>
+          item.noticeId === notice.noticeId
+            ? {item, views: item.views + 1 }
+            : item
+        )
       );
-      setNotices(updatedNotices);
       // 상세 내용 표시
-      setSelectedNotice({ ...notice, views: notice.views + 1 });
+      setSelectedNotice(notice);
       setShowDetail(true);
     } catch (error) {
       console.error('Error increasing views:', error);
       alert('Failed to increase views. Please try again.');
     }
   };
-  
+
   const handleDeleteNotice = async (noticeId) => {
     try {
       await axios.delete(`https://valanse.site/notice/${noticeId}`, {
