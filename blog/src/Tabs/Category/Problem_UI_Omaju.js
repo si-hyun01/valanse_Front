@@ -57,9 +57,11 @@ function ProblemUI() {
     }
   };
 
-  const handleOptionSelect = (option) => {
+  const handleOptionSelect = async (option, quizId) => {
     setSelectedOption(option);
     setShowConfirmDialog(true);
+    const quizData = await fetchQuizById(quizId);
+    // 이후의 작업에 대한 처리
   };
 
   const handleOptionLike = async () => {
@@ -157,7 +159,7 @@ function ProblemUI() {
               </IconButton>
             </Grid>
             <Grid item xs={6} textAlign="center">
-              <Card onClick={() => handleOptionSelect('A')} sx={{ borderRadius: '16px' }}>
+              <Card onClick={() => handleOptionSelect('A', currentQuizData.quizId)} sx={{ borderRadius: '16px' }}>
                 <CardActionArea>
                   <CardMedia
                     component="img"
@@ -174,7 +176,7 @@ function ProblemUI() {
               </Card>
             </Grid>
             <Grid item xs={6} textAlign="center">
-              <Card onClick={() => handleOptionSelect('B')} sx={{ borderRadius: '16px' }}>
+              <Card onClick={() => handleOptionSelect('B', currentQuizData.quizId)} sx={{ borderRadius: '16px' }}>
                 <CardActionArea>
                   <CardMedia
                     component="img"
@@ -209,4 +211,3 @@ function ProblemUI() {
 }
 
 export default ProblemUI;
-
