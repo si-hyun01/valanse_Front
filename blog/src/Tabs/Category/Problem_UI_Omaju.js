@@ -19,51 +19,33 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-const LAST_QUIZ_ID = 50;
-
 function ProblemUI() {
-  const [quizData, setQuizData] = useState(null);
+  const [quizDataList, setQuizDataList] = useState([]);
+  const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
-  const [likes, setLikes] = useState(0);
-  const [dislikes, setDislikes] = useState(0);
-  const [liked, setLiked] = useState(false);
-  const [disliked, setDisliked] = useState(false);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [currentQuizId, setCurrentQuizId] = useState(1);
 
   useEffect(() => {
-    if (currentQuizId <= LAST_QUIZ_ID) {
-      fetchQuizData(currentQuizId);
-    } else {
-      setShowNoProblemDialog(true);
-    }
-  }, [currentQuizId]);
+    fetchQuizData();
+  }, []);
 
-  const fetchQuizData = async (quizId) => {
+  const fetchQuizData = async () => {
     try {
-      const response = await axios.get(`https://valanse.site/quiz/${quizId}?category=축구`);
+      const response = await axios.get(
+        'https://valanse.site/quiz-category/search?keyword=%EC%B6%95%EA%B5%AC'
+      );
       const data = response.data.data;
-      if (!data || Object.keys(data).length === 0) {
-        setQuizData(null);
+      if (!data || data.length === 0) {
         setShowNoProblemDialog(true);
         return;
       }
-      setQuizData(data);
-      setLikes(data.preference);
-      setDislikes(0);
-      setLiked(false);
-      setDisliked(false);
+      setQuizDataList(data);
     } catch (error) {
-      if (error.response && error.response.status === 404) {
-        handleNext();
-      } else {
-        console.error('Error fetching quiz data:', error.message);
-        setShowNoProblemDialog(true);
-      }
+      console.error('Error fetching quiz data:', error.message);
+      setShowNoProblemDialog(true);
     }
   };
-
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
@@ -71,61 +53,27 @@ function ProblemUI() {
   };
 
   const handleOptionLike = async () => {
-    try {
-      if (liked) {
-        await axios.post(`https://valanse.site/quiz/${currentQuizId}/decrease-preference`);
-        setLikes(likes - 1);
-        setLiked(false);
-      } else {
-        if (disliked) {
-          await axios.post(`https://valanse.site/quiz/${currentQuizId}/increase-preference`);
-          setDislikes(dislikes - 1);
-          setDisliked(false);
-        }
-        await axios.post(`https://valanse.site/quiz/${currentQuizId}/increase-preference`);
-        setLikes(likes + 1);
-        setLiked(true);
-      }
-    } catch (error) {
-      console.error('Error updating preference:', error.message);
-    }
+    // Implement liking functionality
   };
 
   const handleOptionDislike = async () => {
-    try {
-      if (disliked) {
-        await axios.post(`https://valanse.site/quiz/${currentQuizId}/increase-preference`);
-        setDislikes(dislikes - 1);
-        setDisliked(false);
-      } else {
-        if (liked) {
-          await axios.post(`https://valanse.site/quiz/${currentQuizId}/decrease-preference`);
-          setLikes(likes - 1);
-          setLiked(false);
-        }
-        await axios.post(`https://valanse.site/quiz/${currentQuizId}/decrease-preference`);
-        setDislikes(dislikes + 1);
-        setDisliked(true);
-      }
-    } catch (error) {
-      console.error('Error updating preference:', error.message);
-    }
+    // Implement disliking functionality
   };
 
   const handleNext = () => {
-    if (currentQuizId < LAST_QUIZ_ID) {
-      setSelectedOption(null);
-      setShowConfirmDialog(false);
-      setCurrentQuizId((prevQuizId) => prevQuizId + 1);
+    const nextIndex = currentQuizIndex + 1;
+    if (nextIndex < quizDataList.length) {
+      setCurrentQuizIndex(nextIndex);
     } else {
       setShowNoProblemDialog(true);
     }
   };
 
   const handlePrevious = () => {
-    const previousQuizId = currentQuizId - 1;
-    if (previousQuizId < 1) return;
-    setCurrentQuizId(previousQuizId);
+    const previousIndex = currentQuizIndex - 1;
+    if (previousIndex >= 0) {
+      setCurrentQuizIndex(previousIndex);
+    }
   };
 
   const handleCloseNoProblemDialog = () => {
@@ -139,6 +87,8 @@ function ProblemUI() {
   const handleConfirmSelection = () => {
     handleNext();
   };
+
+  const currentQuizData = quizDataList[currentQuizIndex];
 
   return (
     <Container maxWidth="lg">
@@ -186,14 +136,14 @@ function ProblemUI() {
           <Grid container spacing={2} justifyContent="center">
             <Grid item xs={12} style={{ height: '30px' }} />
             <Grid item xs={12}>
-              <Typography variant="h4" align="center">{quizData ? quizData.content : ''}</Typography>
+              <Typography variant="h4" align="center">{currentQuizData ? currentQuizData.content : ''}</Typography>
             </Grid>
             <Grid item xs={12} textAlign="center">
               <IconButton onClick={handleOptionLike}>
-                <ThumbUpIcon color={liked ? 'primary' : 'inherit'} /> {likes}
+                <ThumbUpIcon color={'inherit'} /> {currentQuizData ? currentQuizData.likes : 0}
               </IconButton>
               <IconButton onClick={handleOptionDislike}>
-                <ThumbDownIcon color={disliked ? 'primary' : 'inherit'} /> {dislikes}
+                <ThumbDownIcon color={'inherit'} /> {currentQuizData ? currentQuizData.dislikes : 0}
               </IconButton>
             </Grid>
             <Grid item xs={6} textAlign="center">
@@ -202,12 +152,12 @@ function ProblemUI() {
                   <CardMedia
                     component="img"
                     height="400"
-                    image={quizData ? quizData.imageA : ''}
+                    image={currentQuizData ? currentQuizData.imageA : ''}
                     alt=""
                   />
                   <CardContent sx={{ height: '100px' }}>
                     <Typography gutterBottom variant="h5" component="div">
-                      {quizData ? quizData.descriptionA : ''}
+                      {currentQuizData ? currentQuizData.descriptionA : ''}
                     </Typography>
                   </CardContent>
                 </CardActionArea>
@@ -219,12 +169,12 @@ function ProblemUI() {
                   <CardMedia
                     component="img"
                     height="400"
-                    image={quizData ? quizData.imageB : ''}
+                    image={currentQuizData ? currentQuizData.imageB : ''}
                     alt=""
                   />
                   <CardContent sx={{ height: '100px' }}>
                     <Typography gutterBottom variant="h5" component="div">
-                      {quizData ? quizData.descriptionB : ''}
+                      {currentQuizData ? currentQuizData.descriptionB : ''}
                     </Typography>
                   </CardContent>
                 </CardActionArea>
@@ -235,7 +185,7 @@ function ProblemUI() {
                 variant="contained"
                 color="primary"
                 onClick={handlePrevious}
-                disabled={currentQuizId === 1}
+                disabled={currentQuizIndex === 0}
                 startIcon={<ArrowBackIcon />}
               >
                 Previous
