@@ -93,13 +93,13 @@ const MyPage = () => {
                             <Table>
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell>Quiz</TableCell>
-                                        <TableCell>Image A</TableCell>
-                                        <TableCell>Description A</TableCell>
-                                        <TableCell>Image B</TableCell>
-                                        <TableCell>Description B</TableCell>
-                                        <TableCell>Likes</TableCell>
-                                        <TableCell>Views</TableCell>
+                                        <TableCell>제목</TableCell>
+                                        <TableCell>왼쪽 사진</TableCell>
+                                        <TableCell>왼쪽 설명</TableCell>
+                                        <TableCell>오른쪽 사진</TableCell>
+                                        <TableCell>오른쪽 설명</TableCell>
+                                        <TableCell>선호도</TableCell>
+                                        <TableCell>조회수</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <tbody>
