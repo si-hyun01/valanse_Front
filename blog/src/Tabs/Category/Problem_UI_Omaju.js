@@ -42,27 +42,27 @@ function ProblemUI() {
 
   const fetchQuizData = async (quizId) => {
     try {
-        const response = await axios.get(`https://valanse.site/quiz/${quizId}?category=축구`);
-        const data = response.data.data;
-        if (!data || Object.keys(data).length === 0) {
-            setQuizData(null);
-            setShowNoProblemDialog(true);
-            return;
-        }
-        setQuizData(data);
-        setLikes(data.preference);
-        setDislikes(0);
-        setLiked(false);
-        setDisliked(false);
+      const response = await axios.get(`https://valanse.site/quiz/${quizId}?category=축구`);
+      const data = response.data.data;
+      if (!data || Object.keys(data).length === 0) {
+        setQuizData(null);
+        setShowNoProblemDialog(true);
+        return;
+      }
+      setQuizData(data);
+      setLikes(data.preference);
+      setDislikes(0);
+      setLiked(false);
+      setDisliked(false);
     } catch (error) {
-        if (error.response && error.response.status === 404) {
-            handleNext();
-        } else {
-            console.error('Error fetching quiz data:', error.message);
-            setShowNoProblemDialog(true);
-        }
+      if (error.response && error.response.status === 404) {
+        handleNext();
+      } else {
+        console.error('Error fetching quiz data:', error.message);
+        setShowNoProblemDialog(true);
+      }
     }
-};
+  };
 
 
   const handleOptionSelect = (option) => {
