@@ -94,9 +94,9 @@ const MyPage = () => {
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>Quiz</TableCell>
-                                        <TableCell>Option A</TableCell>
+                                        <TableCell>Image A</TableCell>
                                         <TableCell>Description A</TableCell>
-                                        <TableCell>Option B</TableCell>
+                                        <TableCell>Image B</TableCell>
                                         <TableCell>Description B</TableCell>
                                         <TableCell>Likes</TableCell>
                                         <TableCell>Views</TableCell>
@@ -106,23 +106,31 @@ const MyPage = () => {
                                     {quizzes.map((quiz) => (
                                         <TableRow key={quiz.quizId}>
                                             <TableCell>{quiz.content}</TableCell>
-                                            <TableCell>{quiz.optionA}</TableCell>
+                                            <TableCell>
+                                                {quiz.imageA && (
+                                                    <img src={quiz.imageA} alt="Option A" style={{ maxWidth: '100%', marginBottom: '10px' }} />
+                                                )}
+                                            </TableCell>
                                             <TableCell>{quiz.descriptionA}</TableCell>
-                                            <TableCell>{quiz.optionB}</TableCell>
+                                            <TableCell>
+                                                {quiz.imageB && (
+                                                    <img src={quiz.imageB} alt="Option B" style={{ maxWidth: '100%', marginBottom: '10px' }} />
+                                                )}
+                                            </TableCell>
                                             <TableCell>{quiz.descriptionB}</TableCell>
                                             <TableCell>{quiz.preference}</TableCell>
                                             <TableCell>{quiz.view}</TableCell>
                                         </TableRow>
                                     ))}
-                                    </tbody>
-                                </Table>
-                            </TableContainer>
-                        </AccordionDetails>
-                    </Accordion>
-                </div>
-            </>
-        );
-    };
-    
-    export default MyPage;
-    
+                                </tbody>
+                            </Table>
+                        </TableContainer>
+                    </AccordionDetails>
+                </
+                Accordion>
+            </div>
+        </>
+    );
+};
+
+export default MyPage;
