@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Layout from './layouts/Layout';
 import NoticeBoard from '../src/Tabs/notinoti';
 import NoticeWrite from '../src/Tabs/noti_write';
+import Mypage from '../src/layouts/Mypage';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/popularity" element={<Layout />} />
         <Route path="/noti_board" element={<NoticeBoard />} />
         <Route path="/noti_write" element={<NoticeWrite />} />
+        <Route path="/mypage" element={<Mypage />}/>
       </Routes>
     </Router>
   );
