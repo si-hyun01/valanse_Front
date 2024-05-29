@@ -18,6 +18,7 @@ const NoticeWrite = () => {
 
     const handleDialogClose = () => {
         setDialogOpen(false);
+        navigate('/'); // 다이얼로그가 닫힐 때 페이지 이동 실행
     };
 
     const handleAddNotice = async () => {
@@ -54,7 +55,6 @@ const NoticeWrite = () => {
                     setDialogTitle('Success');
                     setDialogContent('공지가 성공적으로 추가되었습니다.');
                     setDialogOpen(true);
-                    navigate('/');
                 } else {
                     console.error('Failed to add notice');
                     setDialogTitle('Error');
@@ -73,7 +73,6 @@ const NoticeWrite = () => {
             setDialogOpen(true);
         }
     };
-    
 
     return (
         <>
