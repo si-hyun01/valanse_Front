@@ -30,6 +30,21 @@ function ProblemUI() {
     fetchQuizData();
   }, []);
 
+  const fetchAllQuizData = async (quizIds) => {
+    try {
+      const quizDataArray = await Promise.all(
+        quizIds.map(async (quizId) => {
+          const response = await axios.get(`https://valanse.site/quiz/${quizId}`);
+          return response.data.data;
+        })
+      );
+      return quizDataArray;
+    } catch (error) {
+      console.error('Error fetching quiz data:', error.message);
+      return [];
+    }
+  };
+  
   const fetchQuizData = async () => {
     try {
       const response = await axios.get(
@@ -40,22 +55,15 @@ function ProblemUI() {
         setShowNoProblemDialog(true);
         return;
       }
-      setQuizDataList(data);
+      const quizIds = data.map((quiz) => quiz.quizId);
+      const quizDataArray = await fetchAllQuizData(quizIds);
+      setQuizDataList(quizDataArray);
     } catch (error) {
       console.error('Error fetching quiz data:', error.message);
       setShowNoProblemDialog(true);
     }
   };
-
-  const fetchQuizById = async (quizId) => {
-    try {
-      const response = await axios.get(`https://valanse.site/quiz/${quizId}`);
-      return response.data.data;
-    } catch (error) {
-      console.error('Error fetching quiz by ID:', error.message);
-      return null;
-    }
-  };
+  
 
   const handleOptionSelect = async (option, quizId) => {
     setSelectedOption(option);
