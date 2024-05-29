@@ -61,8 +61,9 @@ function ProblemUI() {
     setSelectedOption(option);
     setShowConfirmDialog(true);
     const quizData = await fetchQuizById(quizId);
-    // 이후의 작업에 대한 처리
+    console.log(quizData); // 선택한 퀴즈의 상세 정보 출력
   };
+  
 
   const handleOptionLike = async () => {
     // Implement liking functionality
