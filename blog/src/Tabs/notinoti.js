@@ -105,7 +105,7 @@ const NoticeBoard = () => {
       setNotices(
         notices.map(item =>
           item.noticeId === notice.noticeId
-            ? {item, views: item.views + 1 }
+            ? { ...item, views: item.views + 1 }
             : item
         )
       );
@@ -145,8 +145,8 @@ const NoticeBoard = () => {
           'Content-Type': 'application/json;charset=UTF-8'
         }
       });
-      setNotices(notices.map(notice => (notice.noticeId === noticeId ? {notice, title, content } : notice)));
-      setSelectedNotice({selectedNotice, title, content });
+      setNotices(notices.map(notice => (notice.noticeId === noticeId ? { ...notice, title, content } : notice)));
+      setSelectedNotice({ ...selectedNotice, title, content });
     } catch (error) {
       console.error('Error updating notice:', error);
       alert('Failed to update the notice. Please try again.');
@@ -155,6 +155,7 @@ const NoticeBoard = () => {
 
   const handleGoBack = () => {
     setShowDetail(false);
+    setSelectedNotice(null);
   };
 
   useEffect(() => {
@@ -184,15 +185,13 @@ const NoticeBoard = () => {
 
   return (
     <Container className="notii" style={{ marginTop: '50px', maxWidth: "80%" }}>
-      <Typography variant="h4" className="notii-title" style={{ fontWeight: 'bold', color: 'black', marginBottom: '10px', textAlign: 'center',fontSize: '2.5rem' }}>
+      <Typography variant="h4" className="notii-title" style={{ fontWeight: 'bold', color: 'black', marginBottom: '10px', textAlign: 'center', fontSize: '2.5rem' }}>
         공지게시판
       </Typography>
       {!showDetail ? (
         <>
-          <
-            NoticeList notices={notices} onItemClick={handleNoticeClick} />
-          <Button variant="contained" color="primary" component={Link} to=
-            "/noti_write" className="notii-button" style={{ marginTop: '30px' }}>
+          <NoticeList notices={notices} onItemClick={handleNoticeClick} />
+          <Button variant="contained" color="primary" component={Link} to="/noti_write" className="notii-button" style={{ marginTop: '30px' }}>
             공지 작성하기
           </Button>
         </>
