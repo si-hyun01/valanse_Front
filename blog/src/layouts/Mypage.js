@@ -6,6 +6,7 @@ import {
     Typography
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Header from './Header';
 
 const quizzes = [
     {
@@ -72,41 +73,44 @@ const quizzes = [
 
 const MyPage = () => {
     return (
-        <div>
-            {quizzes.map((quiz) => (
-                <Accordion key={quiz.quizId}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        <Typography>{quiz.content}</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Typography variant="body2">
-                            Option A: {quiz.optionA}
-                        </Typography>
-                        <Typography variant="body2">
-                            Description A: {quiz.descriptionA}
-                        </Typography>
-                        {quiz.imageA && (
-                            <img src={quiz.imageA} alt="Option A" style={{ maxWidth: '100%' }} />
-                        )}
-                        <Typography variant="body2">
-                            Option B: {quiz.optionB}
-                        </Typography>
-                        <Typography variant="body2">
-                            Description B: {quiz.descriptionB}
-                        </Typography>
-                        {quiz.imageB && (
-                            <img src={quiz.imageB} alt="Option B" style={{ maxWidth: '100%' }} />
-                        )}
-                        <Typography variant="body2">
-                            Likes: {quiz.preference}
-                        </Typography>
-                        <Typography variant="body2">
-                            Views: {quiz.view}
-                        </Typography>
-                    </AccordionDetails>
-                </Accordion>
-            ))}
-        </div>
+        <>
+            <Header />
+            <div>
+                {quizzes.map((quiz) => (
+                    <Accordion key={quiz.quizId}>
+                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                            <Typography>{quiz.content}</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Typography variant="body2">
+                                Option A: {quiz.optionA}
+                            </Typography>
+                            <Typography variant="body2">
+                                Description A: {quiz.descriptionA}
+                            </Typography>
+                            {quiz.imageA && (
+                                <img src={quiz.imageA} alt="Option A" style={{ maxWidth: '100%' }} />
+                            )}
+                            <Typography variant="body2">
+                                Option B: {quiz.optionB}
+                            </Typography>
+                            <Typography variant="body2">
+                                Description B: {quiz.descriptionB}
+                            </Typography>
+                            {quiz.imageB && (
+                                <img src={quiz.imageB} alt="Option B" style={{ maxWidth: '100%' }} />
+                            )}
+                            <Typography variant="body2">
+                                Likes: {quiz.preference}
+                            </Typography>
+                            <Typography variant="body2">
+                                Views: {quiz.view}
+                            </Typography>
+                        </AccordionDetails>
+                    </Accordion>
+                ))}
+            </div>
+        </>
     );
 };
 
