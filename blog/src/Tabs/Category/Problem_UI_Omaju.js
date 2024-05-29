@@ -104,8 +104,10 @@ function ProblemUI() {
   };
 
   const handleConfirmSelection = () => {
-    handleNext();
+    setShowConfirmDialog(false); // 다이얼로그를 닫기
+    handleNext(); // 다음 퀴즈로 넘어가버리기
   };
+  
 
   const currentQuizData = quizDataList[currentQuizIndex];
 
