@@ -31,11 +31,11 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
             descriptionB: story2,
             category: [selectedCategory]
         };
-
+    
         formData.append('quizRegisterDto', new Blob([JSON.stringify(quizRegisterDto)], { type: 'application/json' }));
         formData.append('image_A', story1Image);
         formData.append('image_B', story2Image);
-
+    
         try {
             const response = await axios.post('https://valanse.site/quiz/register', formData, {
                 headers: {
@@ -46,10 +46,13 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
             console.log('Quiz created successfully:', response.data);
             setOpenDialog(true);
             resetForm(); // Reset the form after successful creation
+            // 이미지 초기화
+            setStory1Image(null);
+            setStory2Image(null);
         } catch (error) {
             console.error('Error creating quiz:', error.response ? error.response.data : error.message);
         }
-    };
+    };    
 
     const handleCloseDialog = () => {
         setOpenDialog(false);
