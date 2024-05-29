@@ -76,35 +76,44 @@ const MyPage = () => {
         <>
             <Header />
             <div>
+                <Typography variant="h4" gutterBottom>
+                    내가 작성한 퀴즈
+                </Typography>
                 {quizzes.map((quiz) => (
                     <Accordion key={quiz.quizId}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                             <Typography>{quiz.content}</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
-                            <Typography variant="body2">
-                                Option A: {quiz.optionA}
-                            </Typography>
-                            <Typography variant="body2">
-                                Description A: {quiz.descriptionA}
-                            </Typography>
-                            {quiz.imageA && (
-                                <img src={quiz.imageA} alt="Option A" style={{ maxWidth: '100%' }} />
-                            )}
-                            <Typography variant="body2">
-                                Option B: {quiz.optionB}
-                            </Typography>
-                            <Typography variant="body2">
-                                Description B: {quiz.descriptionB}
-                            </Typography>
-                            {quiz.imageB && (
-                                <img src={quiz.imageB} alt="Option B" style={{ maxWidth: '100%' }} />
-                            )}
-                            <Typography variant="body2">
-                                Likes: {quiz.preference}
-                            </Typography>
-                            <Typography variant="body2">
-                                Views: {quiz.view}
+                            <Typography variant="body2" component="div">
+                                <div>
+                                    <strong>Option A:</strong> {quiz.optionA}
+                                </div>
+                                <div>
+                                    <strong>Description A:</strong> {quiz.descriptionA}
+                                </div>
+                                {quiz.imageA && (
+                                    <div>
+                                        <img src={quiz.imageA} alt="Option A" style={{ maxWidth: '100%', marginBottom: '10px' }} />
+                                    </div>
+                                )}
+                                <div>
+                                    <strong>Option B:</strong> {quiz.optionB}
+                                </div>
+                                <div>
+                                    <strong>Description B:</strong> {quiz.descriptionB}
+                                </div>
+                                {quiz.imageB && (
+                                    <div>
+                                        <img src={quiz.imageB} alt="Option B" style={{ maxWidth: '100%', marginBottom: '10px' }} />
+                                    </div>
+                                )}
+                                <div>
+                                    <strong>Likes:</strong> {quiz.preference}
+                                </div>
+                                <div>
+                                    <strong>Views:</strong> {quiz.view}
+                                </div>
                             </Typography>
                         </AccordionDetails>
                     </Accordion>
