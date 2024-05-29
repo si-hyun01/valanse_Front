@@ -47,6 +47,16 @@ function ProblemUI() {
     }
   };
 
+  const fetchQuizById = async (quizId) => {
+    try {
+      const response = await axios.get(`https://valanse.site/quiz/${quizId}`);
+      return response.data.data;
+    } catch (error) {
+      console.error('Error fetching quiz by ID:', error.message);
+      return null;
+    }
+  };
+
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
     setShowConfirmDialog(true);
@@ -60,7 +70,7 @@ function ProblemUI() {
     // Implement disliking functionality
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     const nextIndex = currentQuizIndex + 1;
     if (nextIndex < quizDataList.length) {
       setCurrentQuizIndex(nextIndex);
@@ -136,7 +146,7 @@ function ProblemUI() {
           <Grid container spacing={2} justifyContent="center">
             <Grid item xs={12} style={{ height: '30px' }} />
             <Grid item xs={12}>
-              <Typography variant="h4" align="center">{currentQuizData ? currentQuizData.content : ''}</Typography>
+              <Typography variant="h4" align="center">{currentQuiz데이터 ? currentQuizData.content : ''}</Typography>
             </Grid>
             <Grid item xs={12} textAlign="center">
               <IconButton onClick={handleOptionLike}>
