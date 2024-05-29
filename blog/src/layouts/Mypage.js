@@ -3,7 +3,12 @@ import {
     Accordion,
     AccordionSummary,
     AccordionDetails,
-    Typography
+    Typography,
+    TableContainer,
+    Table,
+    TableHead,
+    TableRow,
+    TableCell,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Header from './Header';
@@ -84,46 +89,40 @@ const MyPage = () => {
                         <Typography>퀴즈 목록</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                        {quizzes.map((quiz) => (
-                            <div key={quiz.quizId} style={{ marginBottom: '20px' }}>
-                                <Typography variant="body1">
-                                    <strong>Quiz:</strong> {quiz.content}
-                                </Typography>
-                                <Typography variant="body2">
-                                    <strong>Option A:</strong> {quiz.optionA}
-                                </Typography>
-                                <Typography variant="body2">
-                                    <strong>Description A:</strong> {quiz.descriptionA}
-                                </Typography>
-                                {quiz.imageA && (
-                                    <div>
-                                        <img src={quiz.imageA} alt="Option A" style={{ maxWidth: '100%', marginBottom: '10px' }} />
-                                    </div>
-                                )}
-                                <Typography variant="body2">
-                                    <strong>Option B:</strong> {quiz.optionB}
-                                </Typography>
-                                <Typography variant="body2">
-                                    <strong>Description B:</strong> {quiz.descriptionB}
-                                </Typography>
-                                {quiz.imageB && (
-                                    <div>
-                                        <img src={quiz.imageB} alt="Option B" style={{ maxWidth: '100%', marginBottom: '10px' }} />
-                                    </div>
-                                )}
-                                <Typography variant="body2">
-                                    <strong>Likes:</strong> {quiz.preference}
-                                </Typography>
-                                <Typography variant="body2">
-                                    <strong>Views:</strong> {quiz.view}
-                                </Typography>
-                            </div>
-                        ))}
-                    </AccordionDetails>
-                </Accordion>
-            </div>
-        </>
-    );
-};
-
-export default MyPage;
+                        <TableContainer>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Quiz</TableCell>
+                                        <TableCell>Option A</TableCell>
+                                        <TableCell>Description A</TableCell>
+                                        <TableCell>Option B</TableCell>
+                                        <TableCell>Description B</TableCell>
+                                        <TableCell>Likes</TableCell>
+                                        <TableCell>Views</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <tbody>
+                                    {quizzes.map((quiz) => (
+                                        <TableRow key={quiz.quizId}>
+                                            <TableCell>{quiz.content}</TableCell>
+                                            <TableCell>{quiz.optionA}</TableCell>
+                                            <TableCell>{quiz.descriptionA}</TableCell>
+                                            <TableCell>{quiz.optionB}</TableCell>
+                                            <TableCell>{quiz.descriptionB}</TableCell>
+                                            <TableCell>{quiz.preference}</TableCell>
+                                            <TableCell>{quiz.view}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                    </tbody>
+                                </Table>
+                            </TableContainer>
+                        </AccordionDetails>
+                    </Accordion>
+                </div>
+            </>
+        );
+    };
+    
+    export default MyPage;
+    
