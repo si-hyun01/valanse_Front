@@ -64,12 +64,10 @@ function ProblemUI() {
     }
   };
   
-
   const handleOptionSelect = async (option, quizId) => {
     setSelectedOption(option);
     setShowConfirmDialog(true);
-    const quizData = await fetchQuizById(quizId);
-    console.log(quizData); // 선택한 퀴즈의 상세 정보 출력
+    console.log(quizDataList[currentQuizIndex]); // 선택한 퀴즈의 상세 정보 출력
   };
   
 
@@ -220,3 +218,4 @@ function ProblemUI() {
 }
 
 export default ProblemUI;
+
