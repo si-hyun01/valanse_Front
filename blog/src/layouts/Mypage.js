@@ -82,7 +82,7 @@ const MyPage = () => {
             <Header />
             <div>
                 <Typography variant="h4" gutterBottom>
-                    내가 작성한 퀴즈
+                    마이 페이지 개발 중입니다.
                 </Typography>
                 <Accordion>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
