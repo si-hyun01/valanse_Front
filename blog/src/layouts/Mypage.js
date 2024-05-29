@@ -108,13 +108,13 @@ const MyPage = () => {
                                             <TableCell>{quiz.content}</TableCell>
                                             <TableCell>
                                                 {quiz.imageA && (
-                                                    <img src={quiz.imageA} alt="Option A" style={{ maxWidth: '100%', marginBottom: '10px' }} />
+                                                    <img src={quiz.imageA} alt="Option A" style={{ width: '100%', height: '250px', objectFit: 'cover' }} />
                                                 )}
                                             </TableCell>
                                             <TableCell>{quiz.descriptionA}</TableCell>
                                             <TableCell>
                                                 {quiz.imageB && (
-                                                    <img src={quiz.imageB} alt="Option B" style={{ maxWidth: '100%', marginBottom: '10px' }} />
+                                                    <img src={quiz.imageB} alt="Option B" style={{ width: '100%', height: '250px', objectFit: 'cover' }} />
                                                 )}
                                             </TableCell>
                                             <TableCell>{quiz.descriptionB}</TableCell>
