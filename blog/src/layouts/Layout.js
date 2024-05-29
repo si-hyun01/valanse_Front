@@ -6,6 +6,7 @@ import Footer from './Footer';
 import Popularity from '../Tabs/popularity';
 import Notice from '../Tabs/notinoti';
 import Problem_UI from '../Tabs/Category/Problem_UI';
+import Problem_UI_Omaju from '../Tabs/Category/Problem_UI_Omaju';
 import Make_ploblem from '../Tabs/make_ploblem';
 import Entire from '../Tabs/entire';
 import Soccer_Image from './img/SoccerImage.jpg';
@@ -214,7 +215,7 @@ const Layout = () => {
                     {activeTab === '전체' && <Entire />}
                     {selectedCategory && (
                         <div>
-                            {selectedCategory === '축구' && <Problem_UI />}
+                            {selectedCategory === '축구' && <Problem_UI_Omaju />}
                             {selectedCategory === '음식' && <Problem_UI />}
                             {selectedCategory === '연애' && <Problem_UI />}
                             {selectedCategory === '노래' && <Problem_UI />}
