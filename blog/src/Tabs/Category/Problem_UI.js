@@ -19,7 +19,7 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-const LAST_QUIZ_ID = 40;
+const LAST_QUIZ_ID = 50;
 
 function ProblemUI() {
   const [quizData, setQuizData] = useState(null);
@@ -42,7 +42,7 @@ function ProblemUI() {
 
   const fetchQuizData = async (quizId) => {
     try {
-      const response = await axios.get(`https://valanse.site/quiz/${quizId}`);
+      const response = await axios.get(`https://valanse.site/quiz/${quizId}?category=축구`);
       const data = response.data.data;
       if (!data || Object.keys(data).length === 0) {
         setQuizData(null);
@@ -63,6 +63,7 @@ function ProblemUI() {
       }
     }
   };
+
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
