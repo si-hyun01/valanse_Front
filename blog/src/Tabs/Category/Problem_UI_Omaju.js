@@ -19,7 +19,7 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-const LAST_QUIZ_ID = 30;
+const LAST_QUIZ_ID = 50;
 
 function ProblemUI() {
   const [quizData, setQuizData] = useState(null);
