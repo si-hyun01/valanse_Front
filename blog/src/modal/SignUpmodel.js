@@ -6,15 +6,15 @@ import Naverimage from "../layouts/img/Naver_login.png";
 
 const SignUpModel = ({ show, onHide }) => {
   const handleKakaoLogin = () => {
-    window.location.href = "https://valanse.site/login/oauth2/authorization/kakao";
+    window.location.href = "https://valanse.site/oauth2/authorization/kakao";
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "https://valanse.site/login/oauth2/authorization/google";
+    window.location.href = "https://valanse.site/oauth2/authorization/google";
   };
 
   const handleNaverLogin = () => {
-    window.location.href = "https://valanse.site/login/oauth2/authorization/naver";
+    window.location.href = "https://valanse.site/oauth2/authorization/naver";
   };
 
   return (
