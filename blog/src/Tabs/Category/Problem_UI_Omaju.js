@@ -34,8 +34,13 @@ function ProblemUI({ categoryName }) {
     try {
       const quizDataArray = await Promise.all(
         quizIds.map(async (quizId) => {
-          const response = await axios.get(`https://valanse.site/quiz/${quizId}`);
-          return response.data.data;
+          const quizResponse = await axios.get(`https://valanse.site/quiz/${quizId}`);
+          const likeStatsResponse = await axios.get(`https://valanse.site/quiz/${quizId}/like-stats`);
+          return {
+            ...quizResponse.data.data,
+            likes: likeStatsResponse.data.data.likeCount,
+            dislikes: likeStatsResponse.data.data.unlikeCount,
+          };
         })
       );
       return quizDataArray;
@@ -120,7 +125,6 @@ function ProblemUI({ categoryName }) {
     setShowConfirmDialog(false); // 다이얼로그를 닫기
     handleNext(); // 다음 퀴즈로 넘어가버리기
   };
-
 
   const currentQuizData = quizDataList[currentQuizIndex];
 
