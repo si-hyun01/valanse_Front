@@ -23,8 +23,8 @@ function ProblemUI({ categoryName }) {
   const [quizDataList, setQuizDataList] = useState([]);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
-  const [likes, setLikes] = useState(0);
-  const [dislikes, setDislikes] = useState(0);
+  const [totalLikes, setTotalLikes] = useState(0);
+  const [totalDislikes, setTotalDislikes] = useState(0);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
@@ -73,22 +73,20 @@ function ProblemUI({ categoryName }) {
   };
 
   const handleOptionLike = async () => {
-    // Implement liking functionality
     const currentQuiz = quizDataList[currentQuizIndex];
     try {
       const response = await axios.post(`https://valanse.site/quiz/${currentQuiz.quizId}/increase-preference`);
-      setLikes(response.data.likes);
+      setTotalLikes(totalLikes + 1);
     } catch (error) {
       console.error('Error updating preference:', error.message);
     }
   };
 
   const handleOptionDislike = async () => {
-    // Implement disliking functionality
     const currentQuiz = quizDataList[currentQuizIndex];
     try {
       const response = await axios.post(`https://valanse.site/quiz/${currentQuiz.quizId}/decrease-preference`);
-      setDislikes(response.data.dislikes);
+      setTotalDislikes(totalDislikes + 1);
     } catch (error) {
       console.error('Error updating preference:', error.message);
     }
@@ -122,7 +120,6 @@ function ProblemUI({ categoryName }) {
     setShowConfirmDialog(false); // 다이얼로그를 닫기
     handleNext(); // 다음 퀴즈로 넘어가버리기
   };
-
 
   const currentQuizData = quizDataList[currentQuizIndex];
 
@@ -176,11 +173,17 @@ function ProblemUI({ categoryName }) {
             </Grid>
             <Grid item xs={12} textAlign="center">
               <IconButton onClick={handleOptionLike}>
-                <ThumbUpIcon color={'inherit'} /> {currentQuizData ? currentQuizData.likes: 0}
+                <ThumbUpIcon color={'inherit'} /> {totalLikes}
               </IconButton>
               <IconButton onClick={handleOptionDislike}>
-                <ThumbDownIcon color={'inherit'} /> {currentQuizData ? currentQuizData.dislikes : 0}
+                <ThumbDownIcon color={'inherit'} /> {totalDislikes}
               </IconButton>
+            </Grid>
+            <Grid item xs={6} textAlign="center">
+              < Grid item xs={12} textAlign="center">
+              <Typography variant="h6">추천 통계</Typography>
+              <Typography variant="body1">좋아요: {totalLikes}</Typography>
+              <Typography variant="body1">싫어요: {totalDislikes}</Typography>
             </Grid>
             <Grid item xs={6} textAlign="center">
               <Card onClick={() => handleOptionSelect('A', currentQuizData.quizId)} sx={{ borderRadius: '16px' }}>
@@ -235,4 +238,3 @@ function ProblemUI({ categoryName }) {
 }
 
 export default ProblemUI;
-
