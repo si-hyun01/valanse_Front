@@ -72,10 +72,20 @@ function ProblemUI({ categoryName }) {
 
   const handleOptionLike = async () => {
     // Implement liking functionality
+    const updatedQuizDataList = [...quizDataList];
+    const updatedQuizData = { ...updatedQuizDataList[currentQuizIndex] };
+    updatedQuizData.likes += 1;
+    updatedQuizDataList[currentQuizIndex] = updatedQuizData;
+    setQuizDataList(updatedQuizDataList);
   };
 
   const handleOptionDislike = async () => {
     // Implement disliking functionality
+    const updatedQuizDataList = [...quizDataList];
+    const updatedQuizData = { ...updatedQuizDataList[currentQuizIndex] };
+    updatedQuizData.dislikes += 1;
+    updatedQuizDataList[currentQuizIndex] = updatedQuizData;
+    setQuizDataList(updatedQuizDataList);
   };
 
   const handleNext = async () => {
