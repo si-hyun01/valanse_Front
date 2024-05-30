@@ -45,24 +45,26 @@ function ProblemUI({ categoryName }) {
     }
   };
 
-  const fetchQuizData = async (category) => {
+  const fetchQuizData = async (quizId) => {
     try {
-      const response = await axios.get(
-        `https://valanse.site/quiz-category/search?keyword=${encodeURIComponent(category)}`
-      );
+      const response = await axios.get(`https://valanse.site/quiz/${quizId}`);
       const data = response.data.data;
-      if (!data || data.length === 0) {
+      if (!data || Object.keys(data).length === 0) {
+        setQuizData(null);
         setShowNoProblemDialog(true);
         return;
       }
-      const quizIds = data.map((quiz) => quiz.quizId);
-      const quizDataArray = await fetchAllQuizData(quizIds);
-      setQuizDataList(quizDataArray);
+      setQuizData(data);
+      setLikes(data.preference);
+      setDislikes(0);
+      setLiked(false);
+      setDisliked(false);
     } catch (error) {
       console.error('Error fetching quiz data:', error.message);
       setShowNoProblemDialog(true);
     }
   };
+  
 
   const handleOptionSelect = async (option, quizId) => {
     setSelectedOption(option);
@@ -71,13 +73,47 @@ function ProblemUI({ categoryName }) {
   };
 
   const handleOptionLike = async () => {
-    // Implement liking functionality
+    try {
+      if (liked) {
+        await axios.post(`https://valanse.site/quiz/${currentQuizId}/decrease-preference`);
+        setLikes(likes - 1);
+        setLiked(false);
+      } else {
+        if (disliked) {
+          await axios.post(`https://valanse.site/quiz/${currentQuizId}/increase-preference`);
+          setDislikes(dislikes - 1);
+          setDisliked(false);
+        }
+        await axios.post(`https://valanse.site/quiz/${currentQuizId}/increase-preference`);
+        setLikes(likes + 1);
+        setLiked(true);
+      }
+    } catch (error) {
+      console.error('Error updating preference:', error.message);
+    }
   };
-
+  
   const handleOptionDislike = async () => {
-    // Implement disliking functionality
+    try {
+      if (disliked) {
+        await axios.post(`https://valanse.site/quiz/${currentQuizId}/increase-preference`);
+        setDislikes(dislikes - 1);
+        setDisliked(false);
+      } else {
+        if (liked) {
+          await axios.post(`https://valanse.site/quiz/${currentQuizId}/decrease-preference`);
+          setLikes(likes - 1);
+          setLiked(false);
+        }
+        await axios.post(`https://valanse.site/quiz/${currentQuizId}/decrease-preference`);
+        setDislikes(dislikes + 1);
+        setDisliked(true);
+      }
+    } catch (error) {
+      console.error('Error updating preference:', error.message);
+    }
   };
-
+  
   const handleNext = async () => {
     const nextIndex = currentQuizIndex + 1;
     if (nextIndex < quizDataList.length) {
