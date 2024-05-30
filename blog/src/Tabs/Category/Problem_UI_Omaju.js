@@ -25,8 +25,8 @@ function ProblemUI({ categoryName }) {
   const [selectedOption, setSelectedOption] = useState(null);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
-  const [unlikeCount, setUnlikeCount] = useState(0);
+  const [likeCounts, setLikeCounts] = useState({});
+  const [unlikeCounts, setUnlikeCounts] = useState({});
   const [likeStatus, setLikeStatus] = useState(null);
 
   useEffect(() => {
@@ -72,8 +72,8 @@ function ProblemUI({ categoryName }) {
     try {
       const response = await axios.get(`https://valanse.site/quiz/${quizId}/like-stats`);
       const { likeCount, unlikeCount } = response.data;
-      setLikeCount((prevCount) => ({ ...prevCount, [quizId]: likeCount })); // quizId에 해당하는 좋아요 수 업데이트
-      setUnlikeCount((prevCount) => ({ ...prevCount, [quizId]: unlikeCount })); // quizId에 해당하는 싫어요 수 업데이트
+      setLikeCounts((prevCounts) => ({ ...prevCounts, [quizId]: likeCount })); // quizId에 해당하는 좋아요 수 업데이트
+      setUnlikeCounts((prevCounts) => ({ ...prevCounts, [quizId]: unlikeCount })); // quizId에 해당하는 싫어요 수 업데이트
     } catch (error) {
       console.error('Error fetching like stats:', error.message);
     }
@@ -87,9 +87,9 @@ function ProblemUI({ categoryName }) {
 
   const handleOptionLike = async () => {
     try {
-      await axios.post(`https://valanse.site/quiz/${currentQuizData.quizId}/increase-preference`);
+      await axios.post(`https://valanse.site/quiz/${quizDataList[currentQuizIndex].quizId}/increase-preference`);
       setLikeStatus('like');
-      setLikeCount((prevCount) => ({ ...prevCount, [currentQuizData.quizId]: prevCount[currentQuizData.quizId] + 1 }));
+      setLikeCounts((prevCounts) => ({ ...prevCounts, [quizDataList[currentQuizIndex].quizId]: prevCounts[quizDataList[currentQuizIndex].quizId] + 1 }));
     } catch (error) {
       console.error('Error liking quiz:', error.message);
     }
@@ -97,9 +97,9 @@ function ProblemUI({ categoryName }) {
 
   const handleOptionDislike = async () => {
     try {
-      await axios.post(`https://valanse.site/quiz/${currentQuizData.quizId}/decrease-preference`);
+      await axios.post(`https://valanse.site/quiz/${quizDataList[currentQuizIndex].quizId}/decrease-preference`);
       setLikeStatus('unlike');
-      setUnlikeCount((prevCount) => ({ ...prevCount, [currentQuizData.quizId]: prevCount[currentQuizData.quizId] + 1 }));
+      setUnlikeCounts((prevCounts) => ({ ...prevCounts, [quizDataList[currentQuizIndex].quizId]: prevCounts[quizDataList[currentQuizIndex].quizId] + 1 }));
     } catch (error) {
       console.error('Error disliking quiz:', error.message);
     }
@@ -169,7 +169,8 @@ function ProblemUI({ categoryName }) {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseConfirmDialog} color="primary">
+          <Button
+            onClick={handleCloseConfirmDialog} color="primary">
             취소
           </Button>
           <Button onClick={handleConfirmSelection} color="primary" autoFocus>
@@ -186,14 +187,14 @@ function ProblemUI({ categoryName }) {
             </Grid>
             <Grid item xs={12} textAlign="center">
               <IconButton onClick={handleOptionLike} color={likeStatus === 'like' ? 'primary' : 'default'}>
-                <ThumbUpIcon color={likeStatus === 'like' ? 'primary' : 'inherit'} /> {likeCount}
+                <ThumbUpIcon color={likeStatus === 'like' ? 'primary' : 'inherit'} /> {likeCounts[currentQuizData?.quizId] || 0}
               </IconButton>
               <IconButton onClick={handleOptionDislike} color={likeStatus === 'unlike' ? 'primary' : 'default'}>
-                <ThumbDownIcon color={likeStatus === 'unlike' ? 'primary' : 'inherit'} /> {unlikeCount}
+                <ThumbDownIcon color={likeStatus === 'unlike' ? 'primary' : 'inherit'} /> {unlikeCounts[currentQuizData?.quizId] || 0}
               </IconButton>
             </Grid>
             <Grid item xs={6} textAlign="center">
-              <Card onClick={() => handleOptionSelect('A', currentQuizData.quizId)} sx={{ borderRadius: '16px' }}>
+              <Card onClick={() => handleOptionSelect('A', currentQuizData?.quizId)} sx={{ borderRadius: '16px' }}>
                 <CardActionArea>
                   <CardMedia
                     component="img"
@@ -210,7 +211,7 @@ function ProblemUI({ categoryName }) {
               </Card>
             </Grid>
             <Grid item xs={6} textAlign="center">
-              <Card onClick={() => handleOptionSelect('B', currentQuizData.quizId)} sx={{ borderRadius: '16px' }}>
+              <Card onClick={() => handleOptionSelect('B', currentQuizData?.quizId)} sx={{ borderRadius: '16px' }}>
                 <CardActionArea>
                   <CardMedia
                     component="img"
