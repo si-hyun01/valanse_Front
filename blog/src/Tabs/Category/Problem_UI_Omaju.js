@@ -134,7 +134,6 @@ function ProblemUI({ categoryName }) {
     handleNext(); // 다음 퀴즈로 넘어가버리기
   };
 
-
   const currentQuizData = quizDataList[currentQuizIndex];
 
   return (
@@ -190,7 +189,6 @@ function ProblemUI({ categoryName }) {
                 <ThumbUpIcon color={likeStatus === 'like' ? 'primary' : 'inherit'} /> {likeCount}
               </IconButton>
               <IconButton onClick={handleOptionDislike} color={likeStatus === 'unlike' ? 'primary' : 'default'}>
-
                 <ThumbDownIcon color={likeStatus === 'unlike' ? 'primary' : 'inherit'} /> {unlikeCount}
               </IconButton>
             </Grid>
