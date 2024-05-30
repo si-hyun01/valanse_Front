@@ -23,8 +23,6 @@ function ProblemUI({ categoryName }) {
   const [quizDataList, setQuizDataList] = useState([]);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
-  const [totalLikes, setTotalLikes] = useState(0);
-  const [totalDislikes, setTotalDislikes] = useState(0);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
@@ -66,42 +64,18 @@ function ProblemUI({ categoryName }) {
     }
   };
 
-  const fetchLikeStats = async (quizId) => {
-    try {
-      const response = await axios.get(`https://valanse.site/quiz/${quizId}/like-stats`);
-      const { likeCount, unlikeCount } = response.data;
-      setTotalLikes(likeCount);
-      setTotalDislikes(unlikeCount);
-    } catch (error) {
-      console.error('Error fetching like stats:', error.message);
-    }
-  };
-
   const handleOptionSelect = async (option, quizId) => {
     setSelectedOption(option);
     setShowConfirmDialog(true);
-    await fetchLikeStats(quizId); // 선택된 퀴즈의 좋아요 및 싫어요 통계를 가져옴
     console.log(quizDataList[currentQuizIndex]); // 선택한 퀴즈의 상세 정보 출력
   };
 
   const handleOptionLike = async () => {
-    const currentQuiz = quizDataList[currentQuizIndex];
-    try {
-      const response = await axios.post(`https://valanse.site/quiz/${currentQuiz.quizId}/increase-preference`);
-      setTotalLikes(totalLikes + 1);
-    } catch (error) {
-      console.error('Error updating preference:', error.message);
-    }
+    // Implement liking functionality
   };
 
   const handleOptionDislike = async () => {
-    const currentQuiz = quizDataList[currentQuizIndex];
-    try {
-      const response = await axios.post(`https://valanse.site/quiz/${currentQuiz.quizId}/decrease-preference`);
-      setTotalDislikes(totalDislikes + 1);
-    } catch (error) {
-      console.error('Error updating preference:', error.message);
-    }
+    // Implement disliking functionality
   };
 
   const handleNext = async () => {
@@ -132,6 +106,7 @@ function ProblemUI({ categoryName }) {
     setShowConfirmDialog(false); // 다이얼로그를 닫기
     handleNext(); // 다음 퀴즈로 넘어가버리기
   };
+
 
   const currentQuizData = quizDataList[currentQuizIndex];
 
@@ -185,16 +160,11 @@ function ProblemUI({ categoryName }) {
             </Grid>
             <Grid item xs={12} textAlign="center">
               <IconButton onClick={handleOptionLike}>
-                <ThumbUpIcon color={'inherit'} /> {totalLikes}
+                <ThumbUpIcon color={'inherit'} /> {currentQuizData ? currentQuizData.likes : 0}
               </IconButton>
               <IconButton onClick={handleOptionDislike}>
-                <ThumbDownIcon color={'inherit'} /> {totalDislikes}
+                <ThumbDownIcon color={'inherit'} /> {currentQuizData ? currentQuizData.dislikes : 0}
               </IconButton>
-            </Grid>
-            <Grid item xs={12} textAlign="center">
-              <Typography variant="h6">추천 통계</Typography>
-              <Typography variant="body1">좋아요: {totalLikes}</Typography>
-              <Typography variant="body1">싫어요: {totalDislikes}</Typography>
             </Grid>
             <Grid item xs={6} textAlign="center">
               <Card onClick={() => handleOptionSelect('A', currentQuizData.quizId)} sx={{ borderRadius: '16px' }}>
@@ -241,7 +211,6 @@ function ProblemUI({ categoryName }) {
                 Previous
               </Button>
             </Grid>
-
           </Grid>
         </Container>
       </Card>
