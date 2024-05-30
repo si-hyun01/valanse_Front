@@ -16,7 +16,14 @@ const Popularity = () => {
     const fetchData = async () => {
         try {
             const response = await axios.get('https://valanse.site/quiz/sort-by-preference');
-            setQuizData(response.data.data);
+            const quizIds = response.data.data.map(quiz => quiz.quizId);
+            const likeStatsResponses = await Promise.all(quizIds.map(quizId => axios.get(`https://valanse.site/quiz/${quizId}/like-stats`)));
+            const quizDataWithLikesAndDislikes = response.data.data.map((quiz, index) => ({
+                ...quiz,
+                likes: likeStatsResponses[index].data.data.likeCount,
+                dislikes: likeStatsResponses[index].data.data.unlikeCount
+            }));
+            setQuizData(quizDataWithLikesAndDislikes);
             setIsLoading(false);
         } catch (error) {
             console.error('Error fetching quiz data:', error.message);
@@ -53,7 +60,8 @@ const Popularity = () => {
                     <tr>
                         <th style={{ width: '50px', textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>퀴즈ID</th>
                         <th style={{ width: '400px', textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>제목</th>
-                        <th style={{ width: '200px', textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>선호도</th>
+                        <th style={{ width: '200px', textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>좋아요</th>
+                        <th style={{ width: '200px', textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>싫어요</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -69,28 +77,27 @@ const Popularity = () => {
                                 </div>
                             </td>
                             <td style={{ textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>
-                                <div style={{ fontSize: '12px', color: 'white', fontWeight: 'bold' }}>선호도: {item.preference}</div>
+                                <div style={{ fontSize: '12px', color: 'white', fontWeight: 'bold' }}>{item.likes}</div>
+                            </td>
+                            <td style={{ textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>
+                                <div style={{ fontSize: '12px', color: 'white', fontWeight: 'bold' }}>{item.dislikes}</div>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-            <div style={{ overflowX: 'auto', maxWidth: '100%' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                </table>
-                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-                    <Pagination
-                        count={Math.ceil(quizData.length / itemsPerPage)}
-                        page={page}
-                        onChange={handlePageChange}
-                        variant="outlined"
-                        shape="rounded"
-                        sx={{
-                            '& .MuiPaginationItem-root': { color: 'white' }, // 버튼 색상 수정
-                            '& .MuiPaginationItem-sizeLarge': { fontSize: '1.5rem' }, // 페이지네이션의 버튼 크기를 크게 설정
-                        }}
-                    />
-                </div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                <Pagination
+                    count={Math.ceil(quizData.length / itemsPerPage)}
+                    page={page}
+                    onChange={handlePageChange}
+                    variant="outlined"
+                    shape="rounded"
+                    sx={{
+                        '& .MuiPaginationItem-root': { color: 'white' }, // 버튼 색상 수정
+                        '& .MuiPaginationItem-sizeLarge': { fontSize: '2.5rem' }, // 페이지 버튼 크기를 크기 설정
+                    }}
+                />
             </div>
         </div>
     );
