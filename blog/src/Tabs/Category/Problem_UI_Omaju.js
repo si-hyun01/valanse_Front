@@ -25,18 +25,10 @@ function ProblemUI({ categoryName }) {
   const [selectedOption, setSelectedOption] = useState(null);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
-  const [unlikeCount, setUnlikeCount] = useState(0);
 
   useEffect(() => {
     fetchQuizData(categoryName);
   }, [categoryName]);
-
-  useEffect(() => {
-    if (currentQuizData) {
-      fetchLikeStats();
-    }
-  }, [currentQuizData]);
 
   const fetchAllQuizData = async (quizIds) => {
     try {
@@ -88,7 +80,7 @@ function ProblemUI({ categoryName }) {
       // 에러 처리
     }
   };
-
+  
   const handleOptionDislike = async () => {
     try {
       const response = await axios.post(`https://valanse.site/quiz/${currentQuizData.quizId}/decrease-preference`);
@@ -99,19 +91,7 @@ function ProblemUI({ categoryName }) {
       // 에러 처리
     }
   };
-
-
-  const fetchLikeStats = async () => {
-    try {
-      const response = await axios.get(`https://valanse.site/quiz/${currentQuizData.quizId}/like-stats`);
-      setLikeCount(response.data.likeCount);
-      setUnlikeCount(response.data.unlikeCount);
-    } catch (error) {
-      console.error('Error fetching like stats:', error.message);
-      // 에러 처리
-    }
-  };
-
+  
   const handleNext = async () => {
     const nextIndex = currentQuizIndex + 1;
     if (nextIndex < quizDataList.length) {
@@ -194,12 +174,11 @@ function ProblemUI({ categoryName }) {
             </Grid>
             <Grid item xs={12} textAlign="center">
               <IconButton onClick={handleOptionLike}>
-                <ThumbUpIcon color={'inherit'} /> {likeCount}
+                <ThumbUpIcon color={'inherit'} /> {currentQuizData ? currentQuizData.likes : 0}
               </IconButton>
               <IconButton onClick={handleOptionDislike}>
-                <ThumbDownIcon color={'inherit'} /> {unlikeCount}
+                <ThumbDownIcon color={'inherit'} /> {currentQuizData ? currentQuizData.dislikes : 0}
               </IconButton>
-
             </Grid>
             <Grid item xs={6} textAlign="center">
               <Card onClick={() => handleOptionSelect('A', currentQuizData.quizId)} sx={{ borderRadius: '16px' }}>
