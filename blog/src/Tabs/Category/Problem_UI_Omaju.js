@@ -79,7 +79,12 @@ function ProblemUI({ categoryName }) {
     try {
       const response = await axios.post(`https://valanse.site/quiz/${currentQuizData.quizId}/increase-preference`);
       console.log('Like response:', response.data);
-      // 선호도 증가에 대한 UI 업데이트 등 추가 작업
+      // 선호도 증가에 대한 UI 업데이트
+      setQuizDataList(prevQuizDataList => {
+        const updatedQuizDataList = [...prevQuizDataList];
+        updatedQuizDataList[currentQuizIndex].likes += 1;
+        return updatedQuizDataList;
+      });
     } catch (error) {
       console.error('Error liking quiz:', error.message);
       // 에러 처리
@@ -90,7 +95,12 @@ function ProblemUI({ categoryName }) {
     try {
       const response = await axios.post(`https://valanse.site/quiz/${currentQuizData.quizId}/decrease-preference`);
       console.log('Dislike response:', response.data);
-      // 선호도 감소에 대한 UI 업데이트 등 추가 작업
+      // 선호도 감소에 대한 UI 업데이트
+      setQuizDataList(prevQuizDataList => {
+        const updatedQuizDataList = [...prevQuizDataList];
+        updatedQuizDataList[currentQuizIndex].dislikes += 1;
+        return updatedQuizDataList;
+      });
     } catch (error) {
       console.error('Error disliking quiz:', error.message);
       // 에러 처리
@@ -123,7 +133,7 @@ function ProblemUI({ categoryName }) {
 
   const handleConfirmSelection = () => {
     setShowConfirmDialog(false); // 다이얼로그를 닫기
-    handleNext(); // 다음 퀴즈로 넘어가버리기
+    handleNext(); // 다음 퀴즈로 넘어가기
   };
 
   const currentQuizData = quizDataList[currentQuizIndex];
