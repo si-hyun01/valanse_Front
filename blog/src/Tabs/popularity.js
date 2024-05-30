@@ -20,7 +20,7 @@ const Popularity = () => {
             setIsLoading(false);
         } catch (error) {
             console.error('Error fetching quiz data:', error.message);
-            setError('Error fetching quiz data. Please try again later.');
+            setError('로그인을 해야 볼 수 있습니다.');
             setIsLoading(false);
         }
     };
@@ -47,7 +47,7 @@ const Popularity = () => {
     const currentPageData = quizData.slice(startIndex, endIndex);
 
     return (
-        <div style={{ overflowX: 'auto', maxWidth: '100%' }}>
+        <div style={{ overflowX: 'auto', maxWidth: '100%', textAlign: 'center' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                     <tr>
@@ -75,7 +75,14 @@ const Popularity = () => {
                     ))}
                 </tbody>
             </table>
-            <Pagination count={Math.ceil(quizData.length / itemsPerPage)} page={page} onChange={handlePageChange} variant="outlined" shape="rounded" />
+            <Pagination
+                count={Math.ceil(quizData.length / itemsPerPage)}
+                page={page}
+                onChange={handlePageChange}
+                variant="outlined"
+                shape="rounded"
+                sx={{ '& .MuiPaginationItem-root': { color: 'white' } }} // 버튼 색상 수정
+            />
         </div>
     );
 }
