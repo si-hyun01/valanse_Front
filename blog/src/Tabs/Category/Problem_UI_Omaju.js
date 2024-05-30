@@ -87,24 +87,30 @@ function ProblemUI({ categoryName }) {
 
   const handleOptionLike = async () => {
     try {
-      await axios.post(`https://valanse.site/quiz/${quizDataList[currentQuizIndex].quizId}/increase-preference`);
+      await axios.post(`https://valanse.site/quiz/${currentQuizData.quizId}/increase-preference`);
       setLikeStatus('like');
-      setLikeCounts((prevCounts) => ({ ...prevCounts, [quizDataList[currentQuizIndex].quizId]: prevCounts[quizDataList[currentQuizIndex].quizId] + 1 }));
+      setLikeCounts((prevCounts) => ({
+        ...prevCounts,
+        [currentQuizData.quizId]: (prevCounts[currentQuizData.quizId] || 0) + 1
+      }));
     } catch (error) {
       console.error('Error liking quiz:', error.message);
     }
   };
-
+  
   const handleOptionDislike = async () => {
     try {
-      await axios.post(`https://valanse.site/quiz/${quizDataList[currentQuizIndex].quizId}/decrease-preference`);
+      await axios.post(`https://valanse.site/quiz/${currentQuizData.quizId}/decrease-preference`);
       setLikeStatus('unlike');
-      setUnlikeCounts((prevCounts) => ({ ...prevCounts, [quizDataList[currentQuizIndex].quizId]: prevCounts[quizDataList[currentQuizIndex].quizId] + 1 }));
+      setUnlikeCounts((prevCounts) => ({
+        ...prevCounts,
+        [currentQuizData.quizId]: (prevCounts[currentQuizData.quizId] || 0) + 1
+      }));
     } catch (error) {
       console.error('Error disliking quiz:', error.message);
     }
   };
-
+  
   const handleNext = async () => {
     const nextIndex = currentQuizIndex + 1;
     if (nextIndex < quizDataList.length) {
