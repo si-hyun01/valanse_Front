@@ -13,7 +13,16 @@ const Popularity = () => {
     const fetchData = async () => {
         try {
             const response = await axios.get('https://valanse.site/quiz/sort-by-preference');
-            setQuizData(response.data.data); // 변경된 부분: response.data.data로 변경
+            const sortedQuizData = response.data.data;
+            const updatedQuizData = await Promise.all(sortedQuizData.map(async (item) => {
+                const likeStatsResponse = await axios.get(`https://valanse.site/quiz/${item.quizId}/like-stats`);
+                return {
+                    ...item,
+                    likes: likeStatsResponse.data.data.likeCount,
+                    dislikes: likeStatsResponse.data.data.unlikeCount
+                };
+            }));
+            setQuizData(updatedQuizData);
             setIsLoading(false);
         } catch (error) {
             console.error('Error fetching quiz data:', error.message);
@@ -41,7 +50,8 @@ const Popularity = () => {
                     <tr>
                         <th style={{ width: '50px', textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>퀴즈ID</th>
                         <th style={{ width: '400px', textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>제목</th>
-                        <th style={{ width: '200px', textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>선호도</th>
+                        <th style={{ width: '100px', textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>좋아요</th>
+                        <th style={{ width: '100px', textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>싫어요</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -56,9 +66,8 @@ const Popularity = () => {
                                     </div>
                                 </div>
                             </td>
-                            <td style={{ textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>
-                                <div style={{ fontSize: '12px', color: 'white', fontWeight: 'bold' }}>선호도: {item.preference}</div>
-                            </td>
+                            <td style={{ textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>{item.likes}</td>
+                            <td style={{ textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>{item.dislikes}</td>
                         </tr>
                     ))}
                 </tbody>
