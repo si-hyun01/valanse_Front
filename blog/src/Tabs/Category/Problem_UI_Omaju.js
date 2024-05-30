@@ -23,6 +23,8 @@ function ProblemUI({ categoryName }) {
   const [quizDataList, setQuizDataList] = useState([]);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
+  const [likes, setLikes] = useState(0);
+  const [dislikes, setDislikes] = useState(0);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
@@ -45,26 +47,24 @@ function ProblemUI({ categoryName }) {
     }
   };
 
-  const fetchQuizData = async (quizId) => {
+  const fetchQuizData = async (category) => {
     try {
-      const response = await axios.get(`https://valanse.site/quiz/${quizId}`);
+      const response = await axios.get(
+        `https://valanse.site/quiz-category/search?keyword=${encodeURIComponent(category)}`
+      );
       const data = response.data.data;
-      if (!data || Object.keys(data).length === 0) {
-        setQuizData(null);
+      if (!data || data.length === 0) {
         setShowNoProblemDialog(true);
         return;
       }
-      setQuizData(data);
-      setLikes(data.preference);
-      setDislikes(0);
-      setLiked(false);
-      setDisliked(false);
+      const quizIds = data.map((quiz) => quiz.quizId);
+      const quizDataArray = await fetchAllQuizData(quizIds);
+      setQuizDataList(quizDataArray);
     } catch (error) {
       console.error('Error fetching quiz data:', error.message);
       setShowNoProblemDialog(true);
     }
   };
-  
 
   const handleOptionSelect = async (option, quizId) => {
     setSelectedOption(option);
@@ -73,47 +73,27 @@ function ProblemUI({ categoryName }) {
   };
 
   const handleOptionLike = async () => {
+    // Implement liking functionality
+    const currentQuiz = quizDataList[currentQuizIndex];
     try {
-      if (liked) {
-        await axios.post(`https://valanse.site/quiz/${currentQuizId}/decrease-preference`);
-        setLikes(likes - 1);
-        setLiked(false);
-      } else {
-        if (disliked) {
-          await axios.post(`https://valanse.site/quiz/${currentQuizId}/increase-preference`);
-          setDislikes(dislikes - 1);
-          setDisliked(false);
-        }
-        await axios.post(`https://valanse.site/quiz/${currentQuizId}/increase-preference`);
-        setLikes(likes + 1);
-        setLiked(true);
-      }
+      const response = await axios.post(`https://valanse.site/quiz/${currentQuiz.quizId}/increase-preference`);
+      setLikes(response.data.likes);
     } catch (error) {
       console.error('Error updating preference:', error.message);
     }
   };
-  
+
   const handleOptionDislike = async () => {
+    // Implement disliking functionality
+    const currentQuiz = quizDataList[currentQuizIndex];
     try {
-      if (disliked) {
-        await axios.post(`https://valanse.site/quiz/${currentQuizId}/increase-preference`);
-        setDislikes(dislikes - 1);
-        setDisliked(false);
-      } else {
-        if (liked) {
-          await axios.post(`https://valanse.site/quiz/${currentQuizId}/decrease-preference`);
-          setLikes(likes - 1);
-          setLiked(false);
-        }
-        await axios.post(`https://valanse.site/quiz/${currentQuizId}/decrease-preference`);
-        setDislikes(dislikes + 1);
-        setDisliked(true);
-      }
+      const response = await axios.post(`https://valanse.site/quiz/${currentQuiz.quizId}/decrease-preference`);
+      setDislikes(response.data.dislikes);
     } catch (error) {
       console.error('Error updating preference:', error.message);
     }
   };
-  
+
   const handleNext = async () => {
     const nextIndex = currentQuizIndex + 1;
     if (nextIndex < quizDataList.length) {
@@ -196,7 +176,7 @@ function ProblemUI({ categoryName }) {
             </Grid>
             <Grid item xs={12} textAlign="center">
               <IconButton onClick={handleOptionLike}>
-                <ThumbUpIcon color={'inherit'} /> {currentQuizData ? currentQuizData.likes : 0}
+                <ThumbUpIcon color={'inherit'} /> {currentQuizData ? currentQuizData.likes: 0}
               </IconButton>
               <IconButton onClick={handleOptionDislike}>
                 <ThumbDownIcon color={'inherit'} /> {currentQuizData ? currentQuizData.dislikes : 0}
@@ -255,3 +235,4 @@ function ProblemUI({ categoryName }) {
 }
 
 export default ProblemUI;
+
