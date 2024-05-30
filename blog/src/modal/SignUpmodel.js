@@ -4,7 +4,7 @@ import KaKaoimage from "../layouts/img/Kakao_login.png";
 import Googleimage from "../layouts/img/Google_login1.png";
 import Naverimage from "../layouts/img/Naver_login.png";
 
-const SignUpmodel = ({ show, onHide }) => {
+const SignUpModel = ({ show, onHide }) => {
   const handleKakaoLogin = () => {
     window.location.href = "https://valanse.site/login/oauth2/authorization/kakao";
   };
@@ -14,7 +14,7 @@ const SignUpmodel = ({ show, onHide }) => {
   };
 
   const handleNaverLogin = () => {
-    window.location.href = "https://valanse.site/oauth2/authorization/naver";
+    window.location.href = "https://valanse.site/login/oauth2/authorization/naver";
   };
 
   return (
@@ -31,14 +31,14 @@ const SignUpmodel = ({ show, onHide }) => {
             로그인
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <Button variant="light" onClick={handleGoogleLogin}>
+        <Modal.Body className="d-flex justify-content-center flex-column align-items-center">
+          <Button variant="light" onClick={handleGoogleLogin} className="mb-2">
             <img src={Googleimage} alt="구글 이미지" style={{ width: '170px', height: '45px' }} />
           </Button>
-          <Button variant="light" onClick={handleKakaoLogin}>
-            <img src={KaKaoimage} alt="카카오톡 이미지" />
+          <Button variant="light" onClick={handleKakaoLogin} className="mb-2">
+            <img src={KaKaoimage} alt="카카오톡 이미지" style={{ width: '170px', height: '45px' }} />
           </Button>
-          <Button variant="light" onClick={handleNaverLogin}>
+          <Button variant="light" onClick={handleNaverLogin} className="mb-2">
             <img src={Naverimage} alt="네이버 이미지" style={{ width: '170px', height: '45px' }} />
           </Button>
         </Modal.Body>
@@ -50,4 +50,4 @@ const SignUpmodel = ({ show, onHide }) => {
   );
 };
 
-export default SignUpmodel;
+export default SignUpModel;
