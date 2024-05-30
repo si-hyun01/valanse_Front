@@ -66,9 +66,21 @@ function ProblemUI({ categoryName }) {
     }
   };
 
+  const fetchLikeStats = async (quizId) => {
+    try {
+      const response = await axios.get(`https://valanse.site/quiz/${quizId}/like-stats`);
+      const { likeCount, unlikeCount } = response.data;
+      setTotalLikes(likeCount);
+      setTotalDislikes(unlikeCount);
+    } catch (error) {
+      console.error('Error fetching like stats:', error.message);
+    }
+  };
+
   const handleOptionSelect = async (option, quizId) => {
     setSelectedOption(option);
     setShowConfirmDialog(true);
+    await fetchLikeStats(quizId); // 선택된 퀴즈의 좋아요 및 싫어요 통계를 가져옴
     console.log(quizDataList[currentQuizIndex]); // 선택한 퀴즈의 상세 정보 출력
   };
 
@@ -167,7 +179,7 @@ function ProblemUI({ categoryName }) {
       <Card sx={{ bgcolor: '#f5f5f5', borderRadius: '16px', mt: 4 }}>
         <Container maxWidth="lg">
           <Grid container spacing={2}>
-            <Grid item xs={12} style={{ height: '30px' }} />
+            <Griditem xs={12} style={{ height: '30px' }} />
             <Grid item xs={12}>
               <Typography variant="h4" align="center">{currentQuizData ? currentQuizData.content : ''}</Typography>
             </Grid>
@@ -179,7 +191,7 @@ function ProblemUI({ categoryName }) {
                 <ThumbDownIcon color={'inherit'} /> {totalDislikes}
               </IconButton>
             </Grid>
-              < Grid item xs={12} textAlign="center">
+            <Grid item xs={12} textAlign="center">
               <Typography variant="h6">추천 통계</Typography>
               <Typography variant="body1">좋아요: {totalLikes}</Typography>
               <Typography variant="body1">싫어요: {totalDislikes}</Typography>
