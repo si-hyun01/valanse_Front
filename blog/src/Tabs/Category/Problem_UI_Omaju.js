@@ -38,9 +38,7 @@ function ProblemUI({ categoryName }) {
       const quizDataArray = await Promise.all(
         quizIds.map(async (quizId) => {
           const response = await axios.get(`https://valanse.site/quiz/${quizId}`);
-          const likeStatsResponse = await axios.get(`https://valanse.site/quiz/${quizId}/like-stats`);
-          const { likeCount, unlikeCount } = likeStatsResponse.data;
-          return { ...response.data.data, likeCount, unlikeCount };
+          return response.data.data;
         })
       );
       return quizDataArray;
@@ -63,16 +61,27 @@ function ProblemUI({ categoryName }) {
       const quizIds = data.map((quiz) => quiz.quizId);
       const quizDataArray = await fetchAllQuizData(quizIds);
       setQuizDataList(quizDataArray);
+      quizIds.forEach(fetchLikeStats); // 퀴즈 데이터를 불러올 때마다 좋아요 및 싫어요 수도 가져오기
     } catch (error) {
       console.error('Error fetching quiz data:', error.message);
       setShowNoProblemDialog(true);
     }
   };
 
+  const fetchLikeStats = async (quizId) => {
+    try {
+      const response = await axios.get(`https://valanse.site/quiz/${quizId}/like-stats`);
+      const { likeCount, unlikeCount } = response.data;
+      setLikeCount((prevCount) => ({ ...prevCount, [quizId]: likeCount })); // quizId에 해당하는 좋아요 수 업데이트
+      setUnlikeCount((prevCount) => ({ ...prevCount, [quizId]: unlikeCount })); // quizId에 해당하는 싫어요 수 업데이트
+    } catch (error) {
+      console.error('Error fetching like stats:', error.message);
+    }
+  };
+
   const handleOptionSelect = async (option, quizId) => {
     setSelectedOption(option);
     setShowConfirmDialog(true);
-    await fetchLikeStats(quizId);
     console.log(quizDataList[currentQuizIndex]); // 선택한 퀴즈의 상세 정보 출력
   };
 
@@ -80,7 +89,7 @@ function ProblemUI({ categoryName }) {
     try {
       await axios.post(`https://valanse.site/quiz/${currentQuizData.quizId}/increase-preference`);
       setLikeStatus('like');
-      setLikeCount(likeCount + 1);
+      setLikeCount((prevCount) => ({ ...prevCount, [currentQuizData.quizId]: prevCount[currentQuizData.quizId] + 1 }));
     } catch (error) {
       console.error('Error liking quiz:', error.message);
     }
@@ -90,7 +99,7 @@ function ProblemUI({ categoryName }) {
     try {
       await axios.post(`https://valanse.site/quiz/${currentQuizData.quizId}/decrease-preference`);
       setLikeStatus('unlike');
-      setUnlikeCount(unlikeCount + 1);
+      setUnlikeCount((prevCount) => ({ ...prevCount, [currentQuizData.quizId]: prevCount[currentQuizData.quizId] + 1 }));
     } catch (error) {
       console.error('Error disliking quiz:', error.message);
     }
