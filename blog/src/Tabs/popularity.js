@@ -87,17 +87,26 @@ const Popularity = () => {
                 </tbody>
             </table>
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-                <Pagination
-                    count={Math.ceil(quizData.length / itemsPerPage)}
-                    page={page}
-                    onChange={handlePageChange}
-                    variant="outlined"
-                    shape="rounded"
-                    sx={{
-                        '& .MuiPaginationItem-root': { color: 'white' }, // 버튼 색상 수정
-                        '& .MuiPaginationItem-sizeLarge': { fontSize: '2.5rem' }, // 페이지 버튼 크기를 크기 설정
-                    }}
-                />
+            <Pagination
+    count={Math.ceil(quizData.length / itemsPerPage)}
+    page={page}
+    onChange={handlePageChange}
+    variant="outlined"
+    shape="rounded"
+    sx={{
+        '& .MuiPaginationItem-root': {
+            color: 'white', // 버튼 텍스트 색상
+            backgroundColor: 'rgba(0, 0, 0, 0.5)', // 버튼 배경 색상
+            '&:hover': {
+                backgroundColor: 'rgba(0, 0, 0, 0.7)', // 버튼에 커서 올렸을 때 배경 색상 변경
+            },
+        },
+        '& .MuiPaginationItem-sizeLarge': {
+            fontSize: '2.5rem', // 페이지 버튼 크기 설정
+        },
+    }}
+/>
+
             </div>
         </div>
     );
