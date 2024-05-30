@@ -75,14 +75,20 @@ const Popularity = () => {
                     ))}
                 </tbody>
             </table>
-            <Pagination
-                count={Math.ceil(quizData.length / itemsPerPage)}
-                page={page}
-                onChange={handlePageChange}
-                variant="outlined"
-                shape="rounded"
-                sx={{ '& .MuiPaginationItem-root': { color: 'white' } }} // 버튼 색상 수정
-            />
+            <div style={{ overflowX: 'auto', maxWidth: '100%' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                </table>
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                    <Pagination
+                        count={Math.ceil(quizData.length / itemsPerPage)}
+                        page={page}
+                        onChange={handlePageChange}
+                        variant="outlined"
+                        shape="rounded"
+                        sx={{ '& .MuiPaginationItem-root': { color: 'white' } }} // 버튼 색상 수정
+                    />
+                </div>
+            </div>
         </div>
     );
 }
