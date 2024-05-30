@@ -72,13 +72,52 @@ function ProblemUI({ categoryName }) {
 
 
   const handleOptionLike = async () => {
-    // Implement liking functionality
+    try {
+      if (liked) {
+        setLikes(likes - 1);
+        setLiked(false);
+      } else {
+        if (disliked) {
+          setDislikes(dislikes - 1);
+          setDisliked(false);
+        }
+        setLikes(likes + 1);
+        setLiked(true);
+      }
+      await updatePreference(liked, disliked);
+    } catch (error) {
+      console.error('Error updating preference:', error.message);
+    }
   };
-
+  
   const handleOptionDislike = async () => {
-    // Implement disliking functionality
+    try {
+      if (disliked) {
+        setDislikes(dislikes - 1);
+        setDisliked(false);
+      } else {
+        if (liked) {
+          setLikes(likes - 1);
+          setLiked(false);
+        }
+        setDislikes(dislikes + 1);
+        setDisliked(true);
+      }
+      await updatePreference(liked, disliked);
+    } catch (error) {
+      console.error('Error updating preference:', error.message);
+    }
   };
-
+  
+  const updatePreference = async (wasLiked, wasDisliked) => {
+    try {
+      const preferenceChange = wasLiked ? -1 : (wasDisliked ? 1 : 0);
+      await axios.post(`https://valanse.site/quiz/${currentQuizId}/${preferenceChange > 0 ? 'increase' : 'decrease'}-preference`);
+    } catch (error) {
+      console.error('Error updating preference:', error.message);
+    }
+  };
+  
   const handleNext = async () => {
     const nextIndex = currentQuizIndex + 1;
     if (nextIndex < quizDataList.length) {
