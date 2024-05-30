@@ -27,6 +27,7 @@ function ProblemUI({ categoryName }) {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [unlikeCount, setUnlikeCount] = useState(0);
+  const [likeStatus, setLikeStatus] = useState(null);
 
   useEffect(() => {
     fetchQuizData(categoryName);
@@ -66,48 +67,41 @@ function ProblemUI({ categoryName }) {
     }
   };
 
-  const fetchLikeStats = async () => {
+  const fetchLikeStats = async (quizId) => {
     try {
-      const response = await axios.get(`https://valanse.site/quiz/${currentQuizData.quizId}/like-stats`);
-      setLikeCount(response.data.likeCount);
-      setUnlikeCount(response.data.unlikeCount);
+      const response = await axios.get(`https://valanse.site/quiz/${quizId}/like-stats`);
+      const { likeCount, unlikeCount } = response.data;
+      setLikeCount(likeCount);
+      setUnlikeCount(unlikeCount);
     } catch (error) {
       console.error('Error fetching like stats:', error.message);
-      // 에러 처리
     }
   };
-
-  useEffect(() => {
-    if (currentQuizData) {
-      fetchLikeStats();
-    }
-  }, [currentQuizData]);
 
   const handleOptionSelect = async (option, quizId) => {
     setSelectedOption(option);
     setShowConfirmDialog(true);
+    await fetchLikeStats(quizId);
     console.log(quizDataList[currentQuizIndex]); // 선택한 퀴즈의 상세 정보 출력
   };
 
   const handleOptionLike = async () => {
     try {
-      const response = await axios.post(`https://valanse.site/quiz/${currentQuizData.quizId}/increase-preference`);
-      console.log('Like response:', response.data);
-      fetchLikeStats(); // 좋아요 수 업데이트
+      await axios.post(`https://valanse.site/quiz/${currentQuizData.quizId}/increase-preference`);
+      setLikeStatus('like');
+      setLikeCount(likeCount + 1);
     } catch (error) {
       console.error('Error liking quiz:', error.message);
-      // 에러 처리
     }
   };
 
   const handleOptionDislike = async () => {
     try {
-      const response = await axios.post(`https://valanse.site/quiz/${currentQuizData.quizId}/decrease-preference`);
-      console.log('Dislike response:', response.data);
-      fetchLikeStats(); // 싫어요 수 업데이트
+      await axios.post(`https://valanse.site/quiz/${currentQuizData.quizId}/decrease-preference`);
+      setLikeStatus('unlike');
+      setUnlikeCount(unlikeCount + 1);
     } catch (error) {
       console.error('Error disliking quiz:', error.message);
-      // 에러 처리
     }
   };
 
@@ -188,16 +182,16 @@ function ProblemUI({ categoryName }) {
         <Container maxWidth="lg">
           <Grid container spacing={2}>
             <Grid item xs={12} style={{ height: '30px' }} />
-            <Grid item xs={12
-            }>
+            <Grid item xs={12}>
               <Typography variant="h4" align="center">{currentQuizData ? currentQuizData.content : ''}</Typography>
             </Grid>
             <Grid item xs={12} textAlign="center">
-              <IconButton onClick={handleOptionLike}>
-                <ThumbUpIcon color={'inherit'} /> {likeCount}
+              <IconButton onClick={handleOptionLike} color={likeStatus === 'like' ? 'primary' : 'default'}>
+                <ThumbUpIcon color={likeStatus === 'like' ? 'primary' : 'inherit'} /> {likeCount}
               </IconButton>
-              <IconButton onClick={handleOptionDislike}>
-                <ThumbDownIcon color={'inherit'} /> {unlikeCount}
+              <IconButton onClick={handleOptionDislike} color={likeStatus === 'unlike' ? 'primary' : 'default'}>
+
+                <ThumbDownIcon color={likeStatus === 'unlike' ? 'primary' : 'inherit'} /> {unlikeCount}
               </IconButton>
             </Grid>
             <Grid item xs={6} textAlign="center">
