@@ -49,7 +49,7 @@ function ProblemUI({ categoryName }) {
       return [];
     }
   };
-
+  
   const fetchQuizData = async (category) => {
     try {
       const response = await axios.get(
@@ -68,6 +68,7 @@ function ProblemUI({ categoryName }) {
       setShowNoProblemDialog(true);
     }
   };
+  
 
   const handleOptionSelect = async (option, quizId) => {
     setSelectedOption(option);
