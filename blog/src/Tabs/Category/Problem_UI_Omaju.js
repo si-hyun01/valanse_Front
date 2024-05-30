@@ -179,7 +179,7 @@ function ProblemUI({ categoryName }) {
       <Card sx={{ bgcolor: '#f5f5f5', borderRadius: '16px', mt: 4 }}>
         <Container maxWidth="lg">
           <Grid container spacing={2}>
-            <Griditem xs={12} style={{ height: '30px' }} />
+            <Grid item xs={12} style={{ height: '30px' }} />
             <Grid item xs={12}>
               <Typography variant="h4" align="center">{currentQuizData ? currentQuizData.content : ''}</Typography>
             </Grid>
@@ -241,6 +241,7 @@ function ProblemUI({ categoryName }) {
                 Previous
               </Button>
             </Grid>
+
           </Grid>
         </Container>
       </Card>
