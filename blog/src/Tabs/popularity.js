@@ -85,7 +85,10 @@ const Popularity = () => {
                         onChange={handlePageChange}
                         variant="outlined"
                         shape="rounded"
-                        sx={{ '& .MuiPaginationItem-root': { color: 'white' } }} // 버튼 색상 수정
+                        sx={{
+                            '& .MuiPaginationItem-root': { color: 'white' }, // 버튼 색상 수정
+                            '& .MuiPaginationItem-sizeLarge': { fontSize: '1.5rem' }, // 페이지네이션의 버튼 크기를 크게 설정
+                        }}
                     />
                 </div>
             </div>
