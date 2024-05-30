@@ -38,7 +38,9 @@ function ProblemUI({ categoryName }) {
       const quizDataArray = await Promise.all(
         quizIds.map(async (quizId) => {
           const response = await axios.get(`https://valanse.site/quiz/${quizId}`);
-          return response.data.data;
+          const likeStatsResponse = await axios.get(`https://valanse.site/quiz/${quizId}/like-stats`);
+          const { likeCount, unlikeCount } = likeStatsResponse.data;
+          return { ...response.data.data, likeCount, unlikeCount };
         })
       );
       return quizDataArray;
@@ -64,17 +66,6 @@ function ProblemUI({ categoryName }) {
     } catch (error) {
       console.error('Error fetching quiz data:', error.message);
       setShowNoProblemDialog(true);
-    }
-  };
-
-  const fetchLikeStats = async (quizId) => {
-    try {
-      const response = await axios.get(`https://valanse.site/quiz/${quizId}/like-stats`);
-      const { likeCount, unlikeCount } = response.data;
-      setLikeCount(likeCount);
-      setUnlikeCount(unlikeCount);
-    } catch (error) {
-      console.error('Error fetching like stats:', error.message);
     }
   };
 
