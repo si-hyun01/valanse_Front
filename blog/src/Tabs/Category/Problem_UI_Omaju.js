@@ -19,7 +19,7 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-function ProblemUI() {
+function ProblemUI({ categoryName }) {
   const [quizDataList, setQuizDataList] = useState([]);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -27,8 +27,8 @@ function ProblemUI() {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   useEffect(() => {
-    fetchQuizData();
-  }, []);
+    fetchQuizData(categoryName);
+  }, [categoryName]);
 
   const fetchAllQuizData = async (quizIds) => {
     try {
@@ -44,11 +44,11 @@ function ProblemUI() {
       return [];
     }
   };
-  
-  const fetchQuizData = async () => {
+
+  const fetchQuizData = async (category) => {
     try {
       const response = await axios.get(
-        'https://valanse.site/quiz-category/search?keyword=%EC%B6%95%EA%B5%AC'
+        `https://valanse.site/quiz-category/search?keyword=${encodeURIComponent(category)}`
       );
       const data = response.data.data;
       if (!data || data.length === 0) {
@@ -63,13 +63,13 @@ function ProblemUI() {
       setShowNoProblemDialog(true);
     }
   };
-  
+
   const handleOptionSelect = async (option, quizId) => {
     setSelectedOption(option);
     setShowConfirmDialog(true);
     console.log(quizDataList[currentQuizIndex]); // 선택한 퀴즈의 상세 정보 출력
   };
-  
+
 
   const handleOptionLike = async () => {
     // Implement liking functionality
@@ -107,7 +107,7 @@ function ProblemUI() {
     setShowConfirmDialog(false); // 다이얼로그를 닫기
     handleNext(); // 다음 퀴즈로 넘어가버리기
   };
-  
+
 
   const currentQuizData = quizDataList[currentQuizIndex];
 
@@ -154,7 +154,7 @@ function ProblemUI() {
       </Dialog>
       <Card sx={{ bgcolor: '#f5f5f5', borderRadius: '16px', mt: 4 }}>
         <Container maxWidth="lg">
-          <Grid container spacing={2} justifyContent="center">
+          <Grid container spacing={2}>
             <Grid item xs={12} style={{ height: '30px' }} />
             <Grid item xs={12}>
               <Typography variant="h4" align="center">{currentQuizData ? currentQuizData.content : ''}</Typography>
@@ -220,4 +220,3 @@ function ProblemUI() {
 }
 
 export default ProblemUI;
-
