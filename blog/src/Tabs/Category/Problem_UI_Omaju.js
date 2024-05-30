@@ -25,9 +25,6 @@ function ProblemUI({ categoryName }) {
   const [selectedOption, setSelectedOption] = useState(null);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [likeCounts, setLikeCounts] = useState({});
-  const [unlikeCounts, setUnlikeCounts] = useState({});
-  const [likeStatus, setLikeStatus] = useState(null);
 
   useEffect(() => {
     fetchQuizData(categoryName);
@@ -61,21 +58,9 @@ function ProblemUI({ categoryName }) {
       const quizIds = data.map((quiz) => quiz.quizId);
       const quizDataArray = await fetchAllQuizData(quizIds);
       setQuizDataList(quizDataArray);
-      quizIds.forEach(quizId => fetchLikeStats(quizId)); // 퀴즈 데이터를 불러올 때마다 좋아요 및 싫어요 수도 가져오기
     } catch (error) {
       console.error('Error fetching quiz data:', error.message);
       setShowNoProblemDialog(true);
-    }
-  };
-
-  const fetchLikeStats = async (quizId) => {
-    try {
-      const response = await axios.get(`https://valanse.site/quiz/${quizId}/like-stats`);
-      const { likeCount, unlikeCount } = response.data;
-      setLikeCounts((prevCounts) => ({ ...prevCounts, [quizId]: likeCount })); // quizId에 해당하는 좋아요 수 업데이트
-      setUnlikeCounts((prevCounts) => ({ ...prevCounts, [quizId]: unlikeCount })); // quizId에 해당하는 싫어요 수 업데이트
-    } catch (error) {
-      console.error('Error fetching like stats:', error.message);
     }
   };
 
@@ -85,32 +70,28 @@ function ProblemUI({ categoryName }) {
     console.log(quizDataList[currentQuizIndex]); // 선택한 퀴즈의 상세 정보 출력
   };
 
-  const handleOptionLike = async (quizId) => {
+  const handleOptionLike = async () => {
     try {
-      await axios.post(`https://valanse.site/quiz/${quizId}/increase-preference`);
-      setLikeStatus('like');
-      setLikeCounts((prevCounts) => ({
-        ...prevCounts,
-        [quizId]: (prevCounts[quizId] || 0) + 1
-      }));
+      const response = await axios.post(`https://valanse.site/quiz/${currentQuizData.quizId}/increase-preference`);
+      console.log('Like response:', response.data);
+      // 선호도 증가에 대한 UI 업데이트 등 추가 작업
     } catch (error) {
       console.error('Error liking quiz:', error.message);
+      // 에러 처리
     }
   };
-
-  const handleOptionDislike = async (quizId) => {
+  
+  const handleOptionDislike = async () => {
     try {
-      await axios.post(`https://valanse.site/quiz/${quizId}/decrease-preference`);
-      setLikeStatus('unlike');
-      setUnlikeCounts((prevCounts) => ({
-        ...prevCounts,
-        [quizId]: (prevCounts[quizId] || 0) + 1
-      }));
+      const response = await axios.post(`https://valanse.site/quiz/${currentQuizData.quizId}/decrease-preference`);
+      console.log('Dislike response:', response.data);
+      // 선호도 감소에 대한 UI 업데이트 등 추가 작업
     } catch (error) {
       console.error('Error disliking quiz:', error.message);
+      // 에러 처리
     }
   };
-
+  
   const handleNext = async () => {
     const nextIndex = currentQuizIndex + 1;
     if (nextIndex < quizDataList.length) {
@@ -139,6 +120,7 @@ function ProblemUI({ categoryName }) {
     setShowConfirmDialog(false); // 다이얼로그를 닫기
     handleNext(); // 다음 퀴즈로 넘어가버리기
   };
+
 
   const currentQuizData = quizDataList[currentQuizIndex];
 
@@ -175,8 +157,7 @@ function ProblemUI({ categoryName }) {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={handleCloseConfirmDialog} color="primary">
+          <Button onClick={handleCloseConfirmDialog} color="primary">
             취소
           </Button>
           <Button onClick={handleConfirmSelection} color="primary" autoFocus>
@@ -186,21 +167,21 @@ function ProblemUI({ categoryName }) {
       </Dialog>
       <Card sx={{ bgcolor: '#f5f5f5', borderRadius: '16px', mt: 4 }}>
         <Container maxWidth="lg">
-          <Grid containerspacing={2}>
+          <Grid container spacing={2}>
             <Grid item xs={12} style={{ height: '30px' }} />
             <Grid item xs={12}>
               <Typography variant="h4" align="center">{currentQuizData ? currentQuizData.content : ''}</Typography>
             </Grid>
             <Grid item xs={12} textAlign="center">
-              <IconButton onClick={() => handleOptionLike(currentQuizData?.quizId)} color={likeStatus === 'like' ? 'primary' : 'default'}>
-                <ThumbUpIcon color={likeStatus === 'like' ? 'primary' : 'inherit'} /> {likeCounts[currentQuizData?.quizId] || 0}
+              <IconButton onClick={handleOptionLike}>
+                <ThumbUpIcon color={'inherit'} /> {currentQuizData ? currentQuizData.likes : 0}
               </IconButton>
-              <IconButton onClick={() => handleOptionDislike(currentQuizData?.quizId)} color={likeStatus === 'unlike' ? 'primary' : 'default'}>
-                <ThumbDownIcon color={likeStatus === 'unlike' ? 'primary' : 'inherit'} /> {unlikeCounts[currentQuizData?.quizId] || 0}
+              <IconButton onClick={handleOptionDislike}>
+                <ThumbDownIcon color={'inherit'} /> {currentQuizData ? currentQuizData.dislikes : 0}
               </IconButton>
             </Grid>
             <Grid item xs={6} textAlign="center">
-              <Card onClick={() => handleOptionSelect('A', currentQuizData?.quizId)} sx={{ borderRadius: '16px' }}>
+              <Card onClick={() => handleOptionSelect('A', currentQuizData.quizId)} sx={{ borderRadius: '16px' }}>
                 <CardActionArea>
                   <CardMedia
                     component="img"
@@ -217,7 +198,7 @@ function ProblemUI({ categoryName }) {
               </Card>
             </Grid>
             <Grid item xs={6} textAlign="center">
-              <Card onClick={() => handleOptionSelect('B', currentQuizData?.quizId)} sx={{ borderRadius: '16px' }}>
+              <Card onClick={() => handleOptionSelect('B', currentQuizData.quizId)} sx={{ borderRadius: '16px' }}>
                 <CardActionArea>
                   <CardMedia
                     component="img"
