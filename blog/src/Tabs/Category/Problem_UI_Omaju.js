@@ -179,7 +179,6 @@ function ProblemUI({ categoryName }) {
                 <ThumbDownIcon color={'inherit'} /> {totalDislikes}
               </IconButton>
             </Grid>
-            <Grid item xs={6} textAlign="center">
               < Grid item xs={12} textAlign="center">
               <Typography variant="h6">추천 통계</Typography>
               <Typography variant="body1">좋아요: {totalLikes}</Typography>
