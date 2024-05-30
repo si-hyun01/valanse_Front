@@ -25,6 +25,8 @@ function ProblemUI({ categoryName }) {
   const [selectedOption, setSelectedOption] = useState(null);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+  const [unlikeCount, setUnlikeCount] = useState(0);
 
   useEffect(() => {
     fetchQuizData(categoryName);
@@ -64,6 +66,23 @@ function ProblemUI({ categoryName }) {
     }
   };
 
+  const fetchLikeStats = async () => {
+    try {
+      const response = await axios.get(`https://valanse.site/quiz/${currentQuizData.quizId}/like-stats`);
+      setLikeCount(response.data.likeCount);
+      setUnlikeCount(response.data.unlikeCount);
+    } catch (error) {
+      console.error('Error fetching like stats:', error.message);
+      // 에러 처리
+    }
+  };
+
+  useEffect(() => {
+    if (currentQuizData) {
+      fetchLikeStats();
+    }
+  }, [currentQuizData]);
+
   const handleOptionSelect = async (option, quizId) => {
     setSelectedOption(option);
     setShowConfirmDialog(true);
@@ -74,24 +93,24 @@ function ProblemUI({ categoryName }) {
     try {
       const response = await axios.post(`https://valanse.site/quiz/${currentQuizData.quizId}/increase-preference`);
       console.log('Like response:', response.data);
-      // 선호도 증가에 대한 UI 업데이트 등 추가 작업
+      fetchLikeStats(); // 좋아요 수 업데이트
     } catch (error) {
       console.error('Error liking quiz:', error.message);
       // 에러 처리
     }
   };
-  
+
   const handleOptionDislike = async () => {
     try {
       const response = await axios.post(`https://valanse.site/quiz/${currentQuizData.quizId}/decrease-preference`);
       console.log('Dislike response:', response.data);
-      // 선호도 감소에 대한 UI 업데이트 등 추가 작업
+      fetchLikeStats(); // 싫어요 수 업데이트
     } catch (error) {
       console.error('Error disliking quiz:', error.message);
       // 에러 처리
     }
   };
-  
+
   const handleNext = async () => {
     const nextIndex = currentQuizIndex + 1;
     if (nextIndex < quizDataList.length) {
@@ -169,15 +188,16 @@ function ProblemUI({ categoryName }) {
         <Container maxWidth="lg">
           <Grid container spacing={2}>
             <Grid item xs={12} style={{ height: '30px' }} />
-            <Grid item xs={12}>
+            <Grid item xs={12
+            }>
               <Typography variant="h4" align="center">{currentQuizData ? currentQuizData.content : ''}</Typography>
             </Grid>
             <Grid item xs={12} textAlign="center">
               <IconButton onClick={handleOptionLike}>
-                <ThumbUpIcon color={'inherit'} /> {currentQuizData ? currentQuizData.likes : 0}
+                <ThumbUpIcon color={'inherit'} /> {likeCount}
               </IconButton>
               <IconButton onClick={handleOptionDislike}>
-                <ThumbDownIcon color={'inherit'} /> {currentQuizData ? currentQuizData.dislikes : 0}
+                <ThumbDownIcon color={'inherit'} /> {unlikeCount}
               </IconButton>
             </Grid>
             <Grid item xs={6} textAlign="center">
