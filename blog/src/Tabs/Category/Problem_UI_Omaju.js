@@ -61,7 +61,7 @@ function ProblemUI({ categoryName }) {
       const quizIds = data.map((quiz) => quiz.quizId);
       const quizDataArray = await fetchAllQuizData(quizIds);
       setQuizDataList(quizDataArray);
-      quizIds.forEach(fetchLikeStats); // 퀴즈 데이터를 불러올 때마다 좋아요 및 싫어요 수도 가져오기
+      quizIds.forEach(quizId => fetchLikeStats(quizId)); // 퀴즈 데이터를 불러올 때마다 좋아요 및 싫어요 수도 가져오기
     } catch (error) {
       console.error('Error fetching quiz data:', error.message);
       setShowNoProblemDialog(true);
@@ -85,32 +85,32 @@ function ProblemUI({ categoryName }) {
     console.log(quizDataList[currentQuizIndex]); // 선택한 퀴즈의 상세 정보 출력
   };
 
-  const handleOptionLike = async () => {
+  const handleOptionLike = async (quizId) => {
     try {
-      await axios.post(`https://valanse.site/quiz/${currentQuizData.quizId}/increase-preference`);
+      await axios.post(`https://valanse.site/quiz/${quizId}/increase-preference`);
       setLikeStatus('like');
       setLikeCounts((prevCounts) => ({
         ...prevCounts,
-        [currentQuizData.quizId]: (prevCounts[currentQuizData.quizId] || 0) + 1
+        [quizId]: (prevCounts[quizId] || 0) + 1
       }));
     } catch (error) {
       console.error('Error liking quiz:', error.message);
     }
   };
-  
-  const handleOptionDislike = async () => {
+
+  const handleOptionDislike = async (quizId) => {
     try {
-      await axios.post(`https://valanse.site/quiz/${currentQuizData.quizId}/decrease-preference`);
+      await axios.post(`https://valanse.site/quiz/${quizId}/decrease-preference`);
       setLikeStatus('unlike');
       setUnlikeCounts((prevCounts) => ({
         ...prevCounts,
-        [currentQuizData.quizId]: (prevCounts[currentQuizData.quizId] || 0) + 1
+        [quizId]: (prevCounts[quizId] || 0) + 1
       }));
     } catch (error) {
       console.error('Error disliking quiz:', error.message);
     }
   };
-  
+
   const handleNext = async () => {
     const nextIndex = currentQuizIndex + 1;
     if (nextIndex < quizDataList.length) {
@@ -186,16 +186,16 @@ function ProblemUI({ categoryName }) {
       </Dialog>
       <Card sx={{ bgcolor: '#f5f5f5', borderRadius: '16px', mt: 4 }}>
         <Container maxWidth="lg">
-          <Grid container spacing={2}>
+          <Grid containerspacing={2}>
             <Grid item xs={12} style={{ height: '30px' }} />
             <Grid item xs={12}>
               <Typography variant="h4" align="center">{currentQuizData ? currentQuizData.content : ''}</Typography>
             </Grid>
             <Grid item xs={12} textAlign="center">
-              <IconButton onClick={handleOptionLike} color={likeStatus === 'like' ? 'primary' : 'default'}>
+              <IconButton onClick={() => handleOptionLike(currentQuizData?.quizId)} color={likeStatus === 'like' ? 'primary' : 'default'}>
                 <ThumbUpIcon color={likeStatus === 'like' ? 'primary' : 'inherit'} /> {likeCounts[currentQuizData?.quizId] || 0}
               </IconButton>
-              <IconButton onClick={handleOptionDislike} color={likeStatus === 'unlike' ? 'primary' : 'default'}>
+              <IconButton onClick={() => handleOptionDislike(currentQuizData?.quizId)} color={likeStatus === 'unlike' ? 'primary' : 'default'}>
                 <ThumbDownIcon color={likeStatus === 'unlike' ? 'primary' : 'inherit'} /> {unlikeCounts[currentQuizData?.quizId] || 0}
               </IconButton>
             </Grid>
