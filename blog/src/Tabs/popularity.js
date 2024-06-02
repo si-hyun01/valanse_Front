@@ -2,15 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import Pagination from '@mui/material/Pagination';
 import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 
 const Popularity = () => {
     const [quizData, setQuizData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [page, setPage] = useState(1);
-    const [anchorEl, setAnchorEl] = useState(null);
     const [sortOrder, setSortOrder] = useState('desc'); // Default sort order
     const itemsPerPage = 5;
 
@@ -51,17 +48,8 @@ const Popularity = () => {
         setPage(value);
     };
 
-    const handleMenuClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    };
-
     const handleSortOrderChange = (order) => {
         setSortOrder(order);
-        handleMenuClose();
     };
 
     if (isLoading) {
@@ -83,21 +71,29 @@ const Popularity = () => {
 
     return (
         <div style={{ overflowX: 'auto', maxWidth: '100%', textAlign: 'center' }}>
-            <Button
-                variant="contained"
-                onClick={handleMenuClick}
-                style={{ marginBottom: '20px' }}
-            >
-                정렬 옵션
-            </Button>
-            <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleMenuClose}
-            >
-                <MenuItem onClick={() => handleSortOrderChange('asc')}>오름차순</MenuItem>
-                <MenuItem onClick={() => handleSortOrderChange('desc')}>내림차순</MenuItem>
-            </Menu>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+                <Button
+                    variant="text"
+                    onClick={() => handleSortOrderChange('asc')}
+                    style={{
+                        marginRight: '10px',
+                        color: sortOrder === 'asc' ? '#00FF00' : 'white',
+                        borderBottom: sortOrder === 'asc' ? '2px solid #00FF00' : 'none',
+                    }}
+                >
+                    오름차순
+                </Button>
+                <Button
+                    variant="text"
+                    onClick={() => handleSortOrderChange('desc')}
+                    style={{
+                        color: sortOrder === 'desc' ? '#00FF00' : 'white',
+                        borderBottom: sortOrder === 'desc' ? '2px solid #00FF00' : 'none',
+                    }}
+                >
+                    내림차순
+                </Button>
+            </div>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                     <tr>
