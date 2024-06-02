@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import Pagination from '@mui/material/Pagination';
+import Backdrop from '@mui/material/Backdrop';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Popularity = () => {
     const [quizData, setQuizData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [page, setPage] = useState(1);
+    const [open, setOpen] = useState(false);
+    const [sortOrder, setSortOrder] = useState('desc'); // Default sort order
     const itemsPerPage = 5;
 
     useEffect(() => {
         fetchData();
-    }, [page]);
+    }, [page, sortOrder]);
 
     const fetchData = async () => {
         try {
@@ -23,7 +29,17 @@ const Popularity = () => {
                 likes: likeStatsResponses[index].data.data.likeCount,
                 dislikes: likeStatsResponses[index].data.data.unlikeCount
             }));
-            setQuizData(quizDataWithLikesAndDislikes);
+
+            // 정렬하기
+            const sortedData = [...quizDataWithLikesAndDislikes].sort((a, b) => {
+                if (sortOrder === 'asc') {
+                    return a.likes - b.likes;
+                } else {
+                    return b.likes - a.likes;
+                }
+            });
+
+            setQuizData(sortedData);
             setIsLoading(false);
         } catch (error) {
             console.error('Error fetching quiz data:', error.message);
@@ -34,6 +50,15 @@ const Popularity = () => {
 
     const handlePageChange = (event, value) => {
         setPage(value);
+    };
+
+    const handleToggleBackdrop = () => {
+        setOpen(!open);
+    };
+
+    const handleSortOrderChange = (order) => {
+        setSortOrder(order);
+        setOpen(false);
     };
 
     if (isLoading) {
@@ -55,6 +80,23 @@ const Popularity = () => {
 
     return (
         <div style={{ overflowX: 'auto', maxWidth: '100%', textAlign: 'center' }}>
+            <Button variant="contained" onClick={handleToggleBackdrop} style={{ marginBottom: '20px' }}>
+                정렬 옵션
+            </Button>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={open}
+                onClick={handleToggleBackdrop}
+            >
+                <ButtonGroup
+                    orientation="vertical"
+                    aria-label="vertical contained button group"
+                    variant="contained"
+                >
+                    <Button onClick={() => handleSortOrderChange('asc')}>오름차순</Button>
+                    <Button onClick={() => handleSortOrderChange('desc')}>내림차순</Button>
+                </ButtonGroup>
+            </Backdrop>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                     <tr>
@@ -99,7 +141,6 @@ const Popularity = () => {
                         '& .MuiPaginationItem-outlined': { backgroundColor: '#00FF00' }, // 야광 초록색 배경 설정
                     }}
                 />
-
             </div>
         </div>
     );
