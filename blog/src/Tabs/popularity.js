@@ -71,7 +71,7 @@ const Popularity = () => {
 
     return (
         <div style={{ overflowX: 'auto', maxWidth: '100%', textAlign: 'center' }}>
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px', marginTop: '10px' }}>
                 <Button
                     variant="text"
                     onClick={() => handleSortOrderChange('asc')}
