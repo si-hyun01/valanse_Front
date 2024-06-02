@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import Pagination from '@mui/material/Pagination';
-import Backdrop from '@mui/material/Backdrop';
 import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import CircularProgress from '@mui/material/CircularProgress';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 const Popularity = () => {
     const [quizData, setQuizData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [page, setPage] = useState(1);
-    const [open, setOpen] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
     const [sortOrder, setSortOrder] = useState('desc'); // Default sort order
     const itemsPerPage = 5;
 
@@ -52,13 +51,17 @@ const Popularity = () => {
         setPage(value);
     };
 
-    const handleToggleBackdrop = () => {
-        setOpen(!open);
+    const handleMenuClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
     };
 
     const handleSortOrderChange = (order) => {
         setSortOrder(order);
-        setOpen(false);
+        handleMenuClose();
     };
 
     if (isLoading) {
@@ -80,23 +83,21 @@ const Popularity = () => {
 
     return (
         <div style={{ overflowX: 'auto', maxWidth: '100%', textAlign: 'center' }}>
-            <Button variant="contained" onClick={handleToggleBackdrop} style={{ marginBottom: '20px' }}>
+            <Button
+                variant="contained"
+                onClick={handleMenuClick}
+                style={{ marginBottom: '20px' }}
+            >
                 정렬 옵션
             </Button>
-            <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={open}
-                onClick={handleToggleBackdrop}
+            <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
             >
-                <ButtonGroup
-                    orientation="vertical"
-                    aria-label="vertical contained button group"
-                    variant="contained"
-                >
-                    <Button onClick={() => handleSortOrderChange('asc')}>오름차순</Button>
-                    <Button onClick={() => handleSortOrderChange('desc')}>내림차순</Button>
-                </ButtonGroup>
-            </Backdrop>
+                <MenuItem onClick={() => handleSortOrderChange('asc')}>오름차순</MenuItem>
+                <MenuItem onClick={() => handleSortOrderChange('desc')}>내림차순</MenuItem>
+            </Menu>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                     <tr>
