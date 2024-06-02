@@ -14,6 +14,7 @@ const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [stateToken, setStateToken] = useState('');
     const [accessToken, setAccessToken] = useState('');
+    const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString('ko-KR', { timeZone: 'Asia/Seoul' }));
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -51,6 +52,14 @@ const Header = () => {
         return () => {
             axios.interceptors.request.eject(interceptor);
         };
+    }, []);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentTime(new Date().toLocaleTimeString('ko-KR', { timeZone: 'Asia/Seoul' }));
+        }, 1000);
+
+        return () => clearInterval(timer);
     }, []);
 
     const getAccessToken = async (stateToken) => {
@@ -122,7 +131,7 @@ const Header = () => {
         <>
             <header>
                 <Navbar bg="black" expand="lg">
-                    <Container style={{ maxWidth: '80%', }}>
+                    <Container style={{ maxWidth: '80%' }}>
                         <Navbar.Brand onClick={handleLogoClick}>
                             <img
                                 src={valanse_logo}
@@ -130,6 +139,17 @@ const Header = () => {
                                 style={{ cursor: 'pointer', width: '250px', height: 'auto' }}
                             />
                         </Navbar.Brand>
+
+                        <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <div style={{
+                                color: 'cyan',
+                                fontSize: '24px',
+                                fontWeight: 'bold',
+                                textShadow: '0 0 10px cyan, 0 0 20px cyan, 0 0 30px cyan',
+                            }}>
+                                {currentTime}
+                            </div>
+                        </div>
 
                         <Navbar.Toggle aria-controls="basic-navbar-nav" />
                         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
