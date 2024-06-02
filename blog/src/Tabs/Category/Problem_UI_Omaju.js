@@ -223,8 +223,11 @@ function ProblemUI({ categoryName }) {
           <Grid container spacing={2}>
             <Grid item xs={12} style={{ height: '30px' }} />
             <Grid item xs={12}>
-              <Typography variant="h4" align="center">{currentQuizData ? currentQuizData.content : ''}</Typography>
+              <Typography variant="h4" align="center" sx={{ color: 'white' }}>
+                {currentQuizData ? currentQuizData.content : ''}
+              </Typography>
             </Grid>
+
             <Grid item xs={12} textAlign="center">
               <IconButton onClick={() => handleOptionLike(currentQuizData.quizId)}>
                 <ThumbUpIcon color={'inherit'} /> {currentQuizData ? currentQuizData.likes : 0}
