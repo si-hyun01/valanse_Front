@@ -15,7 +15,6 @@ const Header = () => {
     const [stateToken, setStateToken] = useState('');
     const [accessToken, setAccessToken] = useState('');
     const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString('ko-KR', { timeZone: 'Asia/Seoul' }));
-
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -30,13 +29,11 @@ const Header = () => {
             getAccessToken(token);
         }
 
-        // 액세스 토큰이 만료되었을 때 갱신 토큰을 사용하여 새 액세스 토큰을 가져오는 역할
         const refreshToken = Cookies.get('refresh_token');
         if (refreshToken) {
             refreshAccessToken(refreshToken);
         }
 
-        // axios 인터셉터 
         const interceptor = axios.interceptors.request.use(
             config => {
                 const token = Cookies.get('access_token');
@@ -57,18 +54,11 @@ const Header = () => {
 
     useEffect(() => {
         const timer = setInterval(() => {
-            setCurrentTime(formatTime(new Date()));
+            setCurrentTime(new Date().toLocaleTimeString('ko-KR', { timeZone: 'Asia/Seoul' }));
         }, 1000);
 
         return () => clearInterval(timer);
     }, []);
-
-    const formatTime = (date) => {
-        const hours = date.getHours().toString().padStart(2, '0');
-        const minutes = date.getMinutes().toString().padStart(2, '0');
-        const seconds = date.getSeconds().toString().padStart(2, '0');
-        return `${hours}:${minutes}:${seconds}`;
-    };
 
     const getAccessToken = async (stateToken) => {
         try {
@@ -101,7 +91,6 @@ const Header = () => {
             Cookies.set('access_token', newToken);
         } catch (error) {
             console.error('Error refreshing access token:', error.message);
-            // 필요에 따라 에러 처리, 예: 사용자 로그아웃
         }
     };
 
@@ -150,13 +139,20 @@ const Header = () => {
 
                         <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <div style={{
-                                color: 'cyan',
-                                fontSize: '24px',
-                                fontWeight: 'bold',
-                                textShadow: '0 0 10px cyan, 0 0 20px cyan, 0 0 30px cyan',
-                                fontFamily: 'monospace', // Fixed-width font
+                                padding: '10px 20px',
+                                border: '3px solid cyan',
+                                borderRadius: '10px',
+                                boxShadow: '0 0 10px cyan, 0 0 20px cyan, 0 0 30px cyan',
+                                display: 'inline-block',
                             }}>
-                                {currentTime}
+                                <div style={{
+                                    color: 'cyan',
+                                    fontSize: '24px',
+                                    fontWeight: 'bold',
+                                    textShadow: '0 0 10px cyan, 0 0 20px cyan, 0 0 30px cyan',
+                                }}>
+                                    {currentTime}
+                                </div>
                             </div>
                         </div>
 
