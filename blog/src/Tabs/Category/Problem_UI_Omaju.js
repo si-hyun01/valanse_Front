@@ -90,9 +90,9 @@ function ProblemUI({ categoryName }) {
         const updatedQuizDataList = prevQuizDataList.map((quiz) =>
           quiz.quizId === quizId
             ? {
-                ...quiz,
-                likes: quiz.likes + (isLiked ? -1 : 1),
-              }
+              ...quiz,
+              likes: quiz.likes + (isLiked ? -1 : 1),
+            }
             : quiz
         );
         return updatedQuizDataList;
@@ -121,9 +121,9 @@ function ProblemUI({ categoryName }) {
         const updatedQuizDataList = prevQuizDataList.map((quiz) =>
           quiz.quizId === quizId
             ? {
-                ...quiz,
-                dislikes: quiz.dislikes + (isDisliked ? -1 : 1),
-              }
+              ...quiz,
+              dislikes: quiz.dislikes + (isDisliked ? -1 : 1),
+            }
             : quiz
         );
         return updatedQuizDataList;
@@ -211,7 +211,14 @@ function ProblemUI({ categoryName }) {
           </Button>
         </DialogActions>
       </Dialog>
-      <Card sx={{ bgcolor: '#f5f5f5', borderRadius: '16px', mt: 4 }}>
+      <Card
+        sx={{
+          bgcolor: 'black',
+          borderRadius: '16px',
+          mt: 4,
+          boxShadow: '0px 0px 20px 0px rgba(0, 255, 255, 0.75)', // Neon Glow 효과
+        }}
+      >
         <Container maxWidth="lg">
           <Grid container spacing={2}>
             <Grid item xs={12} style={{ height: '30px' }} />
@@ -227,7 +234,14 @@ function ProblemUI({ categoryName }) {
               </IconButton>
             </Grid>
             <Grid item xs={6} textAlign="center">
-              <Card onClick={() => handleOptionSelect('A', currentQuizData.quizId)} sx={{ borderRadius: '16px' }}>
+              <Card
+                onClick={() => handleOptionSelect('A', currentQuizData.quizId)}
+                sx={{
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  boxShadow: '0px 0px 20px 0px rgba(0, 255, 255, 0.75)',// 네온 효과 추가
+                }}
+              >
                 <CardActionArea>
                   <CardMedia
                     component="img"
@@ -235,8 +249,13 @@ function ProblemUI({ categoryName }) {
                     image={currentQuizData ? currentQuizData.imageA : ''}
                     alt=""
                   />
-                  <CardContent sx={{ height: '100px' }}>
-                    <Typography gutterBottom variant="h5" component="div">
+                  <CardContent sx={{ height: '100px', backgroundColor: 'black' }}>
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="div"
+                      sx={{ color: 'white', }} // 텍스트 색상 및 네온 글로우 효과 추가
+                    >
                       {currentQuizData ? currentQuizData.descriptionA : ''}
                     </Typography>
                   </CardContent>
@@ -244,7 +263,14 @@ function ProblemUI({ categoryName }) {
               </Card>
             </Grid>
             <Grid item xs={6} textAlign="center">
-              <Card onClick={() => handleOptionSelect('B', currentQuizData.quizId)} sx={{ borderRadius: '16px' }}>
+              <Card
+                onClick={() => handleOptionSelect('B', currentQuizData.quizId)}
+                sx={{
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  boxShadow: '0px 0px 20px 0px rgba(0, 255, 255, 0.75)',
+                }}
+              >
                 <CardActionArea>
                   <CardMedia
                     component="img"
@@ -252,14 +278,20 @@ function ProblemUI({ categoryName }) {
                     image={currentQuizData ? currentQuizData.imageB : ''}
                     alt=""
                   />
-                  <CardContent sx={{ height: '100px' }}>
-                    <Typography gutterBottom variant="h5" component="div">
+                  <CardContent sx={{ height: '100px', backgroundColor: 'black' }}>
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="div"
+                      sx={{ color: 'white' }} // 텍스트 색상 및 네온 글로우 효과 추가
+                    >
                       {currentQuizData ? currentQuizData.descriptionB : ''}
                     </Typography>
                   </CardContent>
                 </CardActionArea>
               </Card>
             </Grid>
+
             <Grid item xs={12} textAlign="center">
               <Button
                 variant="contained"
