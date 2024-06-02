@@ -15,6 +15,7 @@ const Header = () => {
     const [stateToken, setStateToken] = useState('');
     const [accessToken, setAccessToken] = useState('');
     const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString('ko-KR', { timeZone: 'Asia/Seoul' }));
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -56,11 +57,18 @@ const Header = () => {
 
     useEffect(() => {
         const timer = setInterval(() => {
-            setCurrentTime(new Date().toLocaleTimeString('ko-KR', { timeZone: 'Asia/Seoul' }));
+            setCurrentTime(formatTime(new Date()));
         }, 1000);
 
         return () => clearInterval(timer);
     }, []);
+
+    const formatTime = (date) => {
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const seconds = date.getSeconds().toString().padStart(2, '0');
+        return `${hours}:${minutes}:${seconds}`;
+    };
 
     const getAccessToken = async (stateToken) => {
         try {
@@ -146,6 +154,7 @@ const Header = () => {
                                 fontSize: '24px',
                                 fontWeight: 'bold',
                                 textShadow: '0 0 10px cyan, 0 0 20px cyan, 0 0 30px cyan',
+                                fontFamily: 'monospace', // Fixed-width font
                             }}>
                                 {currentTime}
                             </div>
