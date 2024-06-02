@@ -144,12 +144,15 @@ const Header = () => {
                                 borderRadius: '10px',
                                 boxShadow: '0 0 10px cyan, 0 0 20px cyan, 0 0 30px cyan',
                                 display: 'inline-block',
+                                width: '200px', // 고정된 너비 설정
+                                textAlign: 'center' // 중앙 정렬
                             }}>
                                 <div style={{
                                     color: 'cyan',
                                     fontSize: '24px',
                                     fontWeight: 'bold',
                                     textShadow: '0 0 10px cyan, 0 0 20px cyan, 0 0 30px cyan',
+                                    fontFamily: 'monospace' // 고정 폭 글꼴 사용
                                 }}>
                                     {currentTime}
                                 </div>
