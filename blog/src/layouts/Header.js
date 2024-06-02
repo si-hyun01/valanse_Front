@@ -14,7 +14,7 @@ const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [stateToken, setStateToken] = useState('');
     const [accessToken, setAccessToken] = useState('');
-    const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString('ko-KR', { timeZone: 'Asia/Seoul' }));
+    const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Seoul', hour12: true, hourCycle: 'h12' }));
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -54,7 +54,7 @@ const Header = () => {
 
     useEffect(() => {
         const timer = setInterval(() => {
-            setCurrentTime(new Date().toLocaleTimeString('ko-KR', { timeZone: 'Asia/Seoul' }));
+            setCurrentTime(new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Seoul', hour12: true, hourCycle: 'h12' }));
         }, 1000);
 
         return () => clearInterval(timer);
@@ -137,22 +137,22 @@ const Header = () => {
                             />
                         </Navbar.Brand>
 
-                        <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <div style={{ flex: 3.5, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <div style={{
                                 padding: '10px 20px',
                                 border: '3px solid cyan',
                                 borderRadius: '10px',
-                                boxShadow: '0 0 10px cyan, 0 0 20px cyan, 0 0 30px cyan',
+                                boxShadow: '0 0 10px cyan',
                                 display: 'inline-block',
-                                width: '200px', // 고정된 너비 설정
-                                textAlign: 'center' // 중앙 정렬
+                                width: '200px',
+                                textAlign: 'center'
                             }}>
                                 <div style={{
                                     color: 'cyan',
                                     fontSize: '24px',
                                     fontWeight: 'bold',
-                                    textShadow: '0 0 10px cyan, 0 0 20px cyan, 0 0 30px cyan',
-                                    fontFamily: 'monospace' // 고정 폭 글꼴 사용
+                                    textShadow: '0 0 10px cyan, 0 0 20px cyan',
+                                    fontFamily: 'monospace'
                                 }}>
                                     {currentTime}
                                 </div>
