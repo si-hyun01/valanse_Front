@@ -25,6 +25,8 @@ function ProblemUI({ categoryName }) {
   const [selectedOption, setSelectedOption] = useState(null);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [likedQuizzes, setLikedQuizzes] = useState({});
+  const [dislikedQuizzes, setDislikedQuizzes] = useState({});
 
   useEffect(() => {
     fetchQuizData(categoryName);
@@ -75,38 +77,68 @@ function ProblemUI({ categoryName }) {
     console.log(quizDataList[currentQuizIndex]); // 선택한 퀴즈의 상세 정보 출력
   };
 
-  const handleOptionLike = async () => {
+  const handleOptionLike = async (quizId) => {
     try {
-      const response = await axios.post(`https://valanse.site/quiz/${currentQuizData.quizId}/increase-preference`);
-      console.log('Like response:', response.data);
-      // 선호도 증가에 대한 UI 업데이트
-      setQuizDataList(prevQuizDataList => {
-        const updatedQuizDataList = [...prevQuizDataList];
-        updatedQuizDataList[currentQuizIndex].likes += 1;
+      const isLiked = likedQuizzes[quizId];
+      const response = isLiked
+        ? await axios.post(`https://valanse.site/quiz/${quizId}/decrease-preference`)
+        : await axios.post(`https://valanse.site/quiz/${quizId}/increase-preference`);
+
+      console.log(isLiked ? 'Dislike response:' : 'Like response:', response.data);
+
+      setQuizDataList((prevQuizDataList) => {
+        const updatedQuizDataList = prevQuizDataList.map((quiz) =>
+          quiz.quizId === quizId
+            ? {
+                ...quiz,
+                likes: quiz.likes + (isLiked ? -1 : 1),
+              }
+            : quiz
+        );
         return updatedQuizDataList;
       });
+
+      setLikedQuizzes((prevLikedQuizzes) => ({
+        ...prevLikedQuizzes,
+        [quizId]: !isLiked,
+      }));
     } catch (error) {
-      console.error('Error liking quiz:', error.message);
+      console.error('Error liking/unliking quiz:', error.message);
       // 에러 처리
     }
   };
-  
-  const handleOptionDislike = async () => {
+
+  const handleOptionDislike = async (quizId) => {
     try {
-      const response = await axios.post(`https://valanse.site/quiz/${currentQuizData.quizId}/decrease-preference`);
-      console.log('Dislike response:', response.data);
-      // 선호도 감소에 대한 UI 업데이트
-      setQuizDataList(prevQuizDataList => {
-        const updatedQuizDataList = [...prevQuizDataList];
-        updatedQuizDataList[currentQuizIndex].dislikes += 1;
+      const isDisliked = dislikedQuizzes[quizId];
+      const response = isDisliked
+        ? await axios.post(`https://valanse.site/quiz/${quizId}/decrease-preference`)
+        : await axios.post(`https://valanse.site/quiz/${quizId}/increase-preference`);
+
+      console.log(isDisliked ? 'Dislike response:' : 'Like response:', response.data);
+
+      setQuizDataList((prevQuizDataList) => {
+        const updatedQuizDataList = prevQuizDataList.map((quiz) =>
+          quiz.quizId === quizId
+            ? {
+                ...quiz,
+                dislikes: quiz.dislikes + (isDisliked ? -1 : 1),
+              }
+            : quiz
+        );
         return updatedQuizDataList;
       });
+
+      setDislikedQuizzes((prevDislikedQuizzes) => ({
+        ...prevDislikedQuizzes,
+        [quizId]: !isDisliked,
+      }));
     } catch (error) {
-      console.error('Error disliking quiz:', error.message);
+      console.error('Error disliking/unliking quiz:', error.message);
       // 에러 처리
     }
   };
-  
+
   const handleNext = async () => {
     const nextIndex = currentQuizIndex + 1;
     if (nextIndex < quizDataList.length) {
@@ -187,10 +219,10 @@ function ProblemUI({ categoryName }) {
               <Typography variant="h4" align="center">{currentQuizData ? currentQuizData.content : ''}</Typography>
             </Grid>
             <Grid item xs={12} textAlign="center">
-              <IconButton onClick={handleOptionLike}>
+              <IconButton onClick={() => handleOptionLike(currentQuizData.quizId)}>
                 <ThumbUpIcon color={'inherit'} /> {currentQuizData ? currentQuizData.likes : 0}
               </IconButton>
-              <IconButton onClick={handleOptionDislike}>
+              <IconButton onClick={() => handleOptionDislike(currentQuizData.quizId)}>
                 <ThumbDownIcon color={'inherit'} /> {currentQuizData ? currentQuizData.dislikes : 0}
               </IconButton>
             </Grid>
