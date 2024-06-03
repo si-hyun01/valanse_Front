@@ -3,7 +3,6 @@ import { Button, Container, Grid, TextField, Dialog, DialogTitle, DialogContent,
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import saveUserAnswer from "../components/comments";
 
 function CreateQuestionPage({ onCreate, selectedCategory }) {
     const [question, setQuestion] = useState('');
@@ -19,8 +18,10 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
         setStory2('');
         setStory1Image(null);
         setStory2Image(null);
+        setUploadImgUrl(''); // 이미지 URL 초기화
     };
-
+    
+    
     const handleCreate = async () => {
         const formData = new FormData();
         const quizRegisterDto = {
