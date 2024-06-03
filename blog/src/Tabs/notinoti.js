@@ -188,8 +188,8 @@ const NoticeBoard = () => {
   }, []);
 
   return (
-    <div className="neon-container">
-      <Container className="notii" style={{ marginTop: '50px', maxWidth: "80%", backgroundColor: 'black', borderRadius: '16px', padding: '16px' }}>
+    <div>
+      <Container className="neon-container" style={{ marginTop: '50px', maxWidth: "80%"}}>
         <Typography variant="h4" className="notii-title" style={{ fontWeight: 'bold', color: 'white', marginBottom: '10px', textAlign: 'center', fontSize: '2.5rem' }}>
           공지게시판
         </Typography>
