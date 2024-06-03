@@ -13,12 +13,19 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     const [story2Image, setStory2Image] = useState(null);
     const [openDialog, setOpenDialog] = useState(false);
 
+    // 이미지 URL 상태 초기화
+    const [story1ImageUrl, setStory1ImageUrl] = useState('');
+    const [story2ImageUrl, setStory2ImageUrl] = useState('');
+
     const resetForm = () => {
         setQuestion('');
         setStory1('');
         setStory2('');
         setStory1Image(null);
         setStory2Image(null);
+        // 이미지 URL 상태 초기화
+        setStory1ImageUrl('');
+        setStory2ImageUrl('');
     };
     
     const handleCreate = async () => {
@@ -46,9 +53,6 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
             console.log('Quiz created successfully:', response.data);
             setOpenDialog(true);
             resetForm(); // Reset the form after successful creation
-            // 이미지 초기화
-            setStory1Image(null);
-            setStory2Image(null);
         } catch (error) {
             console.error('Error creating quiz:', error.response ? error.response.data : error.message);
         }
@@ -64,7 +68,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
                 <Grid item xs={12} style={{ height: '30px' }} />
                 <Grid item xs={12}>
                     <TextField
-                    style={{ backgroundColor: 'gray' }} 
+                        style={{ backgroundColor: 'gray' }} 
                         label="문제 제목을 작성해주세요"
                         fullWidth
                         multiline
@@ -75,7 +79,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
                 </Grid>
                 <Grid item xs={6}>
                     <TextField
-                    style={{ backgroundColor: 'gray' }}
+                        style={{ backgroundColor: 'gray' }}
                         label="아래 사진과 함께 상황을 설명해주세요"
                         fullWidth
                         multiline
@@ -86,7 +90,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
                 </Grid>
                 <Grid item xs={6}>
                     <TextField
-                    style={{ backgroundColor: 'gray' }}
+                        style={{ backgroundColor: 'gray' }}
                         label="아래 사진과 함께 상황을 설명해주세요"
                         fullWidth
                         multiline
@@ -96,10 +100,10 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
                     />
                 </Grid>
                 <Grid item xs={6}>
-                    <ImageUpload setImage={setStory1Image} />
+                    <ImageUpload setImage={setStory1Image} setUploadImgUrl={setStory1ImageUrl} />
                 </Grid>
                 <Grid item xs={6}>
-                    <ImageUpload setImage={setStory2Image} />
+                    <ImageUpload setImage={setStory2Image} setUploadImgUrl={setStory2ImageUrl} />
                 </Grid>
                 <Grid item xs={12} style={{ height: '30px' }} />
                 <Grid item xs={12} textAlign="center">
@@ -124,7 +128,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     );
 }
 
-const ImageUpload = ({ setImage }) => {
+const ImageUpload = ({ setImage, setUploadImgUrl }) => {
     const [uploadImgUrl, setUploadImgUrl] = useState('');
 
     const onchangeImageUpload = (e) => {
@@ -135,12 +139,9 @@ const ImageUpload = ({ setImage }) => {
         reader.readAsDataURL(uploadFile);
         reader.onloadend = () => {
             setUploadImgUrl(reader.result);
+            // 이미지 URL 설정
+            setUploadImgUrl(reader.result);
         };
-    };
-
-    // 이미지 URL 상태 초기화 함수
-    const resetImage = () => {
-        setUploadImgUrl('');
     };
 
     return (
@@ -155,17 +156,13 @@ const ImageUpload = ({ setImage }) => {
                         type="file"
                         accept="image/*"
                         style={{ display: 'none' }}
-                        onChange={(e) => {
-                            onchangeImageUpload(e);
-                            resetImage(); // 이미지 선택 후에 이미지 URL 초기화
-                        }}
+                        onChange={onchangeImageUpload}
                     />
                 </Button>
             </Grid>
         </Grid>
     );
 };
-
 
 function App() {
     const [selectedCategory, setSelectedCategory] = useState('');
@@ -185,13 +182,12 @@ function App() {
                     <Grid item xs={12} style={{ height: '30px' }} />
                     <Grid item xs={12}>
                         <FormControl fullWidth style={{ backgroundColor: 'gray' }}>
-                        <InputLabel style={{ color: 'white' }}>카테고리 선택</InputLabel>
+                            <InputLabel style={{ color: 'white' }}>카테고리 선택</InputLabel>
                             <Select
                                 value={selectedCategory}
                                 onChange={handleCategoryChange}
                                 label="카테고리 선택"
                             >
-                                {/* 메뉴 아이템들은 기본적으로 흰색 배경을 가지고 있으므로 수정이 필요하지 않습니다. */}
                                 <MenuItem value="축구">축구</MenuItem>
                                 <MenuItem value="음식">음식</MenuItem>
                                 <MenuItem value="연애">연애</MenuItem>
@@ -201,7 +197,6 @@ function App() {
                                 <MenuItem value="일상">일상</MenuItem>
                             </Select>
                         </FormControl>
-
                     </Grid>
                 </Grid>
                 {selectedCategory && <CreateQuestionPage onCreate={handleCreateQuestion} selectedCategory={selectedCategory} />}
