@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Button, TextField } from '@mui/material';
+import { Container, Typography, Button, TextField, Card, CardContent } from '@mui/material';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './notii.css'; // CSS 파일 
@@ -22,48 +22,52 @@ const NoticeDetail = ({ notice, onDelete, onGoBack, onUpdate }) => {
   ));
 
   return (
-    <div className="notii" style={{ color: 'black' }}>
-      {isEditing ? (
-        <>
-          <TextField
-            label="Title"
-            value={editedTitle}
-            onChange={(e) => setEditedTitle(e.target.value)}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Content"
-            value={editedContent}
-            onChange={(e) => setEditedContent(e.target.value)}
-            multiline
-            rows={4}
-            fullWidth
-            margin="normal"
-          />
-          <Button onClick={handleUpdate} color="primary">확인</Button>
-          <Button onClick={() => setIsEditing(false)} color="secondary">취소</Button>
-        </>
-      ) : (
-        <>
-          <Typography variant="h6" gutterBottom>{notice.title}</Typography>
-          <Typography variant="subtitle2">글번호: {notice.noticeId}</Typography>
-          <Typography variant="subtitle2">등록일: {notice.createdAt}</Typography>
-          <Typography variant="body1">
-            {formattedContent}
-          </Typography>
-          <Button onClick={onGoBack} aria-label="go-back" color="primary">뒤로가기</Button>
-          <Button onClick={() => onDelete(notice.noticeId)} aria-label="delete" color="error">삭제하기</Button>
-          <Button onClick={() => setIsEditing(true)} aria-label="edit" color="primary">수정하기</Button>
-        </>
-      )}
-    </div>
+    <Card className="notii" sx={{ bgcolor: 'black', borderRadius: '16px', border: '2px solid #8A2BE2', boxShadow: '0px 0px 10px 0px #8A2BE2', p: 2 }}>
+      <CardContent>
+        {isEditing ? (
+          <>
+            <TextField
+              label="Title"
+              value={editedTitle}
+              onChange={(e) => setEditedTitle(e.target.value)}
+              fullWidth
+              margin="normal"
+              sx={{ input: { color: 'white' }, label: { color: 'white' } }}
+            />
+            <TextField
+              label="Content"
+              value={editedContent}
+              onChange={(e) => setEditedContent(e.target.value)}
+              multiline
+              rows={4}
+              fullWidth
+              margin="normal"
+              sx={{ textarea: { color: 'white' }, label: { color: 'white' } }}
+            />
+            <Button onClick={handleUpdate} color="primary">확인</Button>
+            <Button onClick={() => setIsEditing(false)} color="secondary">취소</Button>
+          </>
+        ) : (
+          <>
+            <Typography variant="h6" gutterBottom sx={{ color: 'white' }}>{notice.title}</Typography>
+            <Typography variant="subtitle2" sx={{ color: 'white' }}>글번호: {notice.noticeId}</Typography>
+            <Typography variant="subtitle2" sx={{ color: 'white' }}>등록일: {notice.createdAt}</Typography>
+            <Typography variant="body1" sx={{ color: 'white' }}>
+              {formattedContent}
+            </Typography>
+            <Button onClick={onGoBack} aria-label="go-back" color="primary">뒤로가기</Button>
+            <Button onClick={() => onDelete(notice.noticeId)} aria-label="delete" color="error">삭제하기</Button>
+            <Button onClick={() => setIsEditing(true)} aria-label="edit" color="primary">수정하기</Button>
+          </>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
 const NoticeList = ({ notices, onItemClick }) => {
   return (
-    <div className="notii-table" style={{ fontWeight: 'bold', color: 'black' }}>
+    <div className="notii-table" style={{ fontWeight: 'bold', color: 'white' }}>
       <table>
         <thead>
           <tr>
@@ -185,24 +189,28 @@ const NoticeBoard = () => {
 
   return (
     <Container className="notii" style={{ marginTop: '50px', maxWidth: "80%" }}>
-      <Typography variant="h4" className="notii-title" style={{ fontWeight: 'bold', color: 'black', marginBottom: '10px', textAlign: 'center', fontSize: '2.5rem' }}>
+      <Typography variant="h4" className="notii-title" style={{ fontWeight: 'bold', color: 'white', marginBottom: '10px', textAlign: 'center', fontSize: '2.5rem' }}>
         공지게시판
       </Typography>
-      {!showDetail ? (
-        <>
-          <NoticeList notices={notices} onItemClick={handleNoticeClick} />
-          <Button variant="contained" color="primary" component={Link} to="/noti_write" className="notii-button" style={{ marginTop: '30px' }}>
-            공지 작성하기
-          </Button>
-        </>
-      ) : (
-        <NoticeDetail
-          notice={selectedNotice}
-          onDelete={handleDeleteNotice}
-          onGoBack={handleGoBack}
-          onUpdate={handleUpdateNotice}
-        />
-      )}
+      <Card className="notii" sx={{ bgcolor: 'black', borderRadius: '16px', border: '2px solid #8A2BE2', boxShadow: '0px 0px 10px 0px #8A2BE2', p: 2 }}>
+        <CardContent>
+          {!showDetail ? (
+            <>
+              <NoticeList notices={notices} onItemClick={handleNoticeClick} />
+              <Button variant="contained" color="primary" component={Link} to="/noti_write" className="notii-button" style={{ marginTop: '30px' }}>
+                공지 작성하기
+              </Button>
+            </>
+          ) : (
+            <NoticeDetail
+              notice={selectedNotice}
+              onDelete={handleDeleteNotice}
+              onGoBack={handleGoBack}
+              onUpdate={handleUpdateNotice}
+            />
+          )}
+        </CardContent>
+      </Card>
     </Container>
   );
 };
