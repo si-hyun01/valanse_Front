@@ -9,6 +9,7 @@ import Life4 from "./img/Life_Quotes4.png";
 import Life5 from "./img/Life_Quotes5.png";
 import Life6 from "./img/Life_Quotes6.png";
 import Life7 from "./img/Life_Quotes7.png";
+import syberpunk from "./img/Syber1.jpg"
 
 const preloadImages = [Life1, Life2, Life3, Life4, Life5, Life6, Life7].map(
   (image) => {
@@ -100,8 +101,11 @@ const SliderContainer = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#1a1a1a", // 배경색 설정
+        backgroundImage: `url(${syberpunk})`, // 배경 이미지 설정
+        backgroundSize: "cover", // 배경 이미지 크기 조절
+        backgroundPosition: "center", 
       }}
+
     >
       <div
         style={{
