@@ -22,7 +22,7 @@ const NoticeDetail = ({ notice, onDelete, onGoBack, onUpdate }) => {
   ));
 
   return (
-    <Card className="notii" sx={{ bgcolor: 'black', borderRadius: '16px', border: '2px solid #8A2BE2', boxShadow: '0px 0px 10px 0px #8A2BE2', p: 2 }}>
+    <Card className="notii" sx={{ bgcolor: 'black', borderRadius: '16px', p: 2 }}>
       <CardContent>
         {isEditing ? (
           <>
@@ -188,30 +188,28 @@ const NoticeBoard = () => {
   }, []);
 
   return (
-    <Container className="notii" style={{ marginTop: '50px', maxWidth: "80%" }}>
-      <Typography variant="h4" className="notii-title" style={{ fontWeight: 'bold', color: 'white', marginBottom: '10px', textAlign: 'center', fontSize: '2.5rem' }}>
-        공지게시판
-      </Typography>
-      <Card className="notii" sx={{ bgcolor: 'black', borderRadius: '16px', border: '2px solid #8A2BE2', boxShadow: '0px 0px 10px 0px #8A2BE2', p: 2 }}>
-        <CardContent>
-          {!showDetail ? (
-            <>
-              <NoticeList notices={notices} onItemClick={handleNoticeClick} />
-              <Button variant="contained" color="primary" component={Link} to="/noti_write" className="notii-button" style={{ marginTop: '30px' }}>
-                공지 작성하기
-              </Button>
-            </>
-          ) : (
-            <NoticeDetail
-              notice={selectedNotice}
-              onDelete={handleDeleteNotice}
-              onGoBack={handleGoBack}
-              onUpdate={handleUpdateNotice}
-            />
-          )}
-        </CardContent>
-      </Card>
-    </Container>
+    <div className="neon-container">
+      <Container className="notii" style={{ marginTop: '50px', maxWidth: "80%", backgroundColor: 'black', borderRadius: '16px', padding: '16px' }}>
+        <Typography variant="h4" className="notii-title" style={{ fontWeight: 'bold', color: 'white', marginBottom: '10px', textAlign: 'center', fontSize: '2.5rem' }}>
+          공지게시판
+        </Typography>
+        {!showDetail ? (
+          <>
+            <NoticeList notices={notices} onItemClick={handleNoticeClick} />
+            <Button variant="contained" color="primary" component={Link} to="/noti_write" className="notii-button" style={{ marginTop: '30px' }}>
+              공지 작성하기
+            </Button>
+          </>
+        ) : (
+          <NoticeDetail
+            notice={selectedNotice}
+            onDelete={handleDeleteNotice}
+            onGoBack={handleGoBack}
+            onUpdate={handleUpdateNotice}
+          />
+        )}
+      </Container>
+    </div>
   );
 };
 

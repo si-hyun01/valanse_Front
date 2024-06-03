@@ -50,3 +50,28 @@
     max-width: 500px; /* 원하는 최대 너비를 설정 */
   }
   
+  @keyframes neon {
+    0% {
+      box-shadow: 0 0 5px #ff73fa, 0 0 10px #ff73fa, 0 0 15px #ff73fa, 0 0 20px #ff73fa, 0 0 25px #ff73fa, 0 0 30px #ff73fa, 0 0 35px #ff73fa;
+    }
+    25% {
+      box-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 15px #ff00ff, 0 0 20px #ff00ff, 0 0 25px #ff00ff, 0 0 30px #ff00ff, 0 0 35px #ff00ff;
+    }
+    50% {
+      box-shadow: 0 0 5px #ff5f00, 0 0 10px #ff5f00, 0 0 15px #ff5f00, 0 0 20px #ff5f00, 0 0 25px #ff5f00, 0 0 30px #ff5f00, 0 0 35px #ff5f00;
+    }
+    75% {
+      box-shadow: 0 0 5px #ffff00, 0 0 10px #ffff00, 0 0 15px #ffff00, 0 0 20px #ffff00, 0 0 25px #ffff00, 0 0 30px #ffff00, 0 0 35px #ffff00;
+    }
+    100% {
+      box-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 15px #00ff00, 0 0 20px #00ff00, 0 0 25px #00ff00, 0 0 30px #00ff00, 0 0 35px #00ff00;
+    }
+  }
+  
+  .neon-container {
+    background-color: black;
+    border-radius: 16px;
+    padding: 16px;
+    animation: neon 5s infinite;
+  }
+  
