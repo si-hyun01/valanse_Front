@@ -72,50 +72,44 @@ function ProblemUI() {
   const handleOptionLike = async () => {
     try {
       if (liked) {
+        await axios.post(`https://valanse.site/quiz/${currentQuizId}/decrease-preference`);
         setLikes(likes - 1);
         setLiked(false);
       } else {
         if (disliked) {
+          await axios.post(`https://valanse.site/quiz/${currentQuizId}/increase-preference`);
           setDislikes(dislikes - 1);
           setDisliked(false);
         }
+        await axios.post(`https://valanse.site/quiz/${currentQuizId}/increase-preference`);
         setLikes(likes + 1);
         setLiked(true);
       }
-      await updatePreference(liked, disliked);
     } catch (error) {
       console.error('Error updating preference:', error.message);
     }
   };
-  
+
   const handleOptionDislike = async () => {
     try {
       if (disliked) {
+        await axios.post(`https://valanse.site/quiz/${currentQuizId}/increase-preference`);
         setDislikes(dislikes - 1);
         setDisliked(false);
       } else {
         if (liked) {
+          await axios.post(`https://valanse.site/quiz/${currentQuizId}/decrease-preference`);
           setLikes(likes - 1);
           setLiked(false);
         }
+        await axios.post(`https://valanse.site/quiz/${currentQuizId}/decrease-preference`);
         setDislikes(dislikes + 1);
         setDisliked(true);
       }
-      await updatePreference(liked, disliked);
     } catch (error) {
       console.error('Error updating preference:', error.message);
     }
   };
-  
-  const updatePreference = async (wasLiked, wasDisliked) => {
-    try {
-      const preferenceChange = wasLiked ? -1 : (wasDisliked ? 1 : 0);
-      await axios.post(`https://valanse.site/quiz/${currentQuizId}/${preferenceChange > 0 ? 'increase' : 'decrease'}-preference`);
-    } catch (error) {
-      console.error('Error updating preference:', error.message);
-    }
-  };
-  
 
   const handleNext = () => {
     if (currentQuizId < LAST_QUIZ_ID) {
