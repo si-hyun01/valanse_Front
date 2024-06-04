@@ -3,7 +3,7 @@ import { Button, Container, Grid, TextField, Dialog, DialogTitle, DialogContent,
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import saveUserAnswer from "../components/comments";
+
 
 function CreateQuestionPage({ onCreate, selectedCategory }) {
     const [question, setQuestion] = useState('');
@@ -63,7 +63,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     };
 
     return (
-        <Card >
+        <Card style={{border: '2px solid transparent', background: 'black', boxShadow: '0 0 10px #00FF00'}}>
             <Container >
                 <Grid container spacing={2} justifyContent="center">
                     <Grid item xs={12} style={{ height: '30px' }} />
@@ -145,9 +145,8 @@ const ImageUpload = ({ setImage, setImageUrl }) => {
             setImageUrl(reader.result);
         };
     };
-
     return (
-        <Grid container alignItems="center" justifyContent="space-around">
+        <Grid container alignItems="center" justifyContent="space-around" >
             <Grid item>
                 <img src={uploadImgUrl || "https://via.placeholder.com/200x150"} alt="사진 업로드 해주세요" style={{ width: '200px', height: '150px' }} />
             </Grid>
@@ -166,7 +165,6 @@ const ImageUpload = ({ setImage, setImageUrl }) => {
     );
 };
 
-
 function App() {
     const [selectedCategory, setSelectedCategory] = useState('');
 
@@ -179,43 +177,43 @@ function App() {
     };
 
     return (
-        <div>
-            <Container 
-    maxWidth="md" 
-    sx={{ 
-        border: '2px solid violet', 
-        borderRadius: '10px', 
-        padding: '20px', 
-        margin: '20px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    }}
->
-    <Grid container spacing={2} justifyContent="center">
-        <Grid item xs={12} style={{ height: '30px' }} />
-        <Grid item xs={12}>
-            <FormControl fullWidth style={{ backgroundColor: 'gray' }}>
-                <InputLabel style={{ color: 'white' }}>카테고리 선택</InputLabel>
-                <Select
-                    value={selectedCategory}
-                    onChange={handleCategoryChange}
-                    label="카테고리 선택"
-                >
-                    <MenuItem value="축구">축구</MenuItem>
-                    <MenuItem value="음식">음식</MenuItem>
-                    <MenuItem value="연애">연애</MenuItem>
-                    <MenuItem value="노래">노래</MenuItem>
-                    <MenuItem value="생존">생존</MenuItem>
-                    <MenuItem value="드라마&영화">드라마&영화</MenuItem>
-                    <MenuItem value="일상">일상</MenuItem>
-                </Select>
-            </FormControl>
-        </Grid>
-    </Grid>
-    {selectedCategory && <CreateQuestionPage onCreate={handleCreateQuestion} selectedCategory={selectedCategory} />}
-</Container>
-
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+            <Container
+                maxWidth="md"
+                sx={{
+                    border: '2px solid transparent',
+                    boxShadow: '0 0 10px #00FF00, 0 0 20px #00FF00, 0 0 40px #00FF00',
+                    borderRadius: '10px',
+                    padding: '20px',
+                    marginTop: '40px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+            >
+                <Grid container spacing={2} justifyContent="center">
+                    <Grid item xs={12} style={{ height: '30px' }} />
+                    <Grid item xs={12}>
+                        <FormControl fullWidth style={{ backgroundColor: 'gray', marginBottom: '30px' }}>
+                            <InputLabel style={{ color: 'white' }}>카테고리 선택</InputLabel>
+                            <Select
+                                value={selectedCategory}
+                                onChange={handleCategoryChange}
+                                label="카테고리 선택"
+                            >
+                                <MenuItem value="축구">축구</MenuItem>
+                                <MenuItem value="음식">음식</MenuItem>
+                                <MenuItem value="연애">연애</MenuItem>
+                                <MenuItem value="노래">노래</MenuItem>
+                                <MenuItem value="생존">생존</MenuItem>
+                                <MenuItem value="드라마&영화">드라마&영화</MenuItem>
+                                <MenuItem value="일상">일상</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                </Grid>
+                {selectedCategory && <CreateQuestionPage onCreate={handleCreateQuestion} selectedCategory={selectedCategory} />}
+            </Container>
         </div>
     );
 }
