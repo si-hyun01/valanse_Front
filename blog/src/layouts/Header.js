@@ -129,7 +129,8 @@ const Header = () => {
             fontSize: '16px',
             margin: '0 10px',
             textShadow: '0 0 5px',
-            color: '#fff'
+            color: '#fff',
+            backgroundColor: '#333' //연한 검은색
         },
         logout: {
             borderColor: 'red',
@@ -144,7 +145,7 @@ const Header = () => {
             boxShadow: '0 0 10px blue'
         }
     };
-
+    
     return (
         <>
             <header style={{ backgroundColor: 'black', padding: '10px 0' }}>
