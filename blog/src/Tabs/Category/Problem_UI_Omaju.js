@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {Button,Card,CardActionArea,CardContent,CardMedia,Container,Dialog,DialogActions,DialogContent,DialogTitle,Grid,IconButton,Typography} from '@mui/material';
+import { Button, Card, CardContent, CardActionArea, CardMedia, Container, Dialog, DialogActions, DialogTitle, DialogContent, Grid, IconButton, Typography } from '@mui/material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 function ProblemUI({ categoryName }) {
   const [quizDataList, setQuizDataList] = useState([]);
@@ -281,7 +282,7 @@ function ProblemUI({ categoryName }) {
               </Card>
             </Grid>
 
-            <Grid item xs={12} textAlign="center">
+            <Grid item xs={6} textAlign="center">
               <Button
                 variant="contained"
                 color="primary"
@@ -290,6 +291,17 @@ function ProblemUI({ categoryName }) {
                 startIcon={<ArrowBackIcon />}
               >
                 Previous
+              </Button>
+            </Grid>
+            <Grid item xs={6} textAlign="center">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleNext}
+                disabled={currentQuizIndex === quizDataList.length - 1}
+                endIcon={<ArrowForwardIcon />}
+              >
+                Next
               </Button>
             </Grid>
           </Grid>
