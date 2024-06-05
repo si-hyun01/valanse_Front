@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import valanse_logo from "./img/valanse_logo3.png";
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import SignUpmodel from "../modal/SignUpmodel";
 import Cookies from 'js-cookie';
+import valanse_logo from "./img/valanse_logo3.png";
 
 const Header = () => {
     const [showSignUpModal, setShowSignUpModal] = useState(false);
@@ -124,63 +120,93 @@ const Header = () => {
         window.location.href = 'https://valanse.vercel.app/';
     };
 
+    const buttonStyles = {
+        base: {
+            padding: '10px 20px',
+            border: '2px solid',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            fontSize: '16px',
+            margin: '0 10px',
+            textShadow: '0 0 5px',
+            color: '#fff'
+        },
+        logout: {
+            borderColor: 'red',
+            boxShadow: '0 0 10px red'
+        },
+        myPage: {
+            borderColor: 'green',
+            boxShadow: '0 0 10px green'
+        },
+        login: {
+            borderColor: 'blue',
+            boxShadow: '0 0 10px blue'
+        }
+    };
+
     return (
         <>
-            <header>
-                <Navbar bg="black" expand="lg">
-                    <Container style={{ maxWidth: '80%' }}>
-                        <Navbar.Brand onClick={handleLogoClick}>
-                            <img
-                                src={valanse_logo}
-                                alt="Valanse Logo"
-                                style={{ cursor: 'pointer', width: '250px', height: 'auto' }}
-                            />
-                        </Navbar.Brand>
+            <header style={{ backgroundColor: 'black', padding: '10px 0' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', maxWidth: '80%', margin: '0 auto' }}>
+                    <div onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
+                        <img
+                            src={valanse_logo}
+                            alt="Valanse Logo"
+                            style={{ width: '250px', height: 'auto' }}
+                        />
+                    </div>
 
-                        <div style={{ flex: 3.5, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <div style={{ flex: 3.5, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <div style={{
+                            padding: '10px 20px',
+                            border: '3px solid cyan',
+                            borderRadius: '10px',
+                            boxShadow: '0 0 10px cyan',
+                            display: 'inline-block',
+                            width: '200px',
+                            textAlign: 'center'
+                        }}>
                             <div style={{
-                                padding: '10px 20px',
-                                border: '3px solid cyan',
-                                borderRadius: '10px',
-                                boxShadow: '0 0 10px cyan',
-                                display: 'inline-block',
-                                width: '200px',
-                                textAlign: 'center'
+                                color: 'cyan',
+                                fontSize: '24px',
+                                fontWeight: 'bold',
+                                textShadow: '0 0 10px cyan, 0 0 20px cyan',
+                                fontFamily: 'monospace'
                             }}>
-                                <div style={{
-                                    color: 'cyan',
-                                    fontSize: '24px',
-                                    fontWeight: 'bold',
-                                    textShadow: '0 0 10px cyan, 0 0 20px cyan',
-                                    fontFamily: 'monospace'
-                                }}>
-                                    {currentTime}
-                                </div>
+                                {currentTime}
                             </div>
                         </div>
+                    </div>
 
-                        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                        <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
-                            <Nav className="ml-auto">
-                                {isLoggedIn ? (
-                                    <>
-                                        <Nav.Link>
-                                            <Button variant="secondary" onClick={handleLogout}>로그아웃</Button>
-                                        </Nav.Link>
-                                        <Nav.Link as={Link} to="/mypage">
-                                            <Button variant="secondary">마이페이지</Button>
-                                        </Nav.Link>
-                                    </>
-                                ) : (
-                                    <Nav.Link>
-                                        <Button variant="secondary" onClick={toggleSignUpModal}>로그인</Button>
-                                    </Nav.Link>
-                                )}
-                                <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} />
-                            </Nav>
-                        </Navbar.Collapse>
-                    </Container>
-                </Navbar>
+                    <div>
+                        {isLoggedIn ? (
+                            <>
+                                <button
+                                    style={{ ...buttonStyles.base, ...buttonStyles.logout }}
+                                    onClick={handleLogout}
+                                >
+                                    로그아웃
+                                </button>
+                                <Link to="/mypage">
+                                    <button
+                                        style={{ ...buttonStyles.base, ...buttonStyles.myPage }}
+                                    >
+                                        마이페이지
+                                    </button>
+                                </Link>
+                            </>
+                        ) : (
+                            <button
+                                style={{ ...buttonStyles.base, ...buttonStyles.login }}
+                                onClick={toggleSignUpModal}
+                            >
+                                로그인
+                            </button>
+                        )}
+                        <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} />
+                    </div>
+                </div>
             </header>
         </>
     );
