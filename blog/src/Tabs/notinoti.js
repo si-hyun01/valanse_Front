@@ -44,8 +44,8 @@ const NoticeDetail = ({ notice, onDelete, onGoBack, onUpdate }) => {
               margin="normal"
               sx={{ textarea: { color: 'white' }, label: { color: 'white' } }}
             />
-            <Button onClick={handleUpdate} color="primary">확인</Button>
-            <Button onClick={() => setIsEditing(false)} color="secondary">취소</Button>
+            <Button onClick={handleUpdate} color="primary" sx={{ borderColor: 'lime', color: 'lime' }}>확인</Button>
+            <Button onClick={() => setIsEditing(false)} color="secondary" sx={{ borderColor: 'red', color: 'red' }}>취소</Button>
           </>
         ) : (
           <>
@@ -55,9 +55,9 @@ const NoticeDetail = ({ notice, onDelete, onGoBack, onUpdate }) => {
             <Typography variant="body1" sx={{ color: 'white' }}>
               {formattedContent}
             </Typography>
-            <Button onClick={onGoBack} aria-label="go-back" color="primary">뒤로가기</Button>
-            <Button onClick={() => onDelete(notice.noticeId)} aria-label="delete" color="error">삭제하기</Button>
-            <Button onClick={() => setIsEditing(true)} aria-label="edit" color="primary">수정하기</Button>
+            <Button onClick={onGoBack} aria-label="go-back" color="primary" sx={{ borderColor: 'lime', color: 'lime' }}>뒤로가기</Button>
+            <Button onClick={() => onDelete(notice.noticeId)} aria-label="delete" color="error" sx={{ borderColor: 'red', color: 'red' }}>삭제하기</Button>
+            <Button onClick={() => setIsEditing(true)} aria-label="edit" color="primary" sx={{ borderColor: 'lime', color: 'lime' }}>수정하기</Button>
           </>
         )}
       </CardContent>
@@ -174,8 +174,7 @@ const NoticeBoard = () => {
           }
         } catch (error) {
           if (error.response && error.response.status === 404) {
-            // 404 무시하기
-            continue;
+            //
           } else {
             console.error('Error fetching notice:', error);
           }
@@ -196,7 +195,7 @@ const NoticeBoard = () => {
         {!showDetail ? (
           <>
             <NoticeList notices={notices} onItemClick={handleNoticeClick} />
-            <Button variant="contained" color="primary" component={Link} to="/noti_write" className="notii-button" style={{ marginTop: '30px' }}>
+            <Button variant="contained" color="primary" component={Link} to="/noti_write" className="notii-button" style={{ marginTop: '30px', borderColor: 'lime', color: 'lime' }}>
               공지 작성하기
             </Button>
           </>
