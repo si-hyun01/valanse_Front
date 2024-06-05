@@ -188,14 +188,14 @@ const NoticeBoard = () => {
 
   return (
     <div>
-      <Container className="neon-container" style={{ marginTop: '50px', maxWidth: "80%"}}>
+      <Container className="neon-container" style={{ marginTop: '50px', maxWidth: "80%" }}>
         <Typography variant="h4" className="notii-title" style={{ fontWeight: 'bold', color: 'white', marginBottom: '10px', textAlign: 'center', fontSize: '2.5rem' }}>
           공지게시판
         </Typography>
         {!showDetail ? (
           <>
             <NoticeList notices={notices} onItemClick={handleNoticeClick} />
-            <Button variant="contained" color="primary" component={Link} to="/noti_write" className="notii-button" style={{ marginTop: '30px', borderColor: 'lime', color: 'lime' }}>
+            <Button variant="contained" color="primary" component={Link} to="/noti_write" className="notii-button" style={{ marginTop: '30px', borderColor: 'lime', color: 'lime', backgroundColor: 'hotpink' }}>
               공지 작성하기
             </Button>
           </>
