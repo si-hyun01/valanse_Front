@@ -203,7 +203,7 @@ function ProblemUI({ categoryName }) {
           bgcolor: 'black',
           borderRadius: '16px',
           mt: 4,
-          boxShadow: '0px 0px 20px 0px rgba(0, 255, 255, 0.75)', // Neon Glow 효과
+          boxShadow: '0px 0px 20px 0px rgba(0, 255, 255, 0.75)',
         }}
       >
         <Container maxWidth="lg">
@@ -244,7 +244,7 @@ function ProblemUI({ categoryName }) {
                       gutterBottom
                       variant="h5"
                       component="div"
-                      sx={{ color: 'white', }} // 텍스트 색상 및 네온 글로우 효과 추가
+                      sx={{ color: 'white', }}
                     >
                       {currentQuizData ? currentQuizData.descriptionA : ''}
                     </Typography>
@@ -273,7 +273,7 @@ function ProblemUI({ categoryName }) {
                       gutterBottom
                       variant="h5"
                       component="div"
-                      sx={{ color: 'white' }} // 텍스트 색상 및 네온 글로우 효과 추가
+                      sx={{ color: 'white' }} // 텍스트 색상 및 '네온 글로우'라는 효과 추가
                     >
                       {currentQuizData ? currentQuizData.descriptionB : ''}
                     </Typography>
@@ -289,8 +289,9 @@ function ProblemUI({ categoryName }) {
                 onClick={handlePrevious}
                 disabled={currentQuizIndex === 0}
                 startIcon={<ArrowBackIcon />}
+                sx={{ bgcolor: 'limegreen', color: 'white' }}
               >
-                Previous
+                이전으로
               </Button>
             </Grid>
             <Grid item xs={6} textAlign="center">
@@ -300,8 +301,9 @@ function ProblemUI({ categoryName }) {
                 onClick={handleNext}
                 disabled={currentQuizIndex === quizDataList.length - 1}
                 endIcon={<ArrowForwardIcon />}
+                sx={{ bgcolor: 'limegreen', color: 'white' }}
               >
-                Next
+                다음으로
               </Button>
             </Grid>
           </Grid>
