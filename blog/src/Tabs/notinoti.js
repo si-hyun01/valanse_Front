@@ -195,7 +195,7 @@ const NoticeBoard = () => {
         {!showDetail ? (
           <>
             <NoticeList notices={notices} onItemClick={handleNoticeClick} />
-            <Button variant="contained" color="primary" component={Link} to="/noti_write" className="notii-button" style={{ marginTop: '30px', borderColor: 'lime', color: 'lime', backgroundColor: 'hotpink' }}>
+            <Button variant="contained" color="primary" component={Link} to="/noti_write" className="notii-button" style={{ marginTop: '30px', borderColor: 'lime', color: 'white', backgroundColor: 'hotpink' }}>
               공지 작성하기
             </Button>
           </>
