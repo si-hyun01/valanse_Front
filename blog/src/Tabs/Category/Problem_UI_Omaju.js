@@ -217,10 +217,10 @@ function ProblemUI({ categoryName }) {
 
             <Grid item xs={12} textAlign="center">
               <IconButton onClick={() => handleOptionLike(currentQuizData.quizId)}>
-                <ThumbUpIcon color={'inherit'} /> {currentQuizData ? currentQuizData.likes : 0}
+                <ThumbUpIcon color={'white'} /> {currentQuizData ? currentQuizData.likes : 0}
               </IconButton>
               <IconButton onClick={() => handleOptionDislike(currentQuizData.quizId)}>
-                <ThumbDownIcon color={'inherit'} /> {currentQuizData ? currentQuizData.dislikes : 0}
+                <ThumbDownIcon color={'white'} /> {currentQuizData ? currentQuizData.dislikes : 0}
               </IconButton>
             </Grid>
             <Grid item xs={6} textAlign="center">
