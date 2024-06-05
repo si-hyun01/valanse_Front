@@ -97,16 +97,18 @@ const Popularity = () => {
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                     <tr>
-                        <th style={{ width: '50px', textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>퀴즈ID</th>
+                        <th style={{ width: '50px', textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>순위</th>
                         <th style={{ width: '400px', textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>제목</th>
                         <th style={{ width: '200px', textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>좋아요</th>
                         <th style={{ width: '200px', textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>싫어요</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {currentPageData.map((item) => (
+                    {currentPageData.map((item, index) => (
                         <tr key={item.quizId}>
-                            <td style={{ textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>{item.quizId}</td>
+                            <td style={{ textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>
+                                {startIndex + index + 1}
+                            </td>
                             <td style={{ border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold', padding: '10px' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <img src={item.imageA} alt="Option A" style={{ marginRight: '10px', width: '150px', height: '150px', objectFit: 'cover' }} />
@@ -133,9 +135,9 @@ const Popularity = () => {
                     variant="outlined"
                     shape="rounded"
                     sx={{
-                        '& .MuiPaginationItem-root': { color: 'white' }, // 버튼 색상 수정
-                        '& .MuiPaginationItem-sizeLarge': { fontSize: '2.5rem' }, // 페이지 버튼 크기를 크기 설정
-                        '& .MuiPaginationItem-outlined': { backgroundColor: '#00FF00' }, // 야광 초록색 배경 설정
+                        '& .MuiPaginationItem-root': { color: 'white' },
+                        '& .MuiPaginationItem-sizeLarge': { fontSize: '2.5rem' },
+                        '& .MuiPaginationItem-outlined': { backgroundColor: '#00FF00' },
                     }}
                 />
             </div>
