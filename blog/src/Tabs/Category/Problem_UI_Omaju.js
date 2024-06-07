@@ -91,6 +91,7 @@ function ProblemUI({ categoryName }) {
       }));
     } catch (error) {
       console.error('Error liking/unliking quiz:', error.message);
+      // 에러 처리
     }
   };
 
@@ -121,6 +122,7 @@ function ProblemUI({ categoryName }) {
       }));
     } catch (error) {
       console.error('Error disliking/unliking quiz:', error.message);
+      // 에러 처리
     }
   };
 
@@ -148,24 +150,9 @@ function ProblemUI({ categoryName }) {
     setShowConfirmDialog(false);
   };
 
-  const handleConfirmSelection = async () => {
-    setShowConfirmDialog(false);
-    const currentQuiz = quizDataList[currentQuizIndex];
-    const userId = 0;
-    const answeredAt = new Date().toISOString();
-    const preference = selectedOption === 'A' ? currentQuiz.likes : currentQuiz.dislikes;
-    try {
-      await axios.post('https://valanse.site/quiz/save-user-answer', {
-        userId,
-        quizId: currentQuiz.quizId,
-        selectedOption,
-        answeredAt,
-        preference,
-      });
-      handleNext();
-    } catch (error) {
-      console.error('Error saving user answer:', error.message);
-    }
+  const handleConfirmSelection = () => {
+    setShowConfirmDialog(false); // 다이얼로그를 닫기
+    handleNext(); // 다음 퀴즈로 넘어가기
   };
 
   const currentQuizData = quizDataList[currentQuizIndex];
@@ -193,8 +180,7 @@ function ProblemUI({ categoryName }) {
       <Dialog
         open={showConfirmDialog}
         onClose={handleCloseConfirmDialog}
-        aria-labelledby
-        ="confirm-dialog-title"
+        aria-labelledby="confirm-dialog-title"
         aria-describedby="confirm-dialog-description"
       >
         <DialogTitle id="confirm-dialog-title">선택 확인</DialogTitle>
@@ -249,7 +235,7 @@ function ProblemUI({ categoryName }) {
                 sx={{
                   borderRadius: '16px',
                   overflow: 'hidden',
-                  boxShadow: '0px 0px 20px 0px rgba(0, 255, 255, 0.75)',
+                  boxShadow: '0px 0px 20px 0px rgba(0, 255, 255, 0.75)',// 네온 효과 추가
                 }}
               >
                 <CardActionArea>
@@ -293,7 +279,7 @@ function ProblemUI({ categoryName }) {
                       gutterBottom
                       variant="h5"
                       component="div"
-                      sx={{ color: 'white' }}
+                      sx={{ color: 'white' }} // 텍스트 색상 및 '네온 글로우'라는 효과 추가
                     >
                       {currentQuizData ? currentQuizData.descriptionB : ''}
                     </Typography>
