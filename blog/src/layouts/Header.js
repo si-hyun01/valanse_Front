@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode';
 import SignUpmodel from "../modal/SignUpmodel";
 import Cookies from 'js-cookie';
+import jwtDecode from 'jwt-decode'; // jwtDecode를 가져옵니다.
 import valanse_logo from "./img/valanse_logo3.png";
 
 const Header = () => {
@@ -11,18 +11,13 @@ const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [stateToken, setStateToken] = useState('');
     const [accessToken, setAccessToken] = useState('');
-    const [userId, setUserId] = useState(null);
     const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Seoul', hour12: true, hourCycle: 'h12' }));
+    const [userId, setUserId] = useState(null); // userId 상태를 추가합니다.
     const navigate = useNavigate();
 
     useEffect(() => {
         const accessTokenCookie = Cookies.get('access_token');
         setIsLoggedIn(accessTokenCookie ? true : false);
-
-        if (accessTokenCookie) {
-            const decodedToken = jwtDecode(accessTokenCookie);
-            setUserId(decodedToken.user_id); // 또는 토큰 구조에 따라 userId 필드명을 수정
-        }
 
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('stateToken');
@@ -41,7 +36,7 @@ const Header = () => {
             config => {
                 const token = Cookies.get('access_token');
                 if (token) {
-                    config.headers['Authorization'] = `Bearer ${token}`;
+                    config.headers['Authorization'] = token;
                 }
                 return config;
             },
@@ -63,6 +58,14 @@ const Header = () => {
         return () => clearInterval(timer);
     }, []);
 
+    useEffect(() => {
+        const accessTokenCookie = Cookies.get('access_token');
+        if (accessTokenCookie) {
+            const decodedToken = jwtDecode(accessTokenCookie); // 토큰을 해독합니다.
+            setUserId(decodedToken.userid); // userId를 추출하여 상태로 설정합니다.
+        }
+    }, []);
+
     const getAccessToken = async (stateToken) => {
         try {
             const response = await axios.post('https://valanse.site/token/get', null, {
@@ -74,8 +77,6 @@ const Header = () => {
             const token = response.data.data;
             setAccessToken(token);
             Cookies.set('access_token', token);
-            const decodedToken = jwtDecode(token);
-            setUserId(decodedToken.user_id); // 또는 토큰 구조에 따라 userId 필드명을 수정
             setIsLoggedIn(true);
             window.location.replace('https://valanse.vercel.app/');
         } catch (error) {
@@ -94,8 +95,6 @@ const Header = () => {
             const newToken = response.data.data;
             setAccessToken(newToken);
             Cookies.set('access_token', newToken);
-            const decodedToken = jwtDecode(newToken);
-            setUserId(decodedToken.user_id); // 또는 토큰 구조에 따라 userId 필드명을 수정
         } catch (error) {
             console.error('Error refreshing access token:', error.message);
         }
@@ -107,7 +106,7 @@ const Header = () => {
             if (accessTokenCookie) {
                 await axios.post('https://valanse.site/token/logout', null, {
                     headers: {
-                        'Authorization': `Bearer ${accessTokenCookie}`,
+                        'Authorization': accessTokenCookie,
                         'Content-Type': 'application/json'
                     }
                 });
@@ -116,7 +115,7 @@ const Header = () => {
                 setIsLoggedIn(false);
                 setAccessToken('');
                 setStateToken('');
-                setUserId(null);
+                setUserId(null); // userId 상태를 초기화합니다.
                 window.location.replace('https://valanse.vercel.app/');
             }
         } catch (error) {
@@ -142,7 +141,7 @@ const Header = () => {
             margin: '0 10px',
             textShadow: '0 0 5px',
             color: '#fff',
-            backgroundColor: '#333' // 연한 검은색
+            backgroundColor: '#333' //연한 검은색
         },
         logout: {
             borderColor: 'red',
@@ -211,7 +210,7 @@ const Header = () => {
                             </>
                         ) : (
                             <button
-                                style={{ ...buttonStyles.base, ...buttonStyles.login }}
+                                style={{ ...buttonStyles.base, ...buttonStyleslogin }}
                                 onClick={toggleSignUpModal}
                             >
                                 로그인
