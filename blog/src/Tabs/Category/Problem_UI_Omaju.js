@@ -174,153 +174,156 @@ function ProblemUI({ categoryName }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseNoProblemDialog} color="primary">
-          확인
-        </Button>
-      </DialogActions>
-    </Dialog>
-    <Dialog
-      open={showConfirmDialog}
-      onClose={handleCloseConfirmDialog}
-      aria-labelledby="confirm-dialog-title"
-      aria-describedby="confirm-dialog-description"
-    >
-      <DialogTitle id="confirm-dialog-title">선택 확인</DialogTitle>
-      <DialogContent>
-        <Typography variant="body1" id="confirm-dialog-description">
-          선택지: {selectedOption}. 정말 선택하시겠습니까?
-        </Typography>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleCloseConfirmDialog} color="primary">
-          취소
-        </Button>
-        <Button onClick={handleConfirmSelection} color="primary" autoFocus>
-          확인
-        </Button>
-      </DialogActions>
-    </Dialog>
-    <Card
-      sx={{
-        bgcolor: 'black',
-        borderRadius: '16px',
-        mt: 4,
-        boxShadow: '0px 0px 20px 0px rgba(0, 255, 255, 0.75)',
-      }}
-    >
-      <Container maxWidth="lg">
-        <Grid container spacing={2}>
-          <Grid item xs={12} style={{ height: '30px' }} />
-          <Grid item xs={12}>
-            <Typography variant="h4" align="center" sx={{ color: 'white' }}>
-              {currentQuizData ? currentQuizData.content : ''}
-            </Typography>
-          </Grid>
-          <Grid item xs={12} textAlign="center">
-            <IconButton onClick={() => handleOptionLike(currentQuizData.quizId)}>
-              <ThumbUpIcon sx={{ color: 'white' }} />
-              <Typography variant="body2" sx={{ color: 'white', ml: 1, fontWeight: 'bold' }}>
-                {currentQuizData ? currentQuizData.likes : 0}
+            확인
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={showConfirmDialog}
+        onClose={handleCloseConfirmDialog}
+        aria-labelledby="confirm-dialog-title"
+        aria-describedby="confirm-dialog-description"
+      >
+        <DialogTitle id="confirm-dialog-title">선택 확인</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1" id="confirm-dialog-description">
+            선택지: {selectedOption}. 정말 선택하시겠습니까?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirmDialog} color="primary">
+            취소
+          </Button>
+          <Button onClick={handleConfirmSelection} color="primary" autoFocus>
+            확인
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Card
+        sx={{
+          bgcolor: 'black',
+          borderRadius: '16px',
+          mt: 4,
+          boxShadow: '0px 0px 20px 0px rgba(0, 255, 255, 0.75)',
+        }}
+      >
+        <Container maxWidth="lg">
+          <Grid container spacing={2}>
+            <Grid item xs={12} style={{ height: '30px' }} />
+            <Grid item xs={12}>
+              <Typography variant="h4" align="center" sx={{ color: 'white' }}>
+                {currentQuizData ? currentQuizData.content : ''}
               </Typography>
-            </IconButton>
-            <IconButton onClick={() => handleOptionDislike(currentQuizData.quizId)}>
-              <ThumbDownIcon sx={{ color: 'white' }} />
-              <Typography variant="body2" sx={{ color: 'white', ml: 1, fontWeight: 'bold' }}>
-                {currentQuizData ? currentQuizData.dislikes : 0}
-              </Typography>
-            </IconButton>
-          </Grid>
+            </Grid>
+            <Grid item xs={12} textAlign="center">
+              <IconButton onClick={() => handleOptionLike(currentQuizData.quizId)}>
+                <ThumbUpIcon sx={{ color: 'white' }} />
+                <Typography variant="body2" sx={{ color: 'white', ml: 1, fontWeight: 'bold' }}>
+                  {currentQuizData ? currentQuizData.likes : 0}
+                </Typography>
+              </IconButton>
+              <IconButton onClick={() => handleOptionDislike(currentQuizData.quizId)}>
+                <ThumbDownIcon sx={{ color: 'white' }} />
+                <Typography variant="body2" sx={{ color: 'white', ml: 1, fontWeight: 'bold' }}>
+                  {currentQuizData ? currentQuizData.dislikes : 0}
+                </Typography>
+              </IconButton>
+            </Grid>
 
-          <Grid item xs={6} textAlign="center">
-            <Card
-              onClick={() => handleOptionSelect('A', currentQuizData.quizId)}
-              sx={{
-                borderRadius: '16px',
-                overflow: 'hidden',
-                boxShadow: '0px 0px 20px 0px rgba(0, 255, 255, 0.75)', // 네온 효과 추가
-              }}
-            >
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  height="400"
-                  image={currentQuizData ? currentQuizData.imageA : ''}
-                  alt=""
-                />
-                <CardContent sx={{ height: '100px', backgroundColor: 'black' }}>
-                  <Typography
-                    gutterBottom
-                    variant="h5"
-                    component="div"
-                    sx={{ color: 'white' }}
-                  >
-                    {currentQuizData ? currentQuizData.descriptionA : ''}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-          <Grid item xs={6} textAlign="center">
-            <Card
-              onClick={() => handleOptionSelect('B', currentQuizData.quizId)}
-              sx={{
-                borderRadius: '16px',
-                overflow: 'hidden',
-                boxShadow: '0px 0px 20px 0px rgba(0, 255, 255, 0.75)',
-              }}
-            >
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  height="400"
-                  image={currentQuizData ? currentQuizData.imageB : ''}
-                  alt=""
-                />
-                <CardContent sx={{ height: '100px', backgroundColor: 'black' }}>
-                  <Typography
-                    gutterBottom
-                    variant="h5"
-                    component="div"
-                    sx={{ color: 'white' }} // 텍스트 색상 및 '네온 글로우'라는 효과 추가
-                  >
-                    {currentQuizData ? currentQuizData.descriptionB : ''}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
+            <Grid item xs={6} textAlign="center">
+              <Card
+                onClick={() => handleOptionSelect('A', currentQuizData.quizId)}
+                sx={{
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  boxShadow: '0px 0px 20px 0px rgba(0, 255, 255, 0.75)', // 네온 효과 추가
+                }}
+              >
+                <CardActionArea>
+                  <CardMedia
+                    component="img"
+                    height="400"
+                    image={currentQuizData ? currentQuizData.imageA : ''}
+                    alt=""
+                  />
+                  <CardContent sx={{ height: '100px', backgroundColor: 'black' }}>
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="div"
+                      sx={{ color: 'white' }}
+                    >
+                      {currentQuizData ? currentQuizData.descriptionA : ''}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+            <Grid item xs={6} textAlign="center">
+              <Card
+                onClick={() => handleOptionSelect('B', currentQuizData.quizId)}
+                sx={{
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  boxShadow: '0px 0px 20px 0px rgba(0, 255, 255, 0.75)',
+                }}
+              >
+                <CardActionArea>
+                  <CardMedia
+                    component="img"
+                    height="400"
+                    image={currentQuizData ? currentQuizData.imageB : ''}
+                    alt=""
+                  />
+                  <CardContent sx={{ height: '100px', backgroundColor: 'black' }}>
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="div"
+                      sx={{ color: 'white' }} // 텍스트 색상 및 '네온 글로우'라는 효과 추가
+                    >
+                      {currentQuizData ? currentQuizData.descriptionB : ''}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
 
-          <Grid item xs={6} textAlign="center">
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handlePrevious}
-              disabled={currentQuizIndex === 0}
-              startIcon={<ArrowBackIcon />}
-              sx={{ bgcolor: 'limegreen', color: 'white' }}
-            >
-              이전으로
-            </Button>
+            <Grid item xs={6} textAlign="center">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handlePrevious}
+                disabled={currentQuizIndex === 0}
+                startIcon={<ArrowBackIcon />}
+                sx={{ bgcolor: 'limegreen', color: 'white' }}
+              >
+                이전으로
+              </Button>
+            </Grid>
+            <Grid item xs={6} textAlign="center">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleNext}
+                disabled={currentQuizIndex === quizDataList.length - 1}
+                endIcon={<ArrowForwardIcon />}
+                sx={{ bgcolor: 'limegreen', color: 'white' }}
+              >
+                다음으로
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={6} textAlign="center">
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleNext}
-              disabled={currentQuizIndex === quizDataList.length - 1}
-              endIcon={<ArrowForwardIcon />}
-              sx={{ bgcolor: 'limegreen', color: 'white' }}
-            >
-              다음으로
-            </Button>
-          </Grid>
-        </Grid>
-      </Container>
-    </Card>
+        </Container>
+      </Card>
 
-    {/* Comments 컴포넌트 추가 */}
-    <Comments quizId={currentQuizData ? currentQuizData.quizId : null} />
-  </Container>
-);
+      {/* 댓글 컴포넌트 렌더링 하는부분 */}
+      {currentQuizData && currentQuizData.quizId !== null && (
+        <Comments quizId={currentQuizData.quizId} />
+      )}
+
+    </Container>
+  );
 }
 
 export default ProblemUI;
