@@ -151,7 +151,7 @@ function ProblemUI({ categoryName }) {
   const handleConfirmSelection = async () => {
     setShowConfirmDialog(false);
     const currentQuiz = quizDataList[currentQuizIndex];
-    const userId = 0; // Replace with actual user ID
+    const userId = 0;
     const answeredAt = new Date().toISOString();
     const preference = selectedOption === 'A' ? currentQuiz.likes : currentQuiz.dislikes;
     try {
