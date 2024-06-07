@@ -4,6 +4,7 @@ import axios from 'axios';
 function CommentUI({ quizId }) {
   const [comments, setComments] = useState([]);
   const [newCommentContent, setNewCommentContent] = useState('');
+  const [loading, setLoading] = useState(true); // 로딩 상태 추가
 
   useEffect(() => {
     fetchComments();
@@ -13,8 +14,10 @@ function CommentUI({ quizId }) {
     try {
       const response = await axios.get(`https://valanse.site/comment/quiz/${quizId}`);
       setComments(response.data);
+      setLoading(false); // 로딩 완료 후 상태 변경
     } catch (error) {
       console.error('Error fetching comments:', error);
+      setLoading(false); // 에러 발생 시에도 로딩 완료 후 상태 변경
     }
   };
 
@@ -47,14 +50,20 @@ function CommentUI({ quizId }) {
         <textarea value={newCommentContent} onChange={(e) => setNewCommentContent(e.target.value)} />
         <button onClick={handleCommentSubmit}>댓글 등록</button>
       </div>
-      <ul>
-        {comments.map((comment) => (
-          <li key={comment.commentId}>
-            <div>{comment.content}</div>
-            <button onClick={() => handleCommentDelete(comment.commentId)}>삭제</button>
-          </li>
-        ))}
-      </ul>
+      {loading ? ( // 로딩 중이라면 로딩 상태를 표시
+        <div>Loading...</div>
+      ) : comments.length === 0 ? ( // 댓글이 비어있을 경우 메시지 표시
+        <div>아직 작성된 댓글이 없습니다.</div>
+      ) : ( // 댓글이 있는 경우 목록 표시
+        <ul>
+          {comments.map((comment) => (
+            <li key={comment.commentId}>
+              <div>{comment.content}</div>
+              <button onClick={() => handleCommentDelete(comment.commentId)}>삭제</button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
