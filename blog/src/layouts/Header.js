@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import SignUpmodel from "../modal/SignUpmodel";
 import Cookies from 'js-cookie';
-import jwtDecode from 'jwt-decode'; // jwtDecode를 가져옵니다.
+import {jwtDecode} from 'jwt-decode'; // jwtDecode를 가져옵니다.
 import valanse_logo from "./img/valanse_logo3.png";
 
 const Header = () => {
