@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import {Accordion, AccordionDetails, AccordionSummary,Typography,Table,TableContainer, TableHead,TableRow,TableCell} from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Typography, Table, TableContainer, TableHead, TableRow, TableCell, Button } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Header from './Header';
 
@@ -18,6 +18,20 @@ const MyPage = () => {
         };
         fetchQuizzes();
     }, []);
+
+    const handleDelete = async (quizId) => {
+        try {
+            await axios.delete(`https://valanse.site/quiz/${quizId}`);
+            setQuizzes(quizzes.filter(quiz => quiz.quizId !== quizId));
+        } catch (error) {
+            console.error('Error deleting quiz:', error);
+        }
+    };
+
+    const handleEdit = (quizId) => {
+        // 수정하기 버튼 클릭 시 수행할 작업
+        console.log('Edit quiz:', quizId);
+    };
 
     return (
         <>
@@ -42,6 +56,7 @@ const MyPage = () => {
                                         <TableCell>오른쪽 설명</TableCell>
                                         <TableCell>선호도</TableCell>
                                         <TableCell>조회수</TableCell>
+                                        <TableCell>작업</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <tbody>
@@ -62,6 +77,23 @@ const MyPage = () => {
                                             <TableCell>{quiz.descriptionB}</TableCell>
                                             <TableCell>{quiz.preference}</TableCell>
                                             <TableCell>{quiz.view}</TableCell>
+                                            <TableCell>
+                                                <Button
+                                                    variant="contained"
+                                                    color="primary"
+                                                    onClick={() => handleEdit(quiz.quizId)}
+                                                    style={{ marginRight: '8px' }}
+                                                >
+                                                    수정하기
+                                                </Button>
+                                                <Button
+                                                    variant="contained"
+                                                    color="secondary"
+                                                    onClick={() => handleDelete(quiz.quizId)}
+                                                >
+                                                    삭제하기
+                                                </Button>
+                                            </TableCell>
                                         </TableRow>
                                     ))}
                                 </tbody>
