@@ -316,12 +316,6 @@ function ProblemUI({ categoryName }) {
           </Grid>
         </Container>
       </Card>
-
-      {/* 댓글 컴포넌트 렌더링 하는부분 */}
-      {currentQuizData && currentQuizData.quizId !== null && (
-        <Comments quizId={currentQuizData.quizId} />
-      )}
-
     </Container>
   );
 }
