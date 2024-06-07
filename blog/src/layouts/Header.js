@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import jwt_decode from 'jwt-decode';
 import SignUpmodel from "../modal/SignUpmodel";
 import Cookies from 'js-cookie';
 import valanse_logo from "./img/valanse_logo3.png";
@@ -10,12 +11,18 @@ const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [stateToken, setStateToken] = useState('');
     const [accessToken, setAccessToken] = useState('');
+    const [userId, setUserId] = useState(null);
     const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Seoul', hour12: true, hourCycle: 'h12' }));
     const navigate = useNavigate();
 
     useEffect(() => {
         const accessTokenCookie = Cookies.get('access_token');
         setIsLoggedIn(accessTokenCookie ? true : false);
+
+        if (accessTokenCookie) {
+            const decodedToken = jwt_decode(accessTokenCookie);
+            setUserId(decodedToken.user_id); // 또는 토큰 구조에 따라 userId 필드명을 수정
+        }
 
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('stateToken');
@@ -34,7 +41,7 @@ const Header = () => {
             config => {
                 const token = Cookies.get('access_token');
                 if (token) {
-                    config.headers['Authorization'] = token;
+                    config.headers['Authorization'] = `Bearer ${token}`;
                 }
                 return config;
             },
@@ -67,6 +74,8 @@ const Header = () => {
             const token = response.data.data;
             setAccessToken(token);
             Cookies.set('access_token', token);
+            const decodedToken = jwt_decode(token);
+            setUserId(decodedToken.user_id); // 또는 토큰 구조에 따라 userId 필드명을 수정
             setIsLoggedIn(true);
             window.location.replace('https://valanse.vercel.app/');
         } catch (error) {
@@ -85,6 +94,8 @@ const Header = () => {
             const newToken = response.data.data;
             setAccessToken(newToken);
             Cookies.set('access_token', newToken);
+            const decodedToken = jwt_decode(newToken);
+            setUserId(decodedToken.user_id); // 또는 토큰 구조에 따라 userId 필드명을 수정
         } catch (error) {
             console.error('Error refreshing access token:', error.message);
         }
@@ -96,7 +107,7 @@ const Header = () => {
             if (accessTokenCookie) {
                 await axios.post('https://valanse.site/token/logout', null, {
                     headers: {
-                        'Authorization': accessTokenCookie,
+                        'Authorization': `Bearer ${accessTokenCookie}`,
                         'Content-Type': 'application/json'
                     }
                 });
@@ -105,6 +116,7 @@ const Header = () => {
                 setIsLoggedIn(false);
                 setAccessToken('');
                 setStateToken('');
+                setUserId(null);
                 window.location.replace('https://valanse.vercel.app/');
             }
         } catch (error) {
@@ -130,7 +142,7 @@ const Header = () => {
             margin: '0 10px',
             textShadow: '0 0 5px',
             color: '#fff',
-            backgroundColor: '#333' //연한 검은색
+            backgroundColor: '#333' // 연한 검은색
         },
         logout: {
             borderColor: 'red',
@@ -145,7 +157,7 @@ const Header = () => {
             boxShadow: '0 0 10px blue'
         }
     };
-    
+
     return (
         <>
             <header style={{ backgroundColor: 'black', padding: '10px 0' }}>
