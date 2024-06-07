@@ -14,7 +14,6 @@ function ProblemUI({ categoryName }) {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [likedQuizzes, setLikedQuizzes] = useState({});
   const [dislikedQuizzes, setDislikedQuizzes] = useState({});
-  const [answeredQuizzes, setAnsweredQuizzes] = useState([]);
 
   useEffect(() => {
     fetchQuizData(categoryName);
@@ -150,23 +149,22 @@ function ProblemUI({ categoryName }) {
   };
 
   const handleConfirmSelection = async () => {
-    setShowConfirmDialog(false); // 다이얼로그를 닫기
-    const currentQuizId = quizDataList[currentQuizIndex].quizId;
-    // 사용자의 답변 저장
+    setShowConfirmDialog(false);
+    const currentQuiz = quizDataList[currentQuizIndex];
+    const userId = 0; // Replace with actual user ID
+    const answeredAt = new Date().toISOString();
+    const preference = selectedOption === 'A' ? currentQuiz.likes : currentQuiz.dislikes;
     try {
-      const response = await axios.post('https://valanse.site/quiz/save-user-answer', {
-        userId: 0, // 사용자 ID는 어떻게 설정되는지에 따라 변경되어야 함
-        quizId: currentQuizId,
+      await axios.post('https://valanse.site/quiz/save-user-answer', {
+        userId,
+        quizId: currentQuiz.quizId,
         selectedOption,
-        answeredAt: new Date().toISOString(),
-        preference: selectedOption === 'A' ? quizDataList[currentQuizIndex].likes : quizDataList[currentQuizIndex].dislikes,
+        answeredAt,
+        preference,
       });
-      console.log('User answer saved:', response.data);
-      // 선택한 퀴즈를 더 이상 선택하지 못하도록 처리
-      setAnsweredQuizzes((prevAnsweredQuizzes) => [...prevAnsweredQuizzes, currentQuizId]);
+      handleNext();
     } catch (error) {
       console.error('Error saving user answer:', error.message);
-      // 에러 처리
     }
   };
 
@@ -195,7 +193,8 @@ function ProblemUI({ categoryName }) {
       <Dialog
         open={showConfirmDialog}
         onClose={handleCloseConfirmDialog}
-        aria-labelledby="confirm-dialog-title"
+        aria-labelledby
+        ="confirm-dialog-title"
         aria-describedby="confirm-dialog-description"
       >
         <DialogTitle id="confirm-dialog-title">선택 확인</DialogTitle>
@@ -243,13 +242,14 @@ function ProblemUI({ categoryName }) {
                 </Typography>
               </IconButton>
             </Grid>
+
             <Grid item xs={6} textAlign="center">
               <Card
                 onClick={() => handleOptionSelect('A', currentQuizData.quizId)}
                 sx={{
                   borderRadius: '16px',
                   overflow: 'hidden',
-                  boxShadow: '0px 0px 20px 0px rgba(0, 255, 255, 0.75)',// 네온 효과 추가
+                  boxShadow: '0px 0px 20px 0px rgba(0, 255, 255, 0.75)',
                 }}
               >
                 <CardActionArea>
@@ -293,7 +293,7 @@ function ProblemUI({ categoryName }) {
                       gutterBottom
                       variant="h5"
                       component="div"
-                      sx={{ color: 'white' }} // 텍스트 색상 및 '네온 글로우'라는 효과 추가
+                      sx={{ color: 'white' }}
                     >
                       {currentQuizData ? currentQuizData.descriptionB : ''}
                     </Typography>
@@ -319,7 +319,7 @@ function ProblemUI({ categoryName }) {
                 variant="contained"
                 color="primary"
                 onClick={handleNext}
-                disabled={currentQuizIndex === quizDataList.length - 1 || answeredQuizzes.includes(currentQuizData.quizId)}
+                disabled={currentQuizIndex === quizDataList.length - 1}
                 endIcon={<ArrowForwardIcon />}
                 sx={{ bgcolor: 'limegreen', color: 'white' }}
               >
