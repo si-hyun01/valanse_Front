@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import jwt_decode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import SignUpmodel from "../modal/SignUpmodel";
 import Cookies from 'js-cookie';
 import valanse_logo from "./img/valanse_logo3.png";
@@ -20,7 +20,7 @@ const Header = () => {
         setIsLoggedIn(accessTokenCookie ? true : false);
 
         if (accessTokenCookie) {
-            const decodedToken = jwt_decode(accessTokenCookie);
+            const decodedToken = jwtDecode(accessTokenCookie);
             setUserId(decodedToken.user_id); // 또는 토큰 구조에 따라 userId 필드명을 수정
         }
 
@@ -74,7 +74,7 @@ const Header = () => {
             const token = response.data.data;
             setAccessToken(token);
             Cookies.set('access_token', token);
-            const decodedToken = jwt_decode(token);
+            const decodedToken = jwtDecode(token);
             setUserId(decodedToken.user_id); // 또는 토큰 구조에 따라 userId 필드명을 수정
             setIsLoggedIn(true);
             window.location.replace('https://valanse.vercel.app/');
@@ -94,7 +94,7 @@ const Header = () => {
             const newToken = response.data.data;
             setAccessToken(newToken);
             Cookies.set('access_token', newToken);
-            const decodedToken = jwt_decode(newToken);
+            const decodedToken = jwtDecode(newToken);
             setUserId(decodedToken.user_id); // 또는 토큰 구조에 따라 userId 필드명을 수정
         } catch (error) {
             console.error('Error refreshing access token:', error.message);
