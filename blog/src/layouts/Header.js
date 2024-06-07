@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import SignUpmodel from "../modal/SignUpmodel";
 import Cookies from 'js-cookie';
-import {jwtDecode} from 'jwt-decode'; // jwtDecode를 가져옵니다.
 import valanse_logo from "./img/valanse_logo3.png";
 
 const Header = () => {
@@ -12,7 +11,7 @@ const Header = () => {
     const [stateToken, setStateToken] = useState('');
     const [accessToken, setAccessToken] = useState('');
     const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Seoul', hour12: true, hourCycle: 'h12' }));
-    const [userId, setUserId] = useState(null); // userId 상태를 추가합니다.
+    const [userId, setUserId] = useState(''); // 추가: userid 상태 추가
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -61,8 +60,10 @@ const Header = () => {
     useEffect(() => {
         const accessTokenCookie = Cookies.get('access_token');
         if (accessTokenCookie) {
-            const decodedToken = jwtDecode(accessTokenCookie); // 토큰을 해독합니다.
-            setUserId(decodedToken.userid); // userId를 추출하여 상태로 설정합니다.
+            const tokenPayload = accessTokenCookie.split('.')[1]; // 토큰의 payload 부분 가져오기
+            const decodedPayload = JSON.parse(atob(tokenPayload)); // Base64 디코딩 및 JSON 파싱
+            const userId = decodedPayload.userid; // 페이로드에서 userid 추출
+            setUserId(userId);
         }
     }, []);
 
@@ -115,7 +116,6 @@ const Header = () => {
                 setIsLoggedIn(false);
                 setAccessToken('');
                 setStateToken('');
-                setUserId(null); // userId 상태를 초기화합니다.
                 window.location.replace('https://valanse.vercel.app/');
             }
         } catch (error) {
@@ -156,7 +156,7 @@ const Header = () => {
             boxShadow: '0 0 10px blue'
         }
     };
-
+    
     return (
         <>
             <header style={{ backgroundColor: 'black', padding: '10px 0' }}>
@@ -210,11 +210,11 @@ const Header = () => {
                             </>
                         ) : (
                             <button
-                                style={{ ...buttonStyles.base, ...buttonStyleslogin }}
+                                style={{ ...buttonStyles.base, ...buttonStyles.login }}
                                 onClick={toggleSignUpModal}
                             >
                                 로그인
-                            </button>
+                                </button>
                         )}
                         <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} />
                     </div>
