@@ -14,6 +14,7 @@ function ProblemUI({ categoryName }) {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [likedQuizzes, setLikedQuizzes] = useState({});
   const [dislikedQuizzes, setDislikedQuizzes] = useState({});
+  const [answeredQuizzes, setAnsweredQuizzes] = useState([]);
 
   useEffect(() => {
     fetchQuizData(categoryName);
@@ -91,7 +92,6 @@ function ProblemUI({ categoryName }) {
       }));
     } catch (error) {
       console.error('Error liking/unliking quiz:', error.message);
-      // 에러 처리
     }
   };
 
@@ -122,7 +122,6 @@ function ProblemUI({ categoryName }) {
       }));
     } catch (error) {
       console.error('Error disliking/unliking quiz:', error.message);
-      // 에러 처리
     }
   };
 
@@ -150,9 +149,25 @@ function ProblemUI({ categoryName }) {
     setShowConfirmDialog(false);
   };
 
-  const handleConfirmSelection = () => {
+  const handleConfirmSelection = async () => {
     setShowConfirmDialog(false); // 다이얼로그를 닫기
-    handleNext(); // 다음 퀴즈로 넘어가기
+    const currentQuizId = quizDataList[currentQuizIndex].quizId;
+    // 사용자의 답변 저장
+    try {
+      const response = await axios.post('https://valanse.site/quiz/save-user-answer', {
+        userId: 0, // 사용자 ID는 어떻게 설정되는지에 따라 변경되어야 함
+        quizId: currentQuizId,
+        selectedOption,
+        answeredAt: new Date().toISOString(),
+        preference: selectedOption === 'A' ? quizDataList[currentQuizIndex].likes : quizDataList[currentQuizIndex].dislikes,
+      });
+      console.log('User answer saved:', response.data);
+      // 선택한 퀴즈를 더 이상 선택하지 못하도록 처리
+      setAnsweredQuizzes((prevAnsweredQuizzes) => [...prevAnsweredQuizzes, currentQuizId]);
+    } catch (error) {
+      console.error('Error saving user answer:', error.message);
+      // 에러 처리
+    }
   };
 
   const currentQuizData = quizDataList[currentQuizIndex];
@@ -228,7 +243,6 @@ function ProblemUI({ categoryName }) {
                 </Typography>
               </IconButton>
             </Grid>
-
             <Grid item xs={6} textAlign="center">
               <Card
                 onClick={() => handleOptionSelect('A', currentQuizData.quizId)}
@@ -305,7 +319,7 @@ function ProblemUI({ categoryName }) {
                 variant="contained"
                 color="primary"
                 onClick={handleNext}
-                disabled={currentQuizIndex === quizDataList.length - 1}
+                disabled={currentQuizIndex === quizDataList.length - 1 || answeredQuizzes.includes(currentQuizData.quizId)}
                 endIcon={<ArrowForwardIcon />}
                 sx={{ bgcolor: 'limegreen', color: 'white' }}
               >
