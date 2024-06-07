@@ -10,7 +10,7 @@ const MyPage = () => {
     useEffect(() => {
         const fetchQuizzes = async () => {
             try {
-                const response = await axios.get('http://valanse.site/quiz/user');
+                const response = await axios.get('https://valanse.site/quiz/user');
                 setQuizzes(response.data.data);
             } catch (error) {
                 console.error('Error fetching quizzes:', error);
