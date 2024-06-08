@@ -3,7 +3,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, F
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, selectedCategory, handleCategoryChange }) {
+function CreateQuestionDialog({ open, handleClose, quiz, handleCreate }) {
     const [question, setQuestion] = useState(quiz?.content || '');
     const [optionA, setOptionA] = useState(quiz?.optionA || '');
     const [optionB, setOptionB] = useState(quiz?.optionB || '');
@@ -11,13 +11,14 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, selectedC
     const [descriptionB, setDescriptionB] = useState(quiz?.descriptionB || '');
     const [imageA, setImageA] = useState(null);
     const [imageB, setImageB] = useState(null);
+    const [selectedCategory, setSelectedCategory] = useState(quiz?.category || '');
 
     useEffect(() => {
         // Ensure that selectedCategory is not null
         if (!selectedCategory && quiz && quiz.category) {
-            handleCategoryChange({ target: { value: quiz.category } });
+            setSelectedCategory(quiz.category);
         }
-    }, [quiz, selectedCategory, handleCategoryChange]);
+    }, [quiz, selectedCategory]);
 
     const handleCreateQuestion = async () => {
         const quizRegisterDto = {
@@ -51,6 +52,10 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, selectedC
 
     const handleImageChange = (setImageFunc) => (e) => {
         setImageFunc(e.target.files[0]);
+    };
+
+    const handleCategoryChange = (event) => {
+        setSelectedCategory(event.target.value);
     };
 
     return (
