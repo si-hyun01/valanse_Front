@@ -3,12 +3,9 @@ import axios from 'axios';
 import { Accordion, AccordionDetails, AccordionSummary, Typography, Table, TableContainer, TableHead, TableRow, TableCell, Button } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Header from './Header';
-import EditQuizDialog from './remake_problem';
 
 const MyPage = () => {
     const [quizzes, setQuizzes] = useState([]);
-    const [editDialogOpen, setEditDialogOpen] = useState(false);
-    const [selectedQuiz, setSelectedQuiz] = useState(null);
 
     useEffect(() => {
         const fetchQuizzes = async () => {
@@ -31,23 +28,9 @@ const MyPage = () => {
         }
     };
 
-    const handleEdit = (quiz) => {
-        if (quiz) {
-            setSelectedQuiz(quiz);
-            setEditDialogOpen(true);
-        }
-    };
-    
-
-    const handleCloseEditDialog = () => {
-        setEditDialogOpen(false);
-    };
-
-    const handleEditSubmit = async (formData) => {
-        // 수정된 내용을 서버로 보내는 작업
-        console.log('Edited quiz:', formData);
-        // 서버로 수정된 내용을 보낸 후 새로운 퀴즈 목록을 가져올 수 있도록 필요한 작업 수행
-        setEditDialogOpen(false);
+    const handleEdit = (quizId) => {
+        // 수정하기 버튼 클릭 시 수행할 작업
+        console.log('Edit quiz:', quizId);
     };
 
     return (
@@ -98,7 +81,7 @@ const MyPage = () => {
                                                 <Button
                                                     variant="contained"
                                                     color="primary"
-                                                    onClick={() => handleEdit(quiz)}
+                                                    onClick={() => handleEdit(quiz.quizId)}
                                                     style={{ marginRight: '8px' }}
                                                 >
                                                     수정하기
@@ -119,12 +102,6 @@ const MyPage = () => {
                     </AccordionDetails>
                 </Accordion>
             </div>
-            <EditQuizDialog
-                open={editDialogOpen}
-                onClose={handleCloseEditDialog}
-                onSubmit={handleEditSubmit}
-                initialValues={selectedQuiz}
-            />
         </>
     );
 };
