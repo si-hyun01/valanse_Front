@@ -91,7 +91,7 @@ function CommentUI({ quizId }) {
             <li key={comment.commentId}>
               <div id={`comment-${comment.commentId}`} name={`comment-${comment.commentId}`} style={{ color: 'white' }}>
                 <p>User ID: {comment.authorUserId}</p>
-                <p>{comment.content}</p>
+                <p dangerouslySetInnerHTML={{ __html: comment.content.replace(/\n/g, '<br/>') }}></p>
                 <p>작성날짜: {comment.createdAt}</p>
               </div>
               <button onClick={() => handleCommentDelete(comment.commentId)}>삭제</button>
