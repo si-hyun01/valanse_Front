@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function CommentUI({ quizId }) {
-  const [comments, setComments] = useState({});
+  const [comments, setComments] = useState([]);
   const [newCommentContent, setNewCommentContent] = useState('');
   const [loading, setLoading] = useState(true);
 
@@ -13,7 +13,13 @@ function CommentUI({ quizId }) {
   const fetchComments = async () => {
     try {
       const response = await axios.get(`https://valanse.site/comment/${quizId}/quiz`);
-      setComments(response.data); // API 응답 데이터 형식에 맞춰 수정
+      const commentIds = response.data.map(comment => comment.commentId);
+      const commentContents = await Promise.all(commentIds.map(fetchCommentContent));
+      const commentData = commentIds.reduce((acc, id, index) => {
+        acc[id] = commentContents[index];
+        return acc;
+      }, {});
+      setComments(commentData);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching comments:', error);
@@ -24,7 +30,7 @@ function CommentUI({ quizId }) {
   const fetchCommentContent = async (commentId) => {
     try {
       const response = await axios.get(`https://valanse.site/comment/${commentId}`);
-      return response.data; // 댓글 내용 반환
+      return response.data.content;
     } catch (error) {
       console.error('Error fetching comment content:', error);
       return null;
@@ -38,7 +44,7 @@ function CommentUI({ quizId }) {
         quizId: quizId,
       });
       setNewCommentContent('');
-      fetchComments(); // 댓글 등록 후에 새로운 댓글 목록을 다시 가져옴
+      fetchComments();
     } catch (error) {
       console.error('Error submitting comment:', error);
     }
@@ -68,15 +74,12 @@ function CommentUI({ quizId }) {
         <div style={{ color: 'white' }}>아직 작성된 댓글이 없습니다.</div>
       ) : (
         <ul>
-          {Object.keys(comments).map(async (commentId) => {
-            const commentContent = await fetchCommentContent(commentId);
-            return (
-              <li key={commentId}>
-                <div>{commentContent}</div>
-                <button onClick={() => handleCommentDelete(commentId)}>삭제</button>
-              </li>
-            );
-          })}
+          {Object.keys(comments).map((commentId) => (
+            <li key={commentId}>
+              <div>{comments[commentId]}</div>
+              <button onClick={() => handleCommentDelete(commentId)}>삭제</button>
+            </li>
+          ))}
         </ul>
       )}
     </div>
