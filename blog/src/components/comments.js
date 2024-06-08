@@ -28,7 +28,7 @@ function CommentUI({ quizId }) {
         quizId: quizId,
       });
       setNewCommentContent('');
-      fetchComments();
+      fetchComments(); // 댓글 등록 후에 새로운 댓글 목록을 다시 가져옴
     } catch (error) {
       console.error('Error submitting comment:', error);
     }
