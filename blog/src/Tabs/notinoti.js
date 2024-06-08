@@ -164,23 +164,16 @@ const NoticeBoard = () => {
 
   useEffect(() => {
     const fetchNotices = async () => {
-      let fetchedNotices = [];
-      const maxNoticeId = 10; // 10개만 체크
-      for (let i = 1; i <= maxNoticeId; i++) {
-        try {
-          const response = await axios.get(`https://valanse.site/notice/${i}`);
-          if (response.data && response.data.data) {
-            fetchedNotices.push(response.data.data);
+      try {
+        const response = await axios.get('https://valanse.site/notice/all', {
+          headers: {
+            'accept': 'application/json;charset=UTF-8'
           }
-        } catch (error) {
-          if (error.response && error.response.status === 404) {
-            //
-          } else {
-            console.error('Error fetching notice:', error);
-          }
-        }
+        });
+        setNotices(response.data.data);
+      } catch (error) {
+        console.error('Error fetching notices:', error);
       }
-      setNotices(fetchedNotices);
     };
 
     fetchNotices();
