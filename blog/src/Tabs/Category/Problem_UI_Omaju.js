@@ -5,7 +5,7 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import CommentUI from './comments';  // CommentUI 컴포넌트 import
+import CommentUI from '../../components/comments';  // CommentUI 컴포넌트 import
 
 function ProblemUI({ categoryName }) {
   const [quizDataList, setQuizDataList] = useState([]);
