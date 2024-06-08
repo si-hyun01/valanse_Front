@@ -16,7 +16,13 @@ function CommentUI({ quizId }) {
       const commentsData = response.data.data;
       const commentsContent = await Promise.all(commentsData.map(async (comment) => {
         const commentContentResponse = await axios.get(`https://valanse.site/comment/${comment.commentId}`);
-        return commentContentResponse.data;
+        const commentData = commentContentResponse.data.data;
+        return {
+          commentId: commentData.commentId,
+          authorUserId: commentData.authorUserId,
+          content: commentData.content,
+          createdAt: commentData.createdAt
+        };
       }));
       setComments(commentsContent);
       setLoading(false);
