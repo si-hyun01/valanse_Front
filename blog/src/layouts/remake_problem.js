@@ -1,38 +1,80 @@
 import React, { useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from '@mui/material';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
-const EditQuizDialog = ({ open, onClose, onSubmit, initialValues }) => {
-    const [formData, setFormData] = useState(initialValues);
+function EditQuestionDialog({ open, handleClose, quiz, handleEdit }) {
+    const [editedQuestion, setEditedQuestion] = useState(quiz.content);
+    const [editedOptionA, setEditedOptionA] = useState(quiz.optionA);
+    const [editedOptionB, setEditedOptionB] = useState(quiz.optionB);
+    const [editedDescriptionA, setEditedDescriptionA] = useState(quiz.descriptionA);
+    const [editedDescriptionB, setEditedDescriptionB] = useState(quiz.descriptionB);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
+    const handleEditQuestion = async () => {
+        const editedQuiz = {
+            ...quiz,
+            content: editedQuestion,
+            optionA: editedOptionA,
+            optionB: editedOptionB,
+            descriptionA: editedDescriptionA,
+            descriptionB: editedDescriptionB
+        };
 
-    const handleSubmit = () => {
-        onSubmit(formData);
-        onClose();
+        try {
+            await axios.patch(`https://valanse.site/quiz/${quiz.quizId}`, editedQuiz, {
+                headers: {
+                    'Authorization': Cookies.get('access_token'),
+                    'Content-Type': 'application/json'
+                }
+            });
+            handleEdit(editedQuiz);
+            handleClose();
+        } catch (error) {
+            console.error('Error editing quiz:', error.response ? error.response.data : error.message);
+        }
     };
 
     return (
-        <Dialog open={open} onClose={onClose}>
+        <Dialog open={open} onClose={handleClose}>
             <DialogTitle>퀴즈 수정</DialogTitle>
             <DialogContent>
                 <TextField
                     fullWidth
-                    label="제목"
-                    name="content"
-                    value={formData.content}
-                    onChange={handleChange}
+                    label="퀴즈 제목"
+                    value={editedQuestion}
+                    onChange={(e) => setEditedQuestion(e.target.value)}
                 />
-                {/* 필요한 다른 입력 필드들 추가 */}
+                <TextField
+                    fullWidth
+                    label="옵션 A"
+                    value={editedOptionA}
+                    onChange={(e) => setEditedOptionA(e.target.value)}
+                />
+                <TextField
+                    fullWidth
+                    label="옵션 A 설명"
+                    value={editedDescriptionA}
+                    onChange={(e) => setEditedDescriptionA(e.target.value)}
+                />
+                <TextField
+                    fullWidth
+                    label="옵션 B"
+                    value={editedOptionB}
+                    onChange={(e) => setEditedOptionB(e.target.value)}
+                />
+                <TextField
+                    fullWidth
+                    label="옵션 B 설명"
+                    value={editedDescriptionB}
+                    onChange={(e) => setEditedDescriptionB(e.target.value)}
+                />
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>취소</Button>
-                <Button onClick={handleSubmit}>수정</Button>
+                <Button onClick={handleClose}>취소</Button>
+                <Button onClick={handleEditQuestion} variant="contained" color="primary">수정</Button>
             </DialogActions>
         </Dialog>
     );
-};
+}
 
-export default EditQuizDialog;
+export default EditQuestionDialog;

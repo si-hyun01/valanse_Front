@@ -1,26 +1,24 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
-import { Accordion, AccordionDetails, AccordionSummary, Typography, Table, TableContainer, TableHead, TableRow, TableCell } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Typography, Table, TableContainer, TableHead, TableRow, TableCell, Button } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Header from './Header';
+import EditQuestionDialog from './remake_problem';
 
 const MyPage = () => {
     const [quizzes, setQuizzes] = useState([]);
-    const [editDialogOpen, setEditDialogOpen] = useState(false);
-    const [selectedQuiz, setSelectedQuiz] = useState(null);
-    const [editedContent, setEditedContent] = useState('');
-
-    const fetchQuizzes = async () => {
-        try {
-            const response = await axios.get('https://valanse.site/quiz/user');
-            setQuizzes(response.data.data);
-        } catch (error) {
-            console.error('Error fetching quizzes:', error);
-        }
-    };
+    const [editDialogOpen, setEditDialogOpen] = useState(false); // 수정 다이얼로그 상태
+    const [selectedQuiz, setSelectedQuiz] = useState(null); // 선택된 퀴즈 상태
 
     useEffect(() => {
+        const fetchQuizzes = async () => {
+            try {
+                const response = await axios.get('https://valanse.site/quiz/user');
+                setQuizzes(response.data.data);
+            } catch (error) {
+                console.error('Error fetching quizzes:', error);
+            }
+        };
         fetchQuizzes();
     }, []);
 
@@ -34,22 +32,23 @@ const MyPage = () => {
     };
 
     const handleEdit = (quiz) => {
-        setSelectedQuiz(quiz);
-        setEditedContent(quiz.content);
-        setEditDialogOpen(true);
+        // 수정하기 버튼 클릭 시 수행할 작업
+        setSelectedQuiz(quiz); // 선택된 퀴즈 설정
+        setEditDialogOpen(true); // 수정 다이얼로그 열기
     };
 
-    const handleSave = async () => {
-        try {
-            await axios.patch(`https://valanse.site/quiz/${selectedQuiz.quizId}`, {
-                content: editedContent,
-                // 나머지 수정할 항목 추가
-            });
-            fetchQuizzes(); // 수정 후 퀴즈 목록 다시 불러오기
-            setEditDialogOpen(false); // 다이얼로그 닫기
-        } catch (error) {
-            console.error('Error editing quiz:', error);
-        }
+    // 수정 다이얼로그 닫기 핸들러
+    const handleCloseEditDialog = () => {
+        setEditDialogOpen(false);
+    };
+
+    // 수정한 퀴즈 정보로 상태 업데이트하는 핸들러
+    const handleUpdateQuiz = (updatedQuiz) => {
+        // 퀴즈 목록에서 수정된 퀴즈를 찾아 업데이트
+        const updatedQuizzes = quizzes.map(quiz =>
+            quiz.quizId === updatedQuiz.quizId ? updatedQuiz : quiz
+        );
+        setQuizzes(updatedQuizzes);
     };
 
     return (
@@ -100,7 +99,7 @@ const MyPage = () => {
                                                 <Button
                                                     variant="contained"
                                                     color="primary"
-                                                    onClick={() => handleEdit(quiz)}
+                                                    onClick={() => handleEdit(quiz)} // 수정하기 핸들러에 선택된 퀴즈 전달
                                                     style={{ marginRight: '8px' }}
                                                 >
                                                     수정하기
@@ -120,25 +119,18 @@ const MyPage = () => {
                         </TableContainer>
                     </AccordionDetails>
                 </Accordion>
-            </div>
-            <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>
-                <DialogTitle>퀴즈 수정</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        fullWidth
-                        label="퀴즈 제목"
-                        value={editedContent}
-                        onChange={(e) => setEditedContent(e.target.value)}
+                {/* 수정 다이얼로그 */}
+                <EditQuestionDialog
+                    open={editDialogOpen}
+                    handleClose={handleCloseEditDialog}
+                    quiz={selectedQuiz}
+                    onUpdate={handleUpdate
+                    }
                     />
-                    {/* 수정할 항목 추가 */}
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setEditDialogOpen(false)}>취소</Button>
-                    <Button onClick={handleSave}>저장하기</Button>
-                </DialogActions>
-            </Dialog>
-        </>
-    );
-};
-
-export default MyPage;
+                </div>
+            </>
+        );
+    };
+    
+    export default MyPage;
+    
