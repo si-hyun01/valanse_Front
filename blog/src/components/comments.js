@@ -80,7 +80,7 @@ function CommentUI({ quizId }) {
               <div id={`comment-${comment.commentId}`} name={`comment-${comment.commentId}`} style={{ color: 'white' }}>
                 <p>User ID: {comment.authorUserId}</p>
                 <p>{comment.content}</p>
-                <p>작성날짜: {comment.createdAt}</p>
+                <p>작성날짜: {formattedDate(comment.createdAt)}</p>
               </div>
               <button onClick={() => handleCommentDelete(comment.commentId)}>삭제</button>
             </li>
