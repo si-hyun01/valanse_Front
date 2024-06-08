@@ -36,9 +36,15 @@ function CommentUI({ quizId }) {
   const formattedDate = (dateString) => {
     const date = new Date(dateString);
     const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
-    return date.toLocaleString('ko-KR', options); // 한국 시간대로 포맷팅
+    let formattedDateString = date.toLocaleString('ko-KR', options); // 한국 시간대로 포맷팅
+    // 오후 시간대인지 확인하고 오후로 표시
+    if (date.getHours() >= 12) {
+      formattedDateString += ' 오후';
+    } else {
+      formattedDateString += ' 오전';
+    }
+    return formattedDateString;
   };
-
 
   const handleCommentSubmit = async () => {
     try {
