@@ -21,6 +21,16 @@ function CommentUI({ quizId }) {
     }
   };
 
+  const fetchCommentContent = async (commentId) => {
+    try {
+      const response = await axios.get(`https://valanse.site/comment/${commentId}`);
+      return response.data; // 댓글 내용 반환
+    } catch (error) {
+      console.error('Error fetching comment content:', error);
+      return null;
+    }
+  };
+
   const handleCommentSubmit = async () => {
     try {
       await axios.post('https://valanse.site/comment/register', {
@@ -58,12 +68,15 @@ function CommentUI({ quizId }) {
         <div style={{ color: 'white' }}>아직 작성된 댓글이 없습니다.</div>
       ) : (
         <ul>
-          {Object.keys(comments).map((commentId) => (
-            <li key={commentId}>
-              <div>{comments[commentId].content}</div>
-              <button onClick={() => handleCommentDelete(commentId)}>삭제</button>
-            </li>
-          ))}
+          {Object.keys(comments).map(async (commentId) => {
+            const commentContent = await fetchCommentContent(commentId);
+            return (
+              <li key={commentId}>
+                <div>{commentContent}</div>
+                <button onClick={() => handleCommentDelete(commentId)}>삭제</button>
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>
