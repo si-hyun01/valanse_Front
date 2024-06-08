@@ -35,8 +35,8 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, selectedC
                 }
             });
             console.log('Quiz updated successfully:', response.data);
-            handleCreate();
-            handleClose();
+            handleClose(); // 다이얼로그 닫기
+            handleCreate(); // 수정 완료 후 처리
         } catch (error) {
             console.error('Error updating quiz:', error.response ? error.response.data : error.message);
         }
