@@ -10,6 +10,12 @@ function CommentUI({ quizId }) {
     fetchComments();
   }, [quizId]);
 
+  const formatDate = (createdAt) => {
+    const date = new Date(createdAt);
+    const koreanDate = new Date(date.getTime() + (date.getTimezoneOffset() * 60000) + (9 * 3600000)); // 한국 시간으로 변환
+    return koreanDate.toLocaleString();
+  };
+
   const fetchComments = async () => {
     try {
       const response = await axios.get(`https://valanse.site/comment/${quizId}/quiz`);
@@ -21,7 +27,7 @@ function CommentUI({ quizId }) {
           commentId: commentData.commentId,
           authorUserId: commentData.authorUserId,
           content: commentData.content,
-          createdAt: formattedDate(commentData.createdAt) // 날짜 포맷팅 추가
+          createdAt: formatDate(commentData.createdAt) // 시간 변환
         };
       }));
       setComments(commentsContent);
@@ -30,13 +36,6 @@ function CommentUI({ quizId }) {
       console.error('Error fetching comments:', error);
       setLoading(false);
     }
-  };
-
-  // Date 객체를 한국 시간대로 포맷팅하는 함수
-  const formattedDate = (dateString) => {
-    const date = new Date(dateString);
-    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-    return date.toLocaleString('ko-KR', options); // 한국 시간대로 포맷팅
   };
 
   const handleCommentSubmit = async () => {
@@ -80,7 +79,7 @@ function CommentUI({ quizId }) {
               <div id={`comment-${comment.commentId}`} name={`comment-${comment.commentId}`} style={{ color: 'white' }}>
                 <p>User ID: {comment.authorUserId}</p>
                 <p>{comment.content}</p>
-                <p>작성날짜: {formattedDate(comment.createdAt)}</p>
+                <p>작성날짜: {comment.createdAt}</p>
               </div>
               <button onClick={() => handleCommentDelete(comment.commentId)}>삭제</button>
             </li>
