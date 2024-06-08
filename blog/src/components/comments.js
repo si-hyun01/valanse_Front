@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function CommentUI({ quizId }) {
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState({});
   const [newCommentContent, setNewCommentContent] = useState('');
   const [loading, setLoading] = useState(true);
 
@@ -37,7 +37,9 @@ function CommentUI({ quizId }) {
   const handleCommentDelete = async (commentId) => {
     try {
       await axios.delete(`https://valanse.site/comment/${commentId}`);
-      setComments(comments.filter(comment => comment.commentId !== commentId));
+      const updatedComments = { ...comments };
+      delete updatedComments[commentId];
+      setComments(updatedComments);
     } catch (error) {
       console.error('Error deleting comment:', error);
     }
@@ -52,14 +54,14 @@ function CommentUI({ quizId }) {
       </div>
       {loading ? (
         <div>Loading...</div>
-      ) : comments.length === 0 ? (
+      ) : Object.keys(comments).length === 0 ? (
         <div style={{ color: 'white' }}>아직 작성된 댓글이 없습니다.</div>
       ) : (
         <ul>
-          {comments.map((comment) => (
-            <li key={comment.commentId}>
-              <div>{comment.content}</div>
-              <button onClick={() => handleCommentDelete(comment.commentId)}>삭제</button>
+          {Object.keys(comments).map((commentId) => (
+            <li key={commentId}>
+              <div>{comments[commentId].content}</div>
+              <button onClick={() => handleCommentDelete(commentId)}>삭제</button>
             </li>
           ))}
         </ul>
