@@ -5,7 +5,7 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import Comments from '../../components/comments'
+import CommentUI from './comments';  // CommentUI 컴포넌트 import
 
 function ProblemUI({ categoryName }) {
   const [quizDataList, setQuizDataList] = useState([]);
@@ -229,14 +229,13 @@ function ProblemUI({ categoryName }) {
                 </Typography>
               </IconButton>
             </Grid>
-
             <Grid item xs={6} textAlign="center">
               <Card
                 onClick={() => handleOptionSelect('A', currentQuizData.quizId)}
                 sx={{
                   borderRadius: '16px',
                   overflow: 'hidden',
-                  boxShadow: '0px 0px 20px 0px rgba(0, 255, 255, 0.75)', // 네온 효과 추가
+                  boxShadow: '0px 0px 20px 0px rgba(0, 255, 255, 0.75)',
                 }}
               >
                 <CardActionArea>
@@ -280,7 +279,7 @@ function ProblemUI({ categoryName }) {
                       gutterBottom
                       variant="h5"
                       component="div"
-                      sx={{ color: 'white' }} // 텍스트 색상 및 '네온 글로우'라는 효과 추가
+                      sx={{ color: 'white' }}
                     >
                       {currentQuizData ? currentQuizData.descriptionB : ''}
                     </Typography>
@@ -313,13 +312,12 @@ function ProblemUI({ categoryName }) {
                 다음으로
               </Button>
             </Grid>
+            <Grid item xs={12}>
+              <CommentUI quizId={currentQuizData.quizId} /> {/* CommentUI 컴포넌트 추가 */}
+            </Grid>
           </Grid>
         </Container>
       </Card>
-      {/* 댓글 컴포넌트 렌더링 하는부분 */}
-      {currentQuizData && currentQuizData.quizId !== null && (
-        <Comments quizId={currentQuizData.quizId} />
-      )}
     </Container>
   );
 }
