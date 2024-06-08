@@ -26,6 +26,7 @@ function CommentUI({ quizId }) {
   const [selectedCommentId, setSelectedCommentId] = useState(null);
   const [editCommentContent, setEditCommentContent] = useState('');
   const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   useEffect(() => {
     fetchComments();
@@ -78,11 +79,13 @@ function CommentUI({ quizId }) {
     }
   };
 
-  const handleCommentDelete = async (commentId) => {
+  const handleCommentDelete = async () => {
     try {
-      await axios.delete(`https://valanse.site/comment/${commentId}`);
-      const updatedComments = comments.filter(comment => comment.commentId !== commentId);
+      await axios.delete(`https://valanse.site/comment/${selectedCommentId}`);
+      const updatedComments = comments.filter(comment => comment.commentId !== selectedCommentId);
       setComments(updatedComments);
+      setOpenDeleteDialog(false);
+      setSelectedCommentId(null);
     } catch (error) {
       console.error('Error deleting comment:', error);
     }
@@ -120,6 +123,15 @@ function CommentUI({ quizId }) {
 
   const handleEditDialogClose = () => {
     setOpenEditDialog(false);
+  };
+
+  const handleDeleteDialogOpen = (commentId) => {
+    setSelectedCommentId(commentId);
+    setOpenDeleteDialog(true);
+  };
+
+  const handleDeleteDialogClose = () => {
+    setOpenDeleteDialog(false);
   };
 
   return (
@@ -177,7 +189,7 @@ function CommentUI({ quizId }) {
                 onClose={handleMenuClose}
               >
                 <MenuItem onClick={() => handleEditDialogOpen(comment.commentId, comment.content)}>수정하기</MenuItem>
-                <MenuItem onClick={() => { handleCommentDelete(comment.commentId); handleMenuClose(); }}>삭제</MenuItem>
+                <MenuItem onClick={() => { handleDeleteDialogOpen(comment.commentId); handleMenuClose(); }}>삭제하기</MenuItem>
               </Menu>
             </ListItem>
           ))}
@@ -201,6 +213,17 @@ function CommentUI({ quizId }) {
         <DialogActions>
           <Button onClick={handleEditDialogClose} color="primary">취소</Button>
           <Button onClick={handleCommentEdit} color="primary">수정</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={openDeleteDialog} onClose={handleDeleteDialogClose}>
+        <DialogTitle>댓글 삭제</DialogTitle>
+        <DialogContent>
+          <Typography>정말로 이 댓글을 삭제하시겠습니까?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteDialogClose} color="primary">취소</Button>
+          <Button onClick={handleCommentDelete} color="primary">삭제</Button>
         </DialogActions>
       </Dialog>
     </Box>
