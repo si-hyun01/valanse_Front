@@ -12,6 +12,7 @@ function CommentUI({ quizId }) {
 
   const formatDate = (createdAt) => {
     const date = new Date(createdAt);
+    date.setHours(date.getHours() + 10); // 10시간 추가
     const options = {
       year: 'numeric', month: '2-digit', day: '2-digit',
       hour: '2-digit', minute: '2-digit', second: '2-digit',
