@@ -24,14 +24,10 @@ function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCateg
         };
 
         try {
-            // 이미지 파일도 FormData에 추가
             const formData = new FormData();
-            formData.append('content', editedQuiz.content);
-            formData.append('optionA', editedQuiz.optionA);
-            formData.append('optionB', editedQuiz.optionB);
-            formData.append('descriptionA', editedQuiz.descriptionA);
-            formData.append('descriptionB', editedQuiz.descriptionB);
-            formData.append('category', editedQuiz.category);
+            Object.entries(editedQuiz).forEach(([key, value]) => {
+                formData.append(key, value);
+            });
             if (editedImageA) formData.append('image_A', editedImageA);
             if (editedImageB) formData.append('image_B', editedImageB);
 
