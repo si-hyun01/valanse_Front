@@ -1,10 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import {
+  TextField,
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
+  List,
+  ListItem,
+  ListItemText,
+  Typography
+} from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 function CommentUI({ quizId }) {
   const [comments, setComments] = useState([]);
   const [newCommentContent, setNewCommentContent] = useState('');
   const [loading, setLoading] = useState(true);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedCommentId, setSelectedCommentId] = useState(null);
 
   useEffect(() => {
     fetchComments();
@@ -67,37 +81,77 @@ function CommentUI({ quizId }) {
     }
   };
 
+  const handleMenuOpen = (event, commentId) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedCommentId(commentId);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedCommentId(null);
+  };
+
   return (
     <div>
-      <h2 style={{ color: 'white' }}>댓글</h2>
+      <Typography variant="h6" style={{ color: 'white' }}>댓글</Typography>
       <div style={{ marginBottom: '20px' }}>
-        <textarea
+        <TextField
           id="commentContent"
           name="commentContent"
           placeholder="댓글을 입력하세요"
+          multiline
+          fullWidth
           value={newCommentContent}
           onChange={(e) => setNewCommentContent(e.target.value)}
-          style={{ width: '100%', height: '100px', color: 'white', backgroundColor: 'transparent', border: 'none', borderBottom: '1px solid white' }}
+          InputProps={{
+            style: { color: 'white' },
+            sx: { '& .MuiInputBase-root': { borderBottom: '1px solid white' } }
+          }}
+          variant="standard"
         />
-        <button onClick={handleCommentSubmit} style={{ marginTop: '10px' }}>댓글 등록</button>
+        <Button onClick={handleCommentSubmit} variant="contained" style={{ marginTop: '10px' }}>댓글 등록</Button>
       </div>
       {loading ? (
         <div>Loading...</div>
       ) : comments.length === 0 ? (
-        <div style={{ color: 'white' }}>아직 작성된 댓글이 없습니다.</div>
+        <Typography style={{ color: 'white' }}>아직 작성된 댓글이 없습니다.</Typography>
       ) : (
-        <ul>
+        <List>
           {comments.map((comment) => (
-            <li key={comment.commentId}>
-              <div id={`comment-${comment.commentId}`} name={`comment-${comment.commentId}`} style={{ color: 'white' }}>
-                <p>User ID: {comment.authorUserId}</p>
-                <p dangerouslySetInnerHTML={{ __html: comment.content.replace(/\n/g, '<br/>') }}></p>
-                <p>작성날짜: {comment.createdAt}</p>
-              </div>
-              <button onClick={() => handleCommentDelete(comment.commentId)}>삭제</button>
-            </li>
+            <ListItem key={comment.commentId} style={{ color: 'white' }}>
+              <ListItemText
+                primary={`User ID: ${comment.authorUserId}`}
+                secondary={
+                  <>
+                    <span dangerouslySetInnerHTML={{ __html: comment.content.replace(/\n/g, '<br/>') }}></span>
+                    <br />
+                    {`작성날짜: ${comment.createdAt}`}
+                  </>
+                }
+              />
+              <IconButton
+                edge="end"
+                aria-label="more"
+                aria-controls="comment-menu"
+                aria-haspopup="true"
+                onClick={(e) => handleMenuOpen(e, comment.commentId)}
+                style={{ color: 'white' }}
+              >
+                <MoreVertIcon />
+              </IconButton>
+              <Menu
+                id="comment-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl) && selectedCommentId === comment.commentId}
+                onClose={handleMenuClose}
+              >
+                <MenuItem onClick={() => { handleCommentDelete(comment.commentId); handleMenuClose(); }}>삭제</MenuItem>
+                {/* 다른 메뉴 아이템을 여기에 추가할 수 있습니다. */}
+              </Menu>
+            </ListItem>
           ))}
-        </ul>
+        </List>
       )}
     </div>
   );
