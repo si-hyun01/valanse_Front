@@ -10,7 +10,11 @@ import {
   ListItem,
   ListItemText,
   Typography,
-  Box
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
@@ -20,6 +24,8 @@ function CommentUI({ quizId }) {
   const [loading, setLoading] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedCommentId, setSelectedCommentId] = useState(null);
+  const [editCommentContent, setEditCommentContent] = useState('');
+  const [openEditDialog, setOpenEditDialog] = useState(false);
 
   useEffect(() => {
     fetchComments();
@@ -82,6 +88,21 @@ function CommentUI({ quizId }) {
     }
   };
 
+  const handleCommentEdit = async () => {
+    try {
+      await axios.patch(`https://valanse.site/comment/${selectedCommentId}`, null, {
+        params: {
+          content: editCommentContent
+        }
+      });
+      setEditCommentContent('');
+      setOpenEditDialog(false);
+      fetchComments();
+    } catch (error) {
+      console.error('Error editing comment:', error);
+    }
+  };
+
   const handleMenuOpen = (event, commentId) => {
     setAnchorEl(event.currentTarget);
     setSelectedCommentId(commentId);
@@ -90,6 +111,16 @@ function CommentUI({ quizId }) {
   const handleMenuClose = () => {
     setAnchorEl(null);
     setSelectedCommentId(null);
+  };
+
+  const handleEditDialogOpen = (commentContent) => {
+    setEditCommentContent(commentContent);
+    setOpenEditDialog(true);
+    handleMenuClose();
+  };
+
+  const handleEditDialogClose = () => {
+    setOpenEditDialog(false);
   };
 
   return (
@@ -146,13 +177,33 @@ function CommentUI({ quizId }) {
                 open={Boolean(anchorEl) && selectedCommentId === comment.commentId}
                 onClose={handleMenuClose}
               >
-                <MenuItem onClick={() => { handleCommentDelete(comment.commentId); handleMenuClose(); }}>삭제</MenuItem>
-                {/* 다른 메뉴 아이템을 여기에 추가할 수 있습니다. */}
+                <MenuItem onClick={() => { handleEditDialogOpen(comment.content); }}>수정하기</MenuItem>
+                <MenuItem onClick={() => { handleCommentDelete(comment.commentId); handleMenuClose(); }}>삭제하기</MenuItem>
               </Menu>
             </ListItem>
           ))}
         </List>
       )}
+
+      <Dialog open={openEditDialog} onClose={handleEditDialogClose}>
+        <DialogTitle>댓글 수정</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="editCommentContent"
+            type="text"
+            fullWidth
+            multiline
+            value={editCommentContent}
+            onChange={(e) => setEditCommentContent(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleEditDialogClose} color="primary">취소</Button>
+          <Button onClick={handleCommentEdit} color="primary">수정</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
