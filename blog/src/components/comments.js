@@ -13,7 +13,13 @@ function CommentUI({ quizId }) {
   const formatDate = (createdAt) => {
     const date = new Date(createdAt);
     const koreanDate = new Date(date.getTime() + (date.getTimezoneOffset() * 60000) + (9 * 3600000)); // 한국 시간으로 변환
-    return koreanDate.toLocaleString();
+    const year = koreanDate.getFullYear();
+    const month = String(koreanDate.getMonth() + 1).padStart(2, '0');
+    const day = String(koreanDate.getDate()).padStart(2, '0');
+    const hour = String(koreanDate.getHours()).padStart(2, '0');
+    const minute = String(koreanDate.getMinutes()).padStart(2, '0');
+    const second = String(koreanDate.getSeconds()).padStart(2, '0');
+    return `${year}. ${month}. ${day}. ${hour}:${minute}:${second}`;
   };
 
   const fetchComments = async () => {
