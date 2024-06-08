@@ -1,100 +1,147 @@
 import React, { useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Button, Container, Grid, TextField, Dialog, DialogTitle, DialogContent, DialogActions, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCategory, handleCategoryChange }) {
-    const [editedQuestion, setEditedQuestion] = useState(quiz?.content || '');
-    const [editedDescriptionA, setEditedDescriptionA] = useState(quiz && quiz.descriptionA ? quiz.descriptionA : '');
-    const [editedDescriptionB, setEditedDescriptionB] = useState(quiz && quiz.descriptionB ? quiz.descriptionB : '');
-    const [editedImageA, setEditedImageA] = useState(null); // 이미지 A 상태
-    const [editedImageB, setEditedImageB] = useState(null); // 이미지 B 상태
+function EditQuestionPage({ quizId }) {
+    const [question, setQuestion] = useState('');
+    const [descriptionA, setDescriptionA] = useState('');
+    const [descriptionB, setDescriptionB] = useState('');
+    const [imageA, setImageA] = useState(null);
+    const [imageB, setImageB] = useState(null);
+    const [selectedCategory, setSelectedCategory] = useState('');
+    const [openDialog, setOpenDialog] = useState(false);
 
-    const handleEditQuestion = async () => {
-        const editedQuiz = {
-            ...quiz,
-            content: editedQuestion,
-            descriptionA: editedDescriptionA,
-            descriptionB: editedDescriptionB,
-            category: selectedCategory // 수정된 카테고리 정보 추가
+    // 이미지 URL 상태 초기화
+    const [imageUrlA, setImageUrlA] = useState('');
+    const [imageUrlB, setImageUrlB] = useState('');
+
+    // 기존 퀴즈 데이터 불러오기
+    useEffect(() => {
+        const fetchQuizData = async () => {
+            try {
+                const response = await axios.get(`https://valanse.site/quiz/${quizId}`);
+                const { content, descriptionA, descriptionB, category } = response.data;
+                setQuestion(content);
+                setDescriptionA(descriptionA);
+                setDescriptionB(descriptionB);
+                setSelectedCategory(category);
+            } catch (error) {
+                console.error('Error fetching quiz data:', error.response ? error.response.data : error.message);
+            }
         };
 
+        fetchQuizData();
+    }, [quizId]);
+
+    const handleEdit = async () => {
+        const formData = new FormData();
+        const editedQuizData = {
+            content: question,
+            descriptionA,
+            descriptionB,
+            category: selectedCategory
+        };
+
+        formData.append('quizData', new Blob([JSON.stringify(editedQuizData)], { type: 'application/json' }));
+        if (imageA) formData.append('imageA', imageA);
+        if (imageB) formData.append('imageB', imageB);
+
         try {
-            // 이미지 파일도 FormData에 추가하지 않고, 객체를 직접 전송
-            await axios.patch(`https://valanse.site/quiz/${quiz.quizId}`, editedQuiz, {
+            const response = await axios.patch(`https://valanse.site/quiz/${quizId}/edit`, formData, {
                 headers: {
                     'Authorization': Cookies.get('access_token'),
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'multipart/form-data'
                 }
             });
-            handleEdit(editedQuiz);
-            handleClose();
+            console.log('Quiz edited successfully:', response.data);
+            setOpenDialog(true);
         } catch (error) {
             console.error('Error editing quiz:', error.response ? error.response.data : error.message);
         }
     };
 
-    const handleImageChange = (setImageFunc) => (e) => {
-        setImageFunc(e.target.files[0]);
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
     };
 
     return (
-        <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>퀴즈 수정</DialogTitle>
-            <DialogContent>
-                <TextField
-                    fullWidth
-                    label="퀴즈 제목"
-                    value={editedQuestion}
-                    onChange={(e) => setEditedQuestion(e.target.value)}
-                />
-                <TextField
-                    fullWidth
-                    label="왼쪽 설명"
-                    value={editedDescriptionA}
-                    onChange={(e) => setEditedDescriptionA(e.target.value)}
-                />
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange(setEditedImageA)}
-                />
-                <TextField
-                    fullWidth
-                    label="오른쪽 설명"
-                    value={editedDescriptionB}
-                    onChange={(e) => setEditedDescriptionB(e.target.value)}
-                />
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange(setEditedImageB)}
-                />
-
-                {/* 카테고리 선택 */}
-                <FormControl fullWidth style={{ backgroundColor: 'gray', marginBottom: '30px' }}>
-                    <InputLabel style={{ color: 'white' }}>카테고리 선택</InputLabel>
-                    <Select
-                        value={selectedCategory}
-                        onChange={handleCategoryChange}
-                        label="카테고리 선택"
-                    >
-                        <MenuItem value="축구">축구</MenuItem>
-                        <MenuItem value="음식">음식</MenuItem>
-                        <MenuItem value="연애">연애</MenuItem>
-                        <MenuItem value="노래">노래</MenuItem>
-                        <MenuItem value="생존">생존</MenuItem>
-                        <MenuItem value="드라마&영화">드라마&영화</MenuItem>
-                        <MenuItem value="일상">일상</MenuItem>
-                    </Select>
-                </FormControl>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={handleClose}>취소</Button>
-                <Button onClick={handleEditQuestion} variant="contained" color="primary">수정</Button>
-            </DialogActions>
-        </Dialog>
+        <Container>
+            <Grid container spacing={2}>
+                {/* 퀴즈 수정 폼 */}
+                <Grid item xs={12}>
+                    <TextField
+                        fullWidth
+                        label="퀴즈 제목"
+                        value={question}
+                        onChange={(e) => setQuestion(e.target.value)}
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                        fullWidth
+                        label="왼쪽 설명"
+                        value={descriptionA}
+                        onChange={(e) => setDescriptionA(e.target.value)}
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                        fullWidth
+                        label="오른쪽 설명"
+                        value={descriptionB}
+                        onChange={(e) => setDescriptionB(e.target.value)}
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    {/* 이미지 A 업로드 */}
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setImageA(e.target.files[0])}
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    {/* 이미지 B 업로드 */}
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setImageB(e.target.files[0])}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    {/* 카테고리 선택 */}
+                    <FormControl fullWidth>
+                        <InputLabel>카테고리 선택</InputLabel>
+                        <Select
+                            value={selectedCategory}
+                            onChange={(e) => setSelectedCategory(e.target.value)}
+                        >
+                            <MenuItem value="축구">축구</MenuItem>
+                            <MenuItem value="음식">음식</MenuItem>
+                            <MenuItem value="연애">연애</MenuItem>
+                            <MenuItem value="노래">노래</MenuItem>
+                            <MenuItem value="생존">생존</MenuItem>
+                            <MenuItem value="드라마&영화">드라마&영화</MenuItem>
+                            <MenuItem value="일상">일상</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                    {/* 수정 버튼 */}
+                    <Button variant="contained" color="primary" onClick={handleEdit}>수정</Button>
+                </Grid>
+            </Grid>
+            {/* 알림 다이얼로그 */}
+            <Dialog open={openDialog} onClose={handleCloseDialog}>
+                <DialogTitle>알림</DialogTitle>
+                <DialogContent>퀴즈가 수정되었습니다!</DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog} color="primary">확인</Button>
+                </DialogActions>
+            </Dialog>
+        </Container>
     );
 }
 
-export default EditQuestionDialog;
+export default EditQuestionPage;
