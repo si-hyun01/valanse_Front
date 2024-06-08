@@ -35,13 +35,13 @@ function CommentUI({ quizId }) {
   // Date 객체를 한국 시간대로 포맷팅하는 함수
   const formattedDate = (dateString) => {
     const date = new Date(dateString);
-    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
     let formattedDateString = date.toLocaleString('ko-KR', options); // 한국 시간대로 포맷팅
     const hour = date.getHours();
-    if (hour < 12) {
-      formattedDateString += ' 오전';
-    } else {
+    if (hour >= 12) {
       formattedDateString += ' 오후';
+    } else {
+      formattedDateString += ' 오전';
     }
     return formattedDateString;
   };
@@ -85,7 +85,7 @@ function CommentUI({ quizId }) {
           {comments.map((comment) => (
             <li key={comment.commentId}>
               <div id={`comment-${comment.commentId}`} name={`comment-${comment.commentId}`} style={{ color: 'white' }}>
-                <p>User ID: {comment.authorUserId}</p>
+                <p>닉네임: {comment.authorUserId}</p>
                 <p>{comment.content}</p>
                 <p>작성날짜: {comment.createdAt}</p>
               </div>
