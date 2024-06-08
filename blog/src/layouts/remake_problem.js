@@ -32,8 +32,8 @@ function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCateg
             formData.append('descriptionA', editedQuiz.descriptionA);
             formData.append('descriptionB', editedQuiz.descriptionB);
             formData.append('category', editedQuiz.category);
-            if (editedImageA) formData.append('imageA', editedImageA);
-            if (editedImageB) formData.append('imageB', editedImageB);
+            if (editedImageA) formData.append('image_A', editedImageA);
+            if (editedImageB) formData.append('image_B', editedImageB);
 
             await axios.patch(`https://valanse.site/quiz/${quiz.quizId}`, formData, {
                 headers: {
