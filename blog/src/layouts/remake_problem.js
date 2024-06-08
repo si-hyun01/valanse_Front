@@ -1,40 +1,36 @@
 import React, { useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, FormControl, InputLabel, Select, MenuItem, Grid, Card } from '@mui/material';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
 function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCategory, handleCategoryChange }) {
     const [editedQuestion, setEditedQuestion] = useState(quiz?.content || '');
-    const [editedOptionA, setEditedOptionA] = useState(quiz && quiz.optionA ? quiz.optionA : '');
-    const [editedOptionB, setEditedOptionB] = useState(quiz && quiz.optionB ? quiz.optionB : '');
-    const [editedDescriptionA, setEditedDescriptionA] = useState(quiz && quiz.descriptionA ? quiz.descriptionA : '');
-    const [editedDescriptionB, setEditedDescriptionB] = useState(quiz && quiz.descriptionB ? quiz.descriptionB : '');
-    const [editedImageA, setEditedImageA] = useState(null); // 이미지 A 상태
-    const [editedImageB, setEditedImageB] = useState(null); // 이미지 B 상태
+    const [editedOptionA, setEditedOptionA] = useState(quiz?.optionA || '');
+    const [editedOptionB, setEditedOptionB] = useState(quiz?.optionB || '');
+    const [editedDescriptionA, setEditedDescriptionA] = useState(quiz?.descriptionA || '');
+    const [editedDescriptionB, setEditedDescriptionB] = useState(quiz?.descriptionB || '');
+    const [editedImageA, setEditedImageA] = useState(null);
+    const [editedImageB, setEditedImageB] = useState(null);
 
     const handleEditQuestion = async () => {
-        const editedQuiz = {
-            quizRegisterDto: {
-                content: editedQuestion,
-                optionA: editedOptionA,
-                optionB: editedOptionB,
-                descriptionA: editedDescriptionA,
-                descriptionB: editedDescriptionB,
-                category: [selectedCategory]
-            },
-            image_A: editedImageA,
-            image_B: editedImageB
-        };
+        const formData = new FormData();
+        formData.append('content', editedQuestion);
+        formData.append('optionA', editedOptionA);
+        formData.append('optionB', editedOptionB);
+        formData.append('descriptionA', editedDescriptionA);
+        formData.append('descriptionB', editedDescriptionB);
+        formData.append('category', selectedCategory);
+        if (editedImageA) formData.append('image_A', editedImageA);
+        if (editedImageB) formData.append('image_B', editedImageB);
 
         try {
-            await axios.patch(`https://valanse.site/quiz/${quiz.quizId}`, editedQuiz, {
+            await axios.patch(`https://valanse.site/quiz/${quiz.quizId}`, formData, {
                 headers: {
                     'Authorization': Cookies.get('access_token'),
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'multipart/form-data'
                 }
             });
-            handleEdit(editedQuiz);
+            handleEdit();
             handleClose();
         } catch (error) {
             console.error('Error editing quiz:', error.response ? error.response.data : error.message);
@@ -42,12 +38,7 @@ function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCateg
     };
 
     const handleImageChange = (setImageFunc) => (e) => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setImageFunc(reader.result);
-        };
-        reader.readAsDataURL(file);
+        setImageFunc(e.target.files[0]);
     };
 
     return (
