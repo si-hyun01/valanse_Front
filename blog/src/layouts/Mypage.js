@@ -11,15 +11,16 @@ const MyPage = () => {
     const [selectedQuiz, setSelectedQuiz] = useState(null);
     const [editedContent, setEditedContent] = useState('');
 
+    const fetchQuizzes = async () => {
+        try {
+            const response = await axios.get('https://valanse.site/quiz/user');
+            setQuizzes(response.data.data);
+        } catch (error) {
+            console.error('Error fetching quizzes:', error);
+        }
+    };
+
     useEffect(() => {
-        const fetchQuizzes = async () => {
-            try {
-                const response = await axios.get('https://valanse.site/quiz/user');
-                setQuizzes(response.data.data);
-            } catch (error) {
-                console.error('Error fetching quizzes:', error);
-            }
-        };
         fetchQuizzes();
     }, []);
 
@@ -33,7 +34,6 @@ const MyPage = () => {
     };
 
     const handleEdit = (quiz) => {
-        // 수정하기 버튼 클릭 시 다이얼로그 열기
         setSelectedQuiz(quiz);
         setEditedContent(quiz.content);
         setEditDialogOpen(true);
@@ -45,10 +45,8 @@ const MyPage = () => {
                 content: editedContent,
                 // 나머지 수정할 항목 추가
             });
-            // 퀴즈 목록 다시 불러오기
-            fetchQuizzes();
-            // 다이얼로그 닫기
-            setEditDialogOpen(false);
+            fetchQuizzes(); // 수정 후 퀴즈 목록 다시 불러오기
+            setEditDialogOpen(false); // 다이얼로그 닫기
         } catch (error) {
             console.error('Error editing quiz:', error);
         }
