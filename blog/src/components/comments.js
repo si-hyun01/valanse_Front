@@ -113,8 +113,9 @@ function CommentUI({ quizId }) {
     setSelectedCommentId(null);
   };
 
-  const handleEditDialogOpen = (commentContent) => {
+  const handleEditDialogOpen = (commentId, commentContent) => {
     setEditCommentContent(commentContent);
+    setSelectedCommentId(commentId);  // Ensure commentId is set correctly here
     setOpenEditDialog(true);
     handleMenuClose();
   };
@@ -177,8 +178,8 @@ function CommentUI({ quizId }) {
                 open={Boolean(anchorEl) && selectedCommentId === comment.commentId}
                 onClose={handleMenuClose}
               >
-                <MenuItem onClick={() => { handleEditDialogOpen(comment.content); }}>수정하기</MenuItem>
-                <MenuItem onClick={() => { handleCommentDelete(comment.commentId); handleMenuClose(); }}>삭제하기</MenuItem>
+                <MenuItem onClick={() => handleEditDialogOpen(comment.commentId, comment.content)}>수정하기</MenuItem>
+                <MenuItem onClick={() => { handleCommentDelete(comment.commentId); handleMenuClose(); }}>삭제</MenuItem>
               </Menu>
             </ListItem>
           ))}
