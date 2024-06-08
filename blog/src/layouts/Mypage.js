@@ -32,9 +32,12 @@ const MyPage = () => {
     };
 
     const handleEdit = (quiz) => {
-        setSelectedQuiz(quiz);
-        setEditDialogOpen(true);
+        if (quiz) {
+            setSelectedQuiz(quiz);
+            setEditDialogOpen(true);
+        }
     };
+    
 
     const handleCloseEditDialog = () => {
         setEditDialogOpen(false);
