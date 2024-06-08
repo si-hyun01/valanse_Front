@@ -20,6 +20,7 @@ function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCateg
         formData.append('quizRegisterDto.descriptionA', editedDescriptionA);
         formData.append('quizRegisterDto.descriptionB', editedDescriptionB);
         formData.append('quizRegisterDto.category', selectedCategory);
+        // 이미지 파일 추가
         if (editedImageA) formData.append('image_A', editedImageA);
         if (editedImageB) formData.append('image_B', editedImageB);
 
