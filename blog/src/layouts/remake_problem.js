@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, FormControl, InputLabel, Select, MenuItem, Grid, Card } from '@mui/material';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
 function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCategory, handleCategoryChange }) {
     const [editedQuestion, setEditedQuestion] = useState(quiz?.content || '');
+    const [editedOptionA, setEditedOptionA] = useState(quiz && quiz.optionA ? quiz.optionA : '');
+    const [editedOptionB, setEditedOptionB] = useState(quiz && quiz.optionB ? quiz.optionB : '');
     const [editedDescriptionA, setEditedDescriptionA] = useState(quiz && quiz.descriptionA ? quiz.descriptionA : '');
     const [editedDescriptionB, setEditedDescriptionB] = useState(quiz && quiz.descriptionB ? quiz.descriptionB : '');
     const [editedImageA, setEditedImageA] = useState(null); // 이미지 A 상태
@@ -14,22 +17,15 @@ function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCateg
         const editedQuiz = {
             ...quiz,
             content: editedQuestion,
+
             descriptionA: editedDescriptionA,
-            descriptionB: editedDescriptionB,
-            category: selectedCategory // 수정된 카테고리 정보 추가
+            descriptionB: editedDescriptionB
         };
 
         try {
             // 이미지 파일도 FormData에 추가
             const formData = new FormData();
-            formData.append('quizRegisterDto', JSON.stringify({
-                content: editedQuestion,
-                optionA: editedDescriptionA,
-                optionB: editedDescriptionB,
-                descriptionA: editedDescriptionA,
-                descriptionB: editedDescriptionB,
-                category: selectedCategory
-            }));
+            formData.append('quiz', JSON.stringify(editedQuiz));
             if (editedImageA) formData.append('imageA', editedImageA);
             if (editedImageB) formData.append('imageB', editedImageB);
 
