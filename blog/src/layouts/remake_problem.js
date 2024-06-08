@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, FormControl, InputLabel, Select, MenuItem, Grid, Card } from '@mui/material';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -14,20 +15,23 @@ function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCateg
 
     const handleEditQuestion = async () => {
         const editedQuiz = {
-            quizRegisterDto: {
-                content: editedQuestion,
-                optionA: editedOptionA,
-                optionB: editedOptionB,
-                descriptionA: editedDescriptionA,
-                descriptionB: editedDescriptionB,
-                category: [selectedCategory]
-            }
+            content: editedQuestion,
+            optionA: editedOptionA,
+            optionB: editedOptionB,
+            descriptionA: editedDescriptionA,
+            descriptionB: editedDescriptionB,
+            category: selectedCategory
         };
 
         try {
             // 이미지 파일도 FormData에 추가
             const formData = new FormData();
-            formData.append('quiz', JSON.stringify(editedQuiz));
+            formData.append('content', editedQuiz.content);
+            formData.append('optionA', editedQuiz.optionA);
+            formData.append('optionB', editedQuiz.optionB);
+            formData.append('descriptionA', editedQuiz.descriptionA);
+            formData.append('descriptionB', editedQuiz.descriptionB);
+            formData.append('category', editedQuiz.category);
             if (editedImageA) formData.append('imageA', editedImageA);
             if (editedImageB) formData.append('imageB', editedImageB);
 
