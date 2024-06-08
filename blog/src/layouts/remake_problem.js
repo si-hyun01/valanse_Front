@@ -13,14 +13,17 @@ function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCateg
     const [editedImageB, setEditedImageB] = useState(null); // 이미지 B 상태
 
     const handleEditQuestion = async () => {
+        const quizRegisterDto = {
+            content: editedQuestion,
+            optionA: editedOptionA,
+            optionB: editedOptionB,
+            descriptionA: editedDescriptionA,
+            descriptionB: editedDescriptionB,
+            category: selectedCategory
+        };
+
         const formData = new FormData();
-        formData.append('quizRegisterDto.content', editedQuestion);
-        formData.append('quizRegisterDto.optionA', editedOptionA);
-        formData.append('quizRegisterDto.optionB', editedOptionB);
-        formData.append('quizRegisterDto.descriptionA', editedDescriptionA);
-        formData.append('quizRegisterDto.descriptionB', editedDescriptionB);
-        formData.append('quizRegisterDto.category', selectedCategory);
-        // 이미지 파일 추가
+        formData.append('quizRegisterDto', new Blob([JSON.stringify(quizRegisterDto)], { type: "application/json" }));
         if (editedImageA) formData.append('image_A', editedImageA);
         if (editedImageB) formData.append('image_B', editedImageB);
 
