@@ -70,9 +70,16 @@ function CommentUI({ quizId }) {
   return (
     <div>
       <h2 style={{ color: 'white' }}>댓글</h2>
-      <div>
-        <textarea id="commentContent" name="commentContent" value={newCommentContent} onChange={(e) => setNewCommentContent(e.target.value)} />
-        <button onClick={handleCommentSubmit}>댓글 등록</button>
+      <div style={{ marginBottom: '20px' }}>
+        <textarea
+          id="commentContent"
+          name="commentContent"
+          placeholder="댓글을 입력하세요"
+          value={newCommentContent}
+          onChange={(e) => setNewCommentContent(e.target.value)}
+          style={{ width: '100%', height: '100px', color: 'white', backgroundColor: 'transparent', border: 'none', borderBottom: '1px solid white' }}
+        />
+        <button onClick={handleCommentSubmit} style={{ marginTop: '10px' }}>댓글 등록</button>
       </div>
       {loading ? (
         <div>Loading...</div>
