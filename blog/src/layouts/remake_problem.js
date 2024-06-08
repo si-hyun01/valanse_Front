@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, FormControl, InputLabel, Select, MenuItem, Grid, Card } from '@mui/material';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
 function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCategory, handleCategoryChange }) {
     const [editedQuestion, setEditedQuestion] = useState(quiz?.content || '');
-    const [editedOptionA, setEditedOptionA] = useState(quiz && quiz.optionA ? quiz.optionA : '');
-    const [editedOptionB, setEditedOptionB] = useState(quiz && quiz.optionB ? quiz.optionB : '');
     const [editedDescriptionA, setEditedDescriptionA] = useState(quiz && quiz.descriptionA ? quiz.descriptionA : '');
     const [editedDescriptionB, setEditedDescriptionB] = useState(quiz && quiz.descriptionB ? quiz.descriptionB : '');
     const [editedImageA, setEditedImageA] = useState(null); // 이미지 A 상태
@@ -18,7 +15,8 @@ function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCateg
             ...quiz,
             content: editedQuestion,
             descriptionA: editedDescriptionA,
-            descriptionB: editedDescriptionB
+            descriptionB: editedDescriptionB,
+            category: selectedCategory // 수정된 카테고리 정보 추가
         };
 
         try {
