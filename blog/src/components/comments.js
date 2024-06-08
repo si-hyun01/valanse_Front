@@ -64,7 +64,7 @@ function CommentUI({ quizId }) {
         <ul>
           {comments.map((comment) => (
             <li key={comment.commentId}>
-              <div>{comment.content}</div>
+              <div style={{ color: 'white' }}>{comment.content}</div>
               <button onClick={() => handleCommentDelete(comment.commentId)}>삭제</button>
             </li>
           ))}
