@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function CommentUI({ quizId }) {
-  const [comments, setComments] = useState([]); // 배열로 초기화
+  const [comments, setComments] = useState([]);
   const [newCommentContent, setNewCommentContent] = useState('');
   const [loading, setLoading] = useState(true);
 
@@ -13,21 +13,16 @@ function CommentUI({ quizId }) {
   const fetchComments = async () => {
     try {
       const response = await axios.get(`https://valanse.site/comment/${quizId}/quiz`);
-      setComments(response.data.data); // 수정: response.data.data로 변경
+      const commentsData = response.data.data;
+      const commentsContent = await Promise.all(commentsData.map(async (comment) => {
+        const commentContentResponse = await axios.get(`https://valanse.site/comment/${comment.commentId}`);
+        return commentContentResponse.data;
+      }));
+      setComments(commentsContent);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching comments:', error);
       setLoading(false);
-    }
-  };
-
-  const fetchCommentContent = async (commentId) => {
-    try {
-      const response = await axios.get(`https://valanse.site/comment/${commentId}`);
-      return response.data; // 댓글 내용 반환
-    } catch (error) {
-      console.error('Error fetching comment content:', error);
-      return null;
     }
   };
 
@@ -38,7 +33,7 @@ function CommentUI({ quizId }) {
         quizId: quizId,
       });
       setNewCommentContent('');
-      fetchComments(); // 댓글 등록 후에 새로운 댓글 목록을 다시 가져옴
+      fetchComments();
     } catch (error) {
       console.error('Error submitting comment:', error);
     }
@@ -47,7 +42,8 @@ function CommentUI({ quizId }) {
   const handleCommentDelete = async (commentId) => {
     try {
       await axios.delete(`https://valanse.site/comment/${commentId}`);
-      setComments(comments.filter(comment => comment.commentId !== commentId)); // 수정: filter로 변경
+      const updatedComments = comments.filter(comment => comment.commentId !== commentId);
+      setComments(updatedComments);
     } catch (error) {
       console.error('Error deleting comment:', error);
     }
@@ -66,15 +62,12 @@ function CommentUI({ quizId }) {
         <div style={{ color: 'white' }}>아직 작성된 댓글이 없습니다.</div>
       ) : (
         <ul>
-          {comments.map(async (comment) => { // 수정: comments.map 사용
-            const commentContent = await fetchCommentContent(comment.commentId); // 수정: comment.commentId로 변경
-            return (
-              <li key={comment.commentId}>
-                <div>{commentContent}</div>
-                <button onClick={() => handleCommentDelete(comment.commentId)}>삭제</button>
-              </li>
-            );
-          })}
+          {comments.map((comment) => (
+            <li key={comment.commentId}>
+              <div>{comment.content}</div>
+              <button onClick={() => handleCommentDelete(comment.commentId)}>삭제</button>
+            </li>
+          ))}
         </ul>
       )}
     </div>
