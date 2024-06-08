@@ -3,41 +3,42 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, F
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCategory, handleCategoryChange }) {
-    const [editedQuestion, setEditedQuestion] = useState(quiz?.content || '');
-    const [editedOptionA, setEditedOptionA] = useState(quiz && quiz.optionA ? quiz.optionA : '');
-    const [editedOptionB, setEditedOptionB] = useState(quiz && quiz.optionB ? quiz.optionB : '');
-    const [editedDescriptionA, setEditedDescriptionA] = useState(quiz && quiz.descriptionA ? quiz.descriptionA : '');
-    const [editedDescriptionB, setEditedDescriptionB] = useState(quiz && quiz.descriptionB ? quiz.descriptionB : '');
-    const [editedImageA, setEditedImageA] = useState(null); // 이미지 A 상태
-    const [editedImageB, setEditedImageB] = useState(null); // 이미지 B 상태
+function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, selectedCategory, handleCategoryChange }) {
+    const [question, setQuestion] = useState(quiz?.content || '');
+    const [optionA, setOptionA] = useState(quiz && quiz.optionA ? quiz.optionA : '');
+    const [optionB, setOptionB] = useState(quiz && quiz.optionB ? quiz.optionB : '');
+    const [descriptionA, setDescriptionA] = useState(quiz && quiz.descriptionA ? quiz.descriptionA : '');
+    const [descriptionB, setDescriptionB] = useState(quiz && quiz.descriptionB ? quiz.descriptionB : '');
+    const [imageA, setImageA] = useState(null);
+    const [imageB, setImageB] = useState(null);
 
-    const handleEditQuestion = async () => {
+    const handleCreateQuestion = async () => {
         const quizRegisterDto = {
-            content: editedQuestion,
-            optionA: editedOptionA,
-            optionB: editedOptionB,
-            descriptionA: editedDescriptionA,
-            descriptionB: editedDescriptionB,
+            content: question,
+            optionA: optionA,
+            optionB: optionB,
+            descriptionA: descriptionA,
+            descriptionB: descriptionB,
             category: selectedCategory
         };
 
         const formData = new FormData();
-        formData.append('quizRegisterDto', new Blob([JSON.stringify(quizRegisterDto)], { type: "application/json" }));
-        if (editedImageA) formData.append('image_A', editedImageA);
-        if (editedImageB) formData.append('image_B', editedImageB);
+        formData.append('quizRegisterDto', new Blob([JSON.stringify(quizRegisterDto)], { type: 'application/json' }));
+        if (imageA) formData.append('image_A', imageA);
+        if (imageB) formData.append('image_B', imageB);
 
         try {
-            await axios.patch(`https://valanse.site/quiz/${quiz.quizId}`, formData, {
+            const response = await axios.patch(`https://valanse.site/quiz/${quiz.quizId}`, formData, {
                 headers: {
                     'Authorization': Cookies.get('access_token'),
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            handleEdit();
+            console.log('Quiz updated successfully:', response.data);
+            handleCreate();
             handleClose();
         } catch (error) {
-            console.error('Error editing quiz:', error.response ? error.response.data : error.message);
+            console.error('Error updating quiz:', error.response ? error.response.data : error.message);
         }
     };
 
@@ -52,30 +53,30 @@ function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCateg
                 <TextField
                     fullWidth
                     label="퀴즈 제목"
-                    value={editedQuestion}
-                    onChange={(e) => setEditedQuestion(e.target.value)}
+                    value={question}
+                    onChange={(e) => setQuestion(e.target.value)}
                 />
                 <TextField
                     fullWidth
                     label="왼쪽 설명"
-                    value={editedDescriptionA}
-                    onChange={(e) => setEditedDescriptionA(e.target.value)}
+                    value={descriptionA}
+                    onChange={(e) => setDescriptionA(e.target.value)}
                 />
                 <input
                     type="file"
                     accept="image/*"
-                    onChange={handleImageChange(setEditedImageA)}
+                    onChange={handleImageChange(setImageA)}
                 />
                 <TextField
                     fullWidth
                     label="오른쪽 설명"
-                    value={editedDescriptionB}
-                    onChange={(e) => setEditedDescriptionB(e.target.value)}
+                    value={descriptionB}
+                    onChange={(e) => setDescriptionB(e.target.value)}
                 />
                 <input
                     type="file"
                     accept="image/*"
-                    onChange={handleImageChange(setEditedImageB)}
+                    onChange={handleImageChange(setImageB)}
                 />
 
                 {/* 카테고리 선택 */}
@@ -98,10 +99,10 @@ function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCateg
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>취소</Button>
-                <Button onClick={handleEditQuestion} variant="contained" color="primary">수정</Button>
+                <Button onClick={handleCreateQuestion} variant="contained" color="primary">수정</Button>
             </DialogActions>
         </Dialog>
     );
 }
 
-export default EditQuestionDialog;
+export default CreateQuestionDialog;
