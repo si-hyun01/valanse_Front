@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
 function EditQuestionDialog({ open, handleClose, quiz, handleEdit }) {
-    const [editedQuestion, setEditedQuestion] = useState(quiz ? quiz.content : '');
-    const [editedOptionA, setEditedOptionA] = useState(quiz.optionA);
-    const [editedOptionB, setEditedOptionB] = useState(quiz.optionB);
-    const [editedDescriptionA, setEditedDescriptionA] = useState(quiz.descriptionA);
-    const [editedDescriptionB, setEditedDescriptionB] = useState(quiz.descriptionB);
+    const [editedQuestion, setEditedQuestion] = useState(quiz?.content || '');
+    const [editedOptionA, setEditedOptionA] = useState(quiz && quiz.optionA ? quiz.optionA : '');
+    const [editedOptionB, setEditedOptionB] = useState(quiz && quiz.optionB ? quiz.optionB : '');
+    const [editedDescriptionA, setEditedDescriptionA] = useState(quiz && quiz.descriptionA ? quiz.descriptionA : '');
+    const [editedDescriptionB, setEditedDescriptionB] = useState(quiz && quiz.descriptionB ? quiz.descriptionB : '');
 
     const handleEditQuestion = async () => {
         const editedQuiz = {
