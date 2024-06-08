@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, FormControl, InputLabel, Select, MenuItem, Grid, Card } from '@mui/material';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -42,6 +43,10 @@ function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCateg
         }
     };
 
+    const handleImageChange = (setImageFunc) => (e) => {
+        setImageFunc(e.target.files[0]);
+    };
+
     return (
         <Dialog open={open} onClose={handleClose}>
             <DialogTitle>퀴즈 수정</DialogTitle>
@@ -54,37 +59,25 @@ function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCateg
                 />
                 <TextField
                     fullWidth
-                    label="옵션 A"
-                    value={editedOptionA}
-                    onChange={(e) => setEditedOptionA(e.target.value)}
-                />
-                <TextField
-                    fullWidth
-                    label="옵션 A 설명"
+                    label="왼쪽 설명"
                     value={editedDescriptionA}
                     onChange={(e) => setEditedDescriptionA(e.target.value)}
                 />
                 <input
                     type="file"
                     accept="image/*"
-                    onChange={(e) => setEditedImageA(e.target.files[0])}
+                    onChange={handleImageChange(setEditedImageA)}
                 />
                 <TextField
                     fullWidth
-                    label="옵션 B"
-                    value={editedOptionB}
-                    onChange={(e) => setEditedOptionB(e.target.value)}
-                />
-                <TextField
-                    fullWidth
-                    label="옵션 B 설명"
+                    label="오른쪽 설명"
                     value={editedDescriptionB}
                     onChange={(e) => setEditedDescriptionB(e.target.value)}
                 />
                 <input
                     type="file"
                     accept="image/*"
-                    onChange={(e) => setEditedImageB(e.target.files[0])}
+                    onChange={handleImageChange(setEditedImageB)}
                 />
 
                 {/* 카테고리 선택 */}
