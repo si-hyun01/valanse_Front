@@ -15,26 +15,23 @@ function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCateg
 
     const handleEditQuestion = async () => {
         const editedQuiz = {
-            content: editedQuestion,
-            optionA: editedOptionA,
-            optionB: editedOptionB,
-            descriptionA: editedDescriptionA,
-            descriptionB: editedDescriptionB,
-            category: selectedCategory
+            quizRegisterDto: {
+                content: editedQuestion,
+                optionA: editedOptionA,
+                optionB: editedOptionB,
+                descriptionA: editedDescriptionA,
+                descriptionB: editedDescriptionB,
+                category: [selectedCategory]
+            },
+            image_A: editedImageA,
+            image_B: editedImageB
         };
 
         try {
-            const formData = new FormData();
-            Object.entries(editedQuiz).forEach(([key, value]) => {
-                formData.append(key, value);
-            });
-            if (editedImageA) formData.append('image_A', editedImageA);
-            if (editedImageB) formData.append('image_B', editedImageB);
-
-            await axios.patch(`https://valanse.site/quiz/${quiz.quizId}`, formData, {
+            await axios.patch(`https://valanse.site/quiz/${quiz.quizId}`, editedQuiz, {
                 headers: {
                     'Authorization': Cookies.get('access_token'),
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'application/json'
                 }
             });
             handleEdit(editedQuiz);
@@ -45,7 +42,12 @@ function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCateg
     };
 
     const handleImageChange = (setImageFunc) => (e) => {
-        setImageFunc(e.target.files[0]);
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setImageFunc(reader.result);
+        };
+        reader.readAsDataURL(file);
     };
 
     return (
