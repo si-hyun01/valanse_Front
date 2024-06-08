@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Accordion, AccordionDetails, AccordionSummary, Typography, Table, TableContainer, TableHead, TableRow, TableCell, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Header from './Header';
+import EditQuestionDialog from './remake_problem'; 
 
 const MyPage = () => {
     const [quizzes, setQuizzes] = useState([]);
@@ -129,29 +130,13 @@ const MyPage = () => {
                     </AccordionDetails>
                 </Accordion>
             </div>
-            <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-                <DialogTitle>퀴즈 수정</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="content"
-                        label="퀴즈 내용"
-                        type="text"
-                        fullWidth
-                        value={updatedContent}
-                        onChange={(e) => setUpdatedContent(e.target.value)}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleUpdate} color="primary">
-                        수정하기
-                    </Button>
-                    <Button onClick={() => setOpenDialog(false)} color="secondary">
-                        취소
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            {/* 수정 다이얼로그 */}
+            <EditQuestionDialog
+                open={openDialog}
+                handleClose={() => setOpenDialog(false)}
+                quiz={selectedQuiz}
+                handleEdit={handleUpdate}
+            />
         </>
     );
 };
