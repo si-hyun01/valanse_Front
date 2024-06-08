@@ -17,8 +17,6 @@ function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCateg
         const editedQuiz = {
             ...quiz,
             content: editedQuestion,
-            optionA: editedOptionA,
-            optionB: editedOptionB,
             descriptionA: editedDescriptionA,
             descriptionB: editedDescriptionB
         };
