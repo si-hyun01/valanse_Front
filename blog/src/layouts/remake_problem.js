@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Dialog, DialogTitle, DialogContent, DialogActions, FormControl, InputLabel, Select, MenuItem, Button } from '@mui/material';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -11,6 +11,23 @@ function EditQuestionPage({ quizId }) {
     const [imageB, setImageB] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
     const [openDialog, setOpenDialog] = useState(false);
+
+    useEffect(() => {
+        const fetchQuizData = async () => {
+            try {
+                const response = await axios.get(`https://valanse.site/quiz/${quizId}`);
+                const { content, descriptionA, descriptionB, category } = response.data;
+                setQuestion(content);
+                setDescriptionA(descriptionA);
+                setDescriptionB(descriptionB);
+                setSelectedCategory(category);
+            } catch (error) {
+                console.error('Error fetching quiz data:', error.response ? error.response.data : error.message);
+            }
+        };
+
+        fetchQuizData();
+    }, [quizId]);
 
     const handleEdit = async () => {
         const editedQuizData = {
