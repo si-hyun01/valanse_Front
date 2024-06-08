@@ -117,7 +117,7 @@ function CommentUI({ quizId }) {
 
   const handleEditDialogOpen = (commentId, commentContent) => {
     setEditCommentContent(commentContent);
-    setSelectedCommentId(commentId); // Ensure commentId is set correctly here
+    setSelectedCommentId(commentId); 
     setOpenEditDialog(true);
   };
 
