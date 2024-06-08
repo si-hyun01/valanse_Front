@@ -20,14 +20,38 @@ function ProblemUI({ categoryName }) {
     fetchQuizData(categoryName);
   }, [categoryName]);
 
-  const fetchAllQuizData = async (quizIds) => {
+  const fetchQuizData = async (category) => {
+    try {
+      const response = await axios.get('https://valanse.site/quiz/all', {
+        headers: {
+          'accept': 'application/json;charset=UTF-8',
+        },
+      });
+      const data = response.data.data;
+      if (!data || data.length === 0) {
+        setShowNoProblemDialog(true);
+        return;
+      }
+      const filteredData = data.filter((quiz) => quiz.category === category);
+      if (filteredData.length === 0) {
+        setShowNoProblemDialog(true);
+        return;
+      }
+      const quizDataArray = await fetchAllQuizData(filteredData);
+      setQuizDataList(quizDataArray);
+    } catch (error) {
+      console.error('Error fetching quiz data:', error.message);
+      setShowNoProblemDialog(true);
+    }
+  };
+
+  const fetchAllQuizData = async (quizzes) => {
     try {
       const quizDataArray = await Promise.all(
-        quizIds.map(async (quizId) => {
-          const quizResponse = await axios.get(`https://valanse.site/quiz/${quizId}`);
-          const likeStatsResponse = await axios.get(`https://valanse.site/quiz/${quizId}/like-stats`);
+        quizzes.map(async (quiz) => {
+          const likeStatsResponse = await axios.get(`https://valanse.site/quiz/${quiz.quizId}/like-stats`);
           return {
-            ...quizResponse.data.data,
+            ...quiz,
             likes: likeStatsResponse.data.data.likeCount,
             dislikes: likeStatsResponse.data.data.unlikeCount,
           };
@@ -37,25 +61,6 @@ function ProblemUI({ categoryName }) {
     } catch (error) {
       console.error('Error fetching quiz data:', error.message);
       return [];
-    }
-  };
-
-  const fetchQuizData = async (category) => {
-    try {
-      const response = await axios.get(
-        `https://valanse.site/quiz-category/search?keyword=${encodeURIComponent(category)}`
-      );
-      const data = response.data.data;
-      if (!data || data.length === 0) {
-        setShowNoProblemDialog(true);
-        return;
-      }
-      const quizIds = data.map((quiz) => quiz.quizId);
-      const quizDataArray = await fetchAllQuizData(quizIds);
-      setQuizDataList(quizDataArray);
-    } catch (error) {
-      console.error('Error fetching quiz data:', error.message);
-      setShowNoProblemDialog(true);
     }
   };
 
