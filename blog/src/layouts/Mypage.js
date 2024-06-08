@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import { Accordion, AccordionDetails, AccordionSummary, Typography, Table, TableContainer, TableHead, TableRow, TableCell, Button } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Typography, Table, TableContainer, TableHead, TableRow, TableCell, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Header from './Header';
-import EditQuestionDialog from './remake_problem';
 
 const MyPage = () => {
     const [quizzes, setQuizzes] = useState([]);
-    const [editDialogOpen, setEditDialogOpen] = useState(false); // 수정 다이얼로그 상태
-    const [selectedQuiz, setSelectedQuiz] = useState(null); // 선택된 퀴즈 상태
+    const [selectedQuiz, setSelectedQuiz] = useState(null);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [updatedContent, setUpdatedContent] = useState("");
 
     useEffect(() => {
         const fetchQuizzes = async () => {
@@ -32,23 +32,32 @@ const MyPage = () => {
     };
 
     const handleEdit = (quiz) => {
-        // 수정하기 버튼 클릭 시 수행할 작업
-        setSelectedQuiz(quiz); // 선택된 퀴즈 설정
-        setEditDialogOpen(true); // 수정 다이얼로그 열기
+        setSelectedQuiz(quiz);
+        setOpenDialog(true);
     };
 
-    // 수정 다이얼로그 닫기 핸들러
-    const handleCloseEditDialog = () => {
-        setEditDialogOpen(false);
-    };
-
-    // 수정한 퀴즈 정보로 상태 업데이트하는 핸들러
-    const handleUpdateQuiz = (updatedQuiz) => {
-        // 퀴즈 목록에서 수정된 퀴즈를 찾아 업데이트
-        const updatedQuizzes = quizzes.map(quiz =>
-            quiz.quizId === updatedQuiz.quizId ? updatedQuiz : quiz
-        );
-        setQuizzes(updatedQuizzes);
+    const handleUpdate = async () => {
+        try {
+            await axios.patch(`https://valanse.site/quiz/${selectedQuiz.quizId}`, {
+                quizRegisterDto: {
+                    content: updatedContent,
+                    optionA: selectedQuiz.optionA,
+                    optionB: selectedQuiz.optionB,
+                    descriptionA: selectedQuiz.descriptionA,
+                    descriptionB: selectedQuiz.descriptionB,
+                    category: selectedQuiz.category
+                },
+                image_A: selectedQuiz.imageA,
+                image_B: selectedQuiz.imageB
+            });
+            setOpenDialog(false);
+            // Update quizzes state to reflect changes
+            setQuizzes(quizzes.map(quiz => quiz.quizId === selectedQuiz.quizId ? { ...quiz, content: updatedContent } : quiz));
+            // Reset updated content
+            setUpdatedContent("");
+        } catch (error) {
+            console.error('Error updating quiz:', error);
+        }
     };
 
     return (
@@ -99,7 +108,7 @@ const MyPage = () => {
                                                 <Button
                                                     variant="contained"
                                                     color="primary"
-                                                    onClick={() => handleEdit(quiz)} // 수정하기 핸들러에 선택된 퀴즈 전달
+                                                    onClick={() => handleEdit(quiz)}
                                                     style={{ marginRight: '8px' }}
                                                 >
                                                     수정하기
@@ -119,18 +128,32 @@ const MyPage = () => {
                         </TableContainer>
                     </AccordionDetails>
                 </Accordion>
-                {/* 수정 다이얼로그 */}
-                <EditQuestionDialog
-                    open={editDialogOpen}
-                    handleClose={handleCloseEditDialog}
-                    quiz={selectedQuiz}
-                    onUpdate={handleUpdate
-                    }
+            </div>
+            <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+                <DialogTitle>퀴즈 수정</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="content"
+                        label="퀴즈 내용"
+                        type="text"
+                        fullWidth
+                        value={updatedContent}
+                        onChange={(e) => setUpdatedContent(e.target.value)}
                     />
-                </div>
-            </>
-        );
-    };
-    
-    export default MyPage;
-    
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleUpdate} color="primary">
+                        수정하기
+                    </Button>
+                    <Button onClick={() => setOpenDialog(false)} color="secondary">
+                        취소
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </>
+    );
+};
+
+export default MyPage;
