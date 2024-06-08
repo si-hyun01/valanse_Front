@@ -13,17 +13,13 @@ function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCateg
     const [editedImageB, setEditedImageB] = useState(null); // 이미지 B 상태
 
     const handleEditQuestion = async () => {
-        const quizRegisterDto = {
-            content: editedQuestion,
-            optionA: editedOptionA,
-            optionB: editedOptionB,
-            descriptionA: editedDescriptionA,
-            descriptionB: editedDescriptionB,
-            category: selectedCategory
-        };
-
         const formData = new FormData();
-        formData.append('quizRegisterDto', new Blob([JSON.stringify(quizRegisterDto)], { type: "application/json" }));
+        formData.append('quizRegisterDto.content', editedQuestion);
+        formData.append('quizRegisterDto.optionA', editedOptionA);
+        formData.append('quizRegisterDto.optionB', editedOptionB);
+        formData.append('quizRegisterDto.descriptionA', editedDescriptionA);
+        formData.append('quizRegisterDto.descriptionB', editedDescriptionB);
+        formData.append('quizRegisterDto.category', selectedCategory);
         if (editedImageA) formData.append('image_A', editedImageA);
         if (editedImageB) formData.append('image_B', editedImageB);
 
@@ -31,7 +27,7 @@ function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCateg
             await axios.patch(`https://valanse.site/quiz/${quiz.quizId}`, formData, {
                 headers: {
                     'Authorization': Cookies.get('access_token'),
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'multipart/form-data' // content-type을 multipart/form-data로 설정
                 }
             });
             handleEdit();
