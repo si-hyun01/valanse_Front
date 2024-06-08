@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, FormControl, InputLabel, Select, MenuItem, Grid, Card } from '@mui/material';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -15,11 +14,14 @@ function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCateg
 
     const handleEditQuestion = async () => {
         const editedQuiz = {
-            ...quiz,
-            content: editedQuestion,
-
-            descriptionA: editedDescriptionA,
-            descriptionB: editedDescriptionB
+            quizRegisterDto: {
+                content: editedQuestion,
+                optionA: editedOptionA,
+                optionB: editedOptionB,
+                descriptionA: editedDescriptionA,
+                descriptionB: editedDescriptionB,
+                category: [selectedCategory]
+            }
         };
 
         try {
