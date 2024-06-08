@@ -53,7 +53,7 @@ function CommentUI({ quizId }) {
     <div>
       <h2 style={{ color: 'white' }}>댓글</h2>
       <div>
-        <textarea value={newCommentContent} onChange={(e) => setNewCommentContent(e.target.value)} />
+        <textarea id="commentContent" name="commentContent" value={newCommentContent} onChange={(e) => setNewCommentContent(e.target.value)} />
         <button onClick={handleCommentSubmit}>댓글 등록</button>
       </div>
       {loading ? (
@@ -64,7 +64,7 @@ function CommentUI({ quizId }) {
         <ul>
           {comments.map((comment) => (
             <li key={comment.commentId}>
-              <div style={{ color: 'white' }}>{comment.content}</div>
+              <div id={`comment-${comment.commentId}`} name={`comment-${comment.commentId}`} style={{ color: 'white' }}>{comment.content}</div>
               <button onClick={() => handleCommentDelete(comment.commentId)}>삭제</button>
             </li>
           ))}
