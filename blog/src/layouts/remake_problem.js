@@ -4,7 +4,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 function EditQuestionDialog({ open, handleClose, quiz, handleEdit }) {
-    const [editedQuestion, setEditedQuestion] = useState(quiz.content);
+    const [editedQuestion, setEditedQuestion] = useState(quiz ? quiz.content : '');
     const [editedOptionA, setEditedOptionA] = useState(quiz.optionA);
     const [editedOptionB, setEditedOptionB] = useState(quiz.optionB);
     const [editedDescriptionA, setEditedDescriptionA] = useState(quiz.descriptionA);
