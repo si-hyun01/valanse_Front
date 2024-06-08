@@ -21,7 +21,7 @@ function CommentUI({ quizId }) {
           commentId: commentData.commentId,
           authorUserId: commentData.authorUserId,
           content: commentData.content,
-          createdAt: commentData.createdAt
+          createdAt: formattedDate(commentData.createdAt) // 날짜 포맷팅 추가
         };
       }));
       setComments(commentsContent);
@@ -30,6 +30,13 @@ function CommentUI({ quizId }) {
       console.error('Error fetching comments:', error);
       setLoading(false);
     }
+  };
+
+  // Date 객체를 한국 시간대로 포맷팅하는 함수
+  const formattedDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
+    return date.toLocaleString('ko-KR', options); // 한국 시간대로 포맷팅
   };
 
   const handleCommentSubmit = async () => {
