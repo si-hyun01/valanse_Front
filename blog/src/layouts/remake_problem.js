@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import ImageUpload from './ImageUpload'; // 이미지 업로드 컴포넌트 import
 
 function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCategory, handleCategoryChange }) {
     const [editedQuestion, setEditedQuestion] = useState(quiz?.content || '');
@@ -65,7 +64,11 @@ function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCateg
                     value={editedDescriptionA}
                     onChange={(e) => setEditedDescriptionA(e.target.value)}
                 />
-                <ImageUpload setImage={setEditedImageA} />
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setEditedImageA(e.target.files[0])}
+                />
                 <TextField
                     fullWidth
                     label="옵션 B"
@@ -78,7 +81,11 @@ function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCateg
                     value={editedDescriptionB}
                     onChange={(e) => setEditedDescriptionB(e.target.value)}
                 />
-                <ImageUpload setImage={setEditedImageB} />
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setEditedImageB(e.target.files[0])}
+                />
 
                 {/* 카테고리 선택 */}
                 <FormControl fullWidth style={{ backgroundColor: 'gray', marginBottom: '30px' }}>
