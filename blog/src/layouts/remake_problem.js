@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Container, Grid, TextField, Dialog, DialogTitle, DialogContent, DialogActions, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -45,75 +45,56 @@ function EditQuestionPage({ quizId }) {
     };
 
     return (
-        <Container>
-            <Grid container spacing={2}>
-                <Grid item xs={12}>
-                    <TextField
-                        fullWidth
-                        label="퀴즈 제목"
+        <Dialog open={openDialog} onClose={handleCloseDialog}>
+            <DialogTitle>퀴즈 수정</DialogTitle>
+            <DialogContent>
+                <FormControl fullWidth>
+                    <InputLabel>퀴즈 제목</InputLabel>
+                    <Select
                         value={question}
                         onChange={(e) => setQuestion(e.target.value)}
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <TextField
-                        fullWidth
-                        label="왼쪽 설명"
+                    >
+                        <MenuItem value="퀴즈 제목">{question}</MenuItem>
+                    </Select>
+                </FormControl>
+                <FormControl fullWidth>
+                    <InputLabel>왼쪽 설명</InputLabel>
+                    <Select
                         value={descriptionA}
                         onChange={(e) => setDescriptionA(e.target.value)}
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <TextField
-                        fullWidth
-                        label="오른쪽 설명"
+                    >
+                        <MenuItem value="왼쪽 설명">{descriptionA}</MenuItem>
+                    </Select>
+                </FormControl>
+                <FormControl fullWidth>
+                    <InputLabel>오른쪽 설명</InputLabel>
+                    <Select
                         value={descriptionB}
                         onChange={(e) => setDescriptionB(e.target.value)}
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => setImageA(e.target.value)}
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => setImageB(e.target.value)}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <FormControl fullWidth>
-                        <InputLabel>카테고리 선택</InputLabel>
-                        <Select
-                            value={selectedCategory}
-                            onChange={(e) => setSelectedCategory(e.target.value)}
-                        >
-                            <MenuItem value="축구">축구</MenuItem>
-                            <MenuItem value="음식">음식</MenuItem>
-                            <MenuItem value="연애">연애</MenuItem>
-                            <MenuItem value="노래">노래</MenuItem>
-                            <MenuItem value="생존">생존</MenuItem>
-                            <MenuItem value="드라마&영화">드라마&영화</MenuItem>
-                            <MenuItem value="일상">일상</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={12}>
-                    <Button variant="contained" color="primary" onClick={handleEdit}>수정</Button>
-                </Grid>
-            </Grid>
-            <Dialog open={openDialog} onClose={handleCloseDialog}>
-                <DialogTitle>알림</DialogTitle>
-                <DialogContent>퀴즈가 수정되었습니다!</DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseDialog} color="primary">확인</Button>
-                </DialogActions>
-            </Dialog>
-        </Container>
+                    >
+                        <MenuItem value="오른쪽 설명">{descriptionB}</MenuItem>
+                    </Select>
+                </FormControl>
+                <FormControl fullWidth>
+                    <InputLabel>카테고리 선택</InputLabel>
+                    <Select
+                        value={selectedCategory}
+                        onChange={(e) => setSelectedCategory(e.target.value)}
+                    >
+                        <MenuItem value="축구">축구</MenuItem>
+                        <MenuItem value="음식">음식</MenuItem>
+                        <MenuItem value="연애">연애</MenuItem>
+                        <MenuItem value="노래">노래</MenuItem>
+                        <MenuItem value="생존">생존</MenuItem>
+                        <MenuItem value="드라마&영화">드라마&영화</MenuItem>
+                        <MenuItem value="일상">일상</MenuItem>
+                    </Select>
+                </FormControl>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleCloseDialog} color="primary">확인</Button>
+            </DialogActions>
+        </Dialog>
     );
 }
 
