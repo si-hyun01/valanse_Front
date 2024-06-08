@@ -110,14 +110,12 @@ function CommentUI({ quizId }) {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
-    setSelectedCommentId(null);
   };
 
   const handleEditDialogOpen = (commentId, commentContent) => {
     setEditCommentContent(commentContent);
-    setSelectedCommentId(commentId);  // Ensure commentId is set correctly here
+    setSelectedCommentId(commentId); // Ensure commentId is set correctly here
     setOpenEditDialog(true);
-    handleMenuClose();
   };
 
   const handleEditDialogClose = () => {
