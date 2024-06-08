@@ -22,7 +22,14 @@ function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCateg
         try {
             // 이미지 파일도 FormData에 추가
             const formData = new FormData();
-            formData.append('quiz', JSON.stringify(editedQuiz));
+            formData.append('quizRegisterDto', JSON.stringify({
+                content: editedQuestion,
+                optionA: editedDescriptionA,
+                optionB: editedDescriptionB,
+                descriptionA: editedDescriptionA,
+                descriptionB: editedDescriptionB,
+                category: selectedCategory
+            }));
             if (editedImageA) formData.append('imageA', editedImageA);
             if (editedImageB) formData.append('imageB', editedImageB);
 
