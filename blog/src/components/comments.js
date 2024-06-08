@@ -9,7 +9,8 @@ import {
   List,
   ListItem,
   ListItemText,
-  Typography
+  Typography,
+  Box
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
@@ -92,9 +93,9 @@ function CommentUI({ quizId }) {
   };
 
   return (
-    <div>
+    <Box sx={{ padding: 2, backgroundColor: '#333', borderRadius: 2 }}>
       <Typography variant="h6" style={{ color: 'white' }}>댓글</Typography>
-      <div style={{ marginBottom: '20px' }}>
+      <Box sx={{ marginBottom: 2 }}>
         <TextField
           id="commentContent"
           name="commentContent"
@@ -110,9 +111,9 @@ function CommentUI({ quizId }) {
           variant="standard"
         />
         <Button onClick={handleCommentSubmit} variant="contained" style={{ marginTop: '10px' }}>댓글 등록</Button>
-      </div>
+      </Box>
       {loading ? (
-        <div>Loading...</div>
+        <div style={{ color: 'white' }}>Loading...</div>
       ) : comments.length === 0 ? (
         <Typography style={{ color: 'white' }}>아직 작성된 댓글이 없습니다.</Typography>
       ) : (
@@ -120,12 +121,11 @@ function CommentUI({ quizId }) {
           {comments.map((comment) => (
             <ListItem key={comment.commentId} style={{ color: 'white' }}>
               <ListItemText
-                primary={`User ID: ${comment.authorUserId}`}
+                primary={<Typography style={{ color: 'white' }}>{`User ID: ${comment.authorUserId}`}</Typography>}
                 secondary={
                   <>
-                    <span dangerouslySetInnerHTML={{ __html: comment.content.replace(/\n/g, '<br/>') }}></span>
-                    <br />
-                    {`작성날짜: ${comment.createdAt}`}
+                    <Typography style={{ color: 'white' }} dangerouslySetInnerHTML={{ __html: comment.content.replace(/\n/g, '<br/>') }}></Typography>
+                    <Typography style={{ color: 'white' }}>{`작성날짜: ${comment.createdAt}`}</Typography>
                   </>
                 }
               />
@@ -153,7 +153,7 @@ function CommentUI({ quizId }) {
           ))}
         </List>
       )}
-    </div>
+    </Box>
   );
 }
 
