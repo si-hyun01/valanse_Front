@@ -14,12 +14,12 @@ function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCateg
 
     const handleEditQuestion = async () => {
         const formData = new FormData();
-        formData.append('content', editedQuestion);
-        formData.append('optionA', editedOptionA);
-        formData.append('optionB', editedOptionB);
-        formData.append('descriptionA', editedDescriptionA);
-        formData.append('descriptionB', editedDescriptionB);
-        formData.append('category', selectedCategory);
+        formData.append('quizRegisterDto[content]', editedQuestion);
+        formData.append('quizRegisterDto[optionA]', editedOptionA);
+        formData.append('quizRegisterDto[optionB]', editedOptionB);
+        formData.append('quizRegisterDto[descriptionA]', editedDescriptionA);
+        formData.append('quizRegisterDto[descriptionB]', editedDescriptionB);
+        formData.append('quizRegisterDto[category]', selectedCategory);
         if (editedImageA) formData.append('image_A', editedImageA);
         if (editedImageB) formData.append('image_B', editedImageB);
 
