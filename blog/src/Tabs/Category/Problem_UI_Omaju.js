@@ -20,31 +20,6 @@ function ProblemUI({ categoryName }) {
     fetchQuizData(categoryName);
   }, [categoryName]);
 
-  const fetchQuizData = async (category) => {
-    try {
-      const response = await axios.get('https://valanse.site/quiz/all', {
-        headers: {
-          'accept': 'application/json;charset=UTF-8',
-        },
-      });
-      const data = response.data.data;
-      if (!data || data.length === 0) {
-        setShowNoProblemDialog(true);
-        return;
-      }
-      const filteredData = data.filter((quiz) => quiz.category === category);
-      if (filteredData.length === 0) {
-        setShowNoProblemDialog(true);
-        return;
-      }
-      const quizDataArray = await fetchAllQuizData(filteredData);
-      setQuizDataList(quizDataArray);
-    } catch (error) {
-      console.error('Error fetching quiz data:', error.message);
-      setShowNoProblemDialog(true);
-    }
-  };
-
   const fetchAllQuizData = async (quizzes) => {
     try {
       const quizDataArray = await Promise.all(
@@ -61,6 +36,39 @@ function ProblemUI({ categoryName }) {
     } catch (error) {
       console.error('Error fetching quiz data:', error.message);
       return [];
+    }
+  };
+
+  const fetchQuizData = async (category) => {
+    try {
+      // 카테고리에 따른 퀴즈 데이터 조회
+      const categoryResponse = await axios.get(
+        `https://valanse.site/quiz-category/search?keyword=${encodeURIComponent(category)}`
+      );
+      const categoryQuizzes = categoryResponse.data.data;
+      
+      // 카테고리에 해당하는 퀴즈의 ID 리스트 추출
+      const quizIds = categoryQuizzes.map((quiz) => quiz.quizId);
+      
+      // 추출된 ID 리스트를 이용하여 전체 퀴즈 데이터 조회
+      const allQuizzesResponse = await axios.get('https://valanse.site/quiz/all', {
+        headers: {
+          'accept': 'application/json;charset=UTF-8',
+        },
+      });
+      const allQuizzes = allQuizzesResponse.data.data;
+      
+      // 필터링된 퀴즈 데이터 가져오기
+      const filteredQuizzes = allQuizzes.filter((quiz) => quizIds.includes(quiz.quizId));
+      
+      // 가져온 퀴즈 데이터의 상세 정보를 추가하여 quizDataArray에 저장
+      const quizDataArray = await fetchAllQuizData(filteredQuizzes);
+      
+      // 상태 업데이트
+      setQuizDataList(quizDataArray);
+    } catch (error) {
+      console.error('Error fetching quiz data:', error.message);
+      setShowNoProblemDialog(true);
     }
   };
 
