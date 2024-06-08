@@ -1,16 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
 function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, selectedCategory, handleCategoryChange }) {
     const [question, setQuestion] = useState(quiz?.content || '');
-    const [optionA, setOptionA] = useState(quiz && quiz.optionA ? quiz.optionA : '');
-    const [optionB, setOptionB] = useState(quiz && quiz.optionB ? quiz.optionB : '');
-    const [descriptionA, setDescriptionA] = useState(quiz && quiz.descriptionA ? quiz.descriptionA : '');
-    const [descriptionB, setDescriptionB] = useState(quiz && quiz.descriptionB ? quiz.descriptionB : '');
+    const [optionA, setOptionA] = useState(quiz?.optionA || '');
+    const [optionB, setOptionB] = useState(quiz?.optionB || '');
+    const [descriptionA, setDescriptionA] = useState(quiz?.descriptionA || '');
+    const [descriptionB, setDescriptionB] = useState(quiz?.descriptionB || '');
     const [imageA, setImageA] = useState(null);
     const [imageB, setImageB] = useState(null);
+
+    useEffect(() => {
+        // Ensure that selectedCategory is not null
+        if (!selectedCategory && quiz && quiz.category) {
+            handleCategoryChange({ target: { value: quiz.category } });
+        }
+    }, [quiz, selectedCategory, handleCategoryChange]);
 
     const handleCreateQuestion = async () => {
         const quizRegisterDto = {
@@ -19,7 +26,7 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, selectedC
             optionB: optionB,
             descriptionA: descriptionA,
             descriptionB: descriptionB,
-            category: selectedCategory
+            category: selectedCategory ? [selectedCategory] : [] // Ensure this is not null
         };
 
         const formData = new FormData();
