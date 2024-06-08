@@ -5,10 +5,10 @@ import Cookies from 'js-cookie';
 
 function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, selectedCategory, handleCategoryChange }) {
     const [question, setQuestion] = useState(quiz?.content || '');
-    const [optionA, setOptionA] = useState(quiz?.optionA || '');
-    const [optionB, setOptionB] = useState(quiz?.optionB || '');
-    const [descriptionA, setDescriptionA] = useState(quiz?.descriptionA || '');
-    const [descriptionB, setDescriptionB] = useState(quiz?.descriptionB || '');
+    const [optionA, setOptionA] = useState(quiz && quiz.optionA ? quiz.optionA : '');
+    const [optionB, setOptionB] = useState(quiz && quiz.optionB ? quiz.optionB : '');
+    const [descriptionA, setDescriptionA] = useState(quiz && quiz.descriptionA ? quiz.descriptionA : '');
+    const [descriptionB, setDescriptionB] = useState(quiz && quiz.descriptionB ? quiz.descriptionB : '');
     const [imageA, setImageA] = useState(null);
     const [imageB, setImageB] = useState(null);
 
@@ -19,7 +19,7 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, selectedC
             optionB: optionB,
             descriptionA: descriptionA,
             descriptionB: descriptionB,
-            category: [selectedCategory] // 배열로 전달
+            category: selectedCategory
         };
 
         const formData = new FormData();
