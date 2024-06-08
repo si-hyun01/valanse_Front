@@ -1,102 +1,95 @@
-import React, { useState, useEffect } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, FormControl, InputLabel, Select, MenuItem, Button } from '@mui/material';
+import React, { useState } from 'react';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-function EditQuestionPage({ quizId }) {
-    const [question, setQuestion] = useState('');
-    const [descriptionA, setDescriptionA] = useState('');
-    const [descriptionB, setDescriptionB] = useState('');
-    const [imageA, setImageA] = useState('');
-    const [imageB, setImageB] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('');
-    const [openDialog, setOpenDialog] = useState(false);
+function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCategory, handleCategoryChange }) {
+    const [editedQuestion, setEditedQuestion] = useState(quiz?.content || '');
+    const [editedDescriptionA, setEditedDescriptionA] = useState(quiz && quiz.descriptionA ? quiz.descriptionA : '');
+    const [editedDescriptionB, setEditedDescriptionB] = useState(quiz && quiz.descriptionB ? quiz.descriptionB : '');
+    const [editedImageA, setEditedImageA] = useState(null); // 이미지 A 상태
+    const [editedImageB, setEditedImageB] = useState(null); // 이미지 B 상태
 
-    useEffect(() => {
-        const fetchQuizData = async () => {
-            try {
-                const response = await axios.get(`https://valanse.site/quiz/${quizId}`);
-                const { content, descriptionA, descriptionB, category } = response.data;
-                setQuestion(content);
-                setDescriptionA(descriptionA);
-                setDescriptionB(descriptionB);
-                setSelectedCategory(category);
-            } catch (error) {
-                console.error('Error fetching quiz data:', error.response ? error.response.data : error.message);
-            }
-        };
-
-        fetchQuizData();
-    }, [quizId]);
-
-    const handleEdit = async () => {
-        const editedQuizData = {
-            quizRegisterDto: {
-                content: question,
-                optionA: descriptionA,
-                optionB: descriptionB,
-                descriptionA: descriptionA,
-                descriptionB: descriptionB,
-                category: [selectedCategory]
-            },
-            image_A: imageA,
-            image_B: imageB
+    const handleEditQuestion = async () => {
+        const editedQuiz = {
+            ...quiz,
+            content: editedQuestion,
+            descriptionA: editedDescriptionA,
+            descriptionB: editedDescriptionB,
+            category: selectedCategory // 수정된 카테고리 정보 추가
         };
 
         try {
-            const response = await axios.patch(`https://valanse.site/quiz/${quizId}`, editedQuizData, {
+            // 이미지 파일도 FormData에 추가
+            const formData = new FormData();
+            formData.append('quizRegisterDto', JSON.stringify({
+                content: editedQuestion,
+                optionA: editedDescriptionA,
+                optionB: editedDescriptionB,
+                descriptionA: editedDescriptionA,
+                descriptionB: editedDescriptionB,
+                category: selectedCategory
+            }));
+            if (editedImageA) formData.append('imageA', editedImageA);
+            if (editedImageB) formData.append('imageB', editedImageB);
+
+            await axios.patch(`https://valanse.site/quiz/${quiz.quizId}`, formData, {
                 headers: {
                     'Authorization': Cookies.get('access_token'),
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'multipart/form-data'
                 }
             });
-            console.log('Quiz edited successfully:', response.data);
-            setOpenDialog(true);
+            handleEdit(editedQuiz);
+            handleClose();
         } catch (error) {
             console.error('Error editing quiz:', error.response ? error.response.data : error.message);
         }
     };
 
-    const handleCloseDialog = () => {
-        setOpenDialog(false);
+    const handleImageChange = (setImageFunc) => (e) => {
+        setImageFunc(e.target.files[0]);
     };
 
     return (
-        <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <Dialog open={open} onClose={handleClose}>
             <DialogTitle>퀴즈 수정</DialogTitle>
             <DialogContent>
-                <FormControl fullWidth>
-                    <InputLabel>퀴즈 제목</InputLabel>
-                    <Select
-                        value={question}
-                        onChange={(e) => setQuestion(e.target.value)}
-                    >
-                        <MenuItem value="퀴즈 제목">{question}</MenuItem>
-                    </Select>
-                </FormControl>
-                <FormControl fullWidth>
-                    <InputLabel>왼쪽 설명</InputLabel>
-                    <Select
-                        value={descriptionA}
-                        onChange={(e) => setDescriptionA(e.target.value)}
-                    >
-                        <MenuItem value="왼쪽 설명">{descriptionA}</MenuItem>
-                    </Select>
-                </FormControl>
-                <FormControl fullWidth>
-                    <InputLabel>오른쪽 설명</InputLabel>
-                    <Select
-                        value={descriptionB}
-                        onChange={(e) => setDescriptionB(e.target.value)}
-                    >
-                        <MenuItem value="오른쪽 설명">{descriptionB}</MenuItem>
-                    </Select>
-                </FormControl>
-                <FormControl fullWidth>
-                    <InputLabel>카테고리 선택</InputLabel>
+                <TextField
+                    fullWidth
+                    label="퀴즈 제목"
+                    value={editedQuestion}
+                    onChange={(e) => setEditedQuestion(e.target.value)}
+                />
+                <TextField
+                    fullWidth
+                    label="왼쪽 설명"
+                    value={editedDescriptionA}
+                    onChange={(e) => setEditedDescriptionA(e.target.value)}
+                />
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange(setEditedImageA)}
+                />
+                <TextField
+                    fullWidth
+                    label="오른쪽 설명"
+                    value={editedDescriptionB}
+                    onChange={(e) => setEditedDescriptionB(e.target.value)}
+                />
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange(setEditedImageB)}
+                />
+
+                {/* 카테고리 선택 */}
+                <FormControl fullWidth style={{ backgroundColor: 'gray', marginBottom: '30px' }}>
+                    <InputLabel style={{ color: 'white' }}>카테고리 선택</InputLabel>
                     <Select
                         value={selectedCategory}
-                        onChange={(e) => setSelectedCategory(e.target.value)}
+                        onChange={handleCategoryChange}
+                        label="카테고리 선택"
                     >
                         <MenuItem value="축구">축구</MenuItem>
                         <MenuItem value="음식">음식</MenuItem>
@@ -109,10 +102,11 @@ function EditQuestionPage({ quizId }) {
                 </FormControl>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleCloseDialog} color="primary">확인</Button>
+                <Button onClick={handleClose}>취소</Button>
+                <Button onClick={handleEditQuestion} variant="contained" color="primary">수정</Button>
             </DialogActions>
         </Dialog>
     );
 }
 
-export default EditQuestionPage;
+export default EditQuestionDialog;
