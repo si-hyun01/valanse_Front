@@ -5,21 +5,21 @@ import Cookies from 'js-cookie';
 
 function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCategory, handleCategoryChange }) {
     const [editedQuestion, setEditedQuestion] = useState(quiz?.content || '');
-    const [editedOptionA, setEditedOptionA] = useState(quiz?.optionA || '');
-    const [editedOptionB, setEditedOptionB] = useState(quiz?.optionB || '');
-    const [editedDescriptionA, setEditedDescriptionA] = useState(quiz?.descriptionA || '');
-    const [editedDescriptionB, setEditedDescriptionB] = useState(quiz?.descriptionB || '');
-    const [editedImageA, setEditedImageA] = useState(null);
-    const [editedImageB, setEditedImageB] = useState(null);
+    const [editedOptionA, setEditedOptionA] = useState(quiz && quiz.optionA ? quiz.optionA : '');
+    const [editedOptionB, setEditedOptionB] = useState(quiz && quiz.optionB ? quiz.optionB : '');
+    const [editedDescriptionA, setEditedDescriptionA] = useState(quiz && quiz.descriptionA ? quiz.descriptionA : '');
+    const [editedDescriptionB, setEditedDescriptionB] = useState(quiz && quiz.descriptionB ? quiz.descriptionB : '');
+    const [editedImageA, setEditedImageA] = useState(null); // 이미지 A 상태
+    const [editedImageB, setEditedImageB] = useState(null); // 이미지 B 상태
 
     const handleEditQuestion = async () => {
         const formData = new FormData();
-        formData.append('quizRegisterDto[content]', editedQuestion);
-        formData.append('quizRegisterDto[optionA]', editedOptionA);
-        formData.append('quizRegisterDto[optionB]', editedOptionB);
-        formData.append('quizRegisterDto[descriptionA]', editedDescriptionA);
-        formData.append('quizRegisterDto[descriptionB]', editedDescriptionB);
-        formData.append('quizRegisterDto[category]', selectedCategory);
+        formData.append('quizRegisterDto.content', editedQuestion);
+        formData.append('quizRegisterDto.optionA', editedOptionA);
+        formData.append('quizRegisterDto.optionB', editedOptionB);
+        formData.append('quizRegisterDto.descriptionA', editedDescriptionA);
+        formData.append('quizRegisterDto.descriptionB', editedDescriptionB);
+        formData.append('quizRegisterDto.category', selectedCategory);
         if (editedImageA) formData.append('image_A', editedImageA);
         if (editedImageB) formData.append('image_B', editedImageB);
 
