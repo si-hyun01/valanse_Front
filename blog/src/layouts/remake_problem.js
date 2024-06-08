@@ -20,23 +20,11 @@ function EditQuestionDialog({ open, handleClose, quiz, handleEdit, selectedCateg
         };
 
         try {
-            // 이미지 파일도 FormData에 추가
-            const formData = new FormData();
-            formData.append('quizRegisterDto', JSON.stringify({
-                content: editedQuestion,
-                optionA: editedDescriptionA,
-                optionB: editedDescriptionB,
-                descriptionA: editedDescriptionA,
-                descriptionB: editedDescriptionB,
-                category: selectedCategory
-            }));
-            if (editedImageA) formData.append('imageA', editedImageA);
-            if (editedImageB) formData.append('imageB', editedImageB);
-
-            await axios.patch(`https://valanse.site/quiz/${quiz.quizId}`, formData, {
+            // 이미지 파일도 FormData에 추가하지 않고, 객체를 직접 전송
+            await axios.patch(`https://valanse.site/quiz/${quiz.quizId}`, editedQuiz, {
                 headers: {
                     'Authorization': Cookies.get('access_token'),
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'application/json'
                 }
             });
             handleEdit(editedQuiz);
