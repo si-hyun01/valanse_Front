@@ -71,9 +71,9 @@ function CommentUI({ quizId }) {
           {comments.map((comment) => (
             <li key={comment.commentId}>
               <div id={`comment-${comment.commentId}`} name={`comment-${comment.commentId}`} style={{ color: 'white' }}>
-                <p>Name: {comment.authorUserId}</p>
-                <p>Content: {comment.content}</p>
-                <p>Date: {comment.createdAt}</p>
+                <p>User ID: {comment.authorUserId}</p>
+                <p>{comment.content}</p>
+                <p>작성날짜: {comment.createdAt}</p>
               </div>
               <button onClick={() => handleCommentDelete(comment.commentId)}>삭제</button>
             </li>
