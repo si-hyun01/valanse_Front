@@ -12,7 +12,7 @@ function CommentUI({ quizId }) {
 
   const fetchComments = async () => {
     try {
-      const response = await axios.get(`https://valanse.site/comment/quiz/${quizId}`);
+      const response = await axios.get(`https://valanse.site/comment/${quizId}/quiz`);
       setComments(response.data); // API 응답 데이터 형식에 맞춰 수정
       setLoading(false);
     } catch (error) {
