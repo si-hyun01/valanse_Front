@@ -39,6 +39,7 @@ function CommentUI({ quizId }) {
     return date.toLocaleString('ko-KR', options); // 한국 시간대로 포맷팅
   };
 
+
   const handleCommentSubmit = async () => {
     try {
       await axios.post('https://valanse.site/comment/register', {
