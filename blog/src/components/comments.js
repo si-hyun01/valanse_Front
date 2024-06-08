@@ -45,21 +45,21 @@ function CommentUI({ quizId }) {
 
   return (
     <div>
-      <h2>댓글</h2>
+      <h2 style={{ color: 'white' }}>댓글</h2>
       <div>
-        <textarea value={newCommentContent} onChange={(e) => setNewCommentContent(e.target.value)} />
-        <button onClick={handleCommentSubmit}>댓글 등록</button>
+        <textarea value={newCommentContent} onChange={(e) => setNewCommentContent(e.target.value)} style={{ color: 'white' }} />
+        <button onClick={handleCommentSubmit} style={{ color: 'white' }}>댓글 등록</button>
       </div>
       {loading ? (
-        <div>Loading...</div>
+        <div style={{ color: 'white' }}>Loading...</div>
       ) : comments.length === 0 ? (
-        <div>아직 작성된 댓글이 없습니다.</div>
+        <div style={{ color: 'white' }}>아직 작성된 댓글이 없습니다.</div>
       ) : (
         <ul>
           {comments.map((comment) => (
             <li key={comment.commentId}>
-              <div>{comment.content}</div>
-              <button onClick={() => handleCommentDelete(comment.commentId)}>삭제</button>
+              <div style={{ color: 'white' }}>{comment.content}</div>
+              <button onClick={() => handleCommentDelete(comment.commentId)} style={{ color: 'white' }}>삭제</button>
             </li>
           ))}
         </ul>
