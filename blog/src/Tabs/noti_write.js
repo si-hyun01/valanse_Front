@@ -3,7 +3,6 @@ import { Container, Typography, TextField, Button, Dialog, DialogTitle, DialogCo
 import { useNavigate } from 'react-router-dom';
 import Header from '../layouts/Header';
 import Footer from '../layouts/Footer';
-import './notii.css';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -77,45 +76,48 @@ const NoticeWrite = () => {
     return (
         <>
             <Header />
-            <Container maxWidth="md" className="notii">
-                <Typography variant="h4" className="notii-title2">
-                    공지게시판
-                </Typography>
-                <Button
-                    variant="contained"
-                    className="button1_write"
-                    style={{ backgroundColor: 'white', boxShadow: 'none' }}
-                    onClick={() => navigate(-1)}
-                >
-                    <ArrowBackIcon style={{ color: 'black', fontSize: '24px' }} />
-                    <span style={{ color: 'black', fontWeight: 'bold', fontSize: '20px' }}>뒤로가기</span>
-                </Button>
-                <div className="textfield1">
-                    <TextField
-                        label="제목"
-                        fullWidth
-                        value={newNotice}
-                        onChange={(e) => setNewNotice(e.target.value)}
-                        variant="outlined"
-                    />
-                </div>
-                <div style={{ marginBottom: '16px' }}></div> {/* 간격을 벌리는 부분 */}
-                <div className="textfield2">
-                    <TextField
-                        label="내용"
-                        fullWidth
-                        multiline
-                        rows={12}
-                        value={newNoticeContent}
-                        onChange={(e) => setNewNoticeContent(e.target.value)}
-                        variant="outlined"
-                    />
-                </div>
-                <Button variant="contained" className="notii-button2" color="primary" onClick={handleAddNotice}>
-                    작성
-                </Button>
-            </Container>
-            <Footer />
+            <div style={{ backgroundColor: 'black' }}>
+                <Container maxWidth="md" className="notii">
+                    <Typography variant="h4" className="notii-title2" style={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}>
+                        공지작성
+                    </Typography>
+                    <Button
+                        variant="contained"
+                        className="button1_write"
+                        style={{ backgroundColor: 'white', boxShadow: 'none' }}
+                        onClick={() => navigate(-1)}
+                    >
+                        <ArrowBackIcon style={{ color: 'black', fontSize: '24px' }} />
+                        <span style={{ color: 'black', fontWeight: 'bold', fontSize: '20px' }}>뒤로가기</span>
+                    </Button>
+                    <div className="textfield1">
+                        <TextField
+                            label="제목"
+                            fullWidth
+                            value={newNotice}
+                            onChange={(e) => setNewNotice(e.target.value)}
+                            variant="outlined"
+                            InputProps={{ style: { color: 'white' } }} // 텍스트 필드의 텍스트 색상 변경
+                        />
+                    </div>
+                    <div style={{ marginBottom: '16px' }}></div> {/* 간격을 벌리는 부분 */}
+                    <div className="textfield2">
+                        <TextField
+                            label="내용"
+                            fullWidth
+                            multiline
+                            rows={12}
+                            value={newNoticeContent}
+                            onChange={(e) => setNewNoticeContent(e.target.value)}
+                            variant="outlined"
+                            InputProps={{ style: { color: 'white' } }} // 텍스트 필드의 텍스트 색상 변경
+                        />
+                    </div>
+                    <Button variant="contained" className="notii-button2" color="primary" onClick={handleAddNotice} style={{ marginTop: '16px' }}>
+                        작성
+                    </Button>
+                </Container>
+            </div>
             <Dialog open={dialogOpen} onClose={handleDialogClose}>
                 <DialogTitle>{dialogTitle}</DialogTitle>
                 <DialogContent>
