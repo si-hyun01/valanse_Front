@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button, Card, CardContent, CardActionArea, CardMedia, Container, Dialog, DialogActions, DialogTitle, DialogContent, Grid, IconButton, Typography } from '@mui/material';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import { Button, Card, CardContent, CardActionArea, CardMedia, Container, Dialog, DialogActions, DialogTitle, DialogContent, Grid, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CommentUI from '../../components/comments';  // CommentUI 컴포넌트 import
@@ -10,34 +8,12 @@ import CommentUI from '../../components/comments';  // CommentUI 컴포넌트 im
 function ProblemUI({ categoryName }) {
   const [quizDataList, setQuizDataList] = useState([]);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
-  const [selectedOption, setSelectedOption] = useState(null);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [likedQuizzes, setLikedQuizzes] = useState({});
-  const [dislikedQuizzes, setDislikedQuizzes] = useState({});
 
   useEffect(() => {
     fetchQuizData(categoryName);
   }, [categoryName]);
-
-  const fetchAllQuizData = async (quizzes) => {
-    try {
-      const quizDataArray = await Promise.all(
-        quizzes.map(async (quiz) => {
-          const likeStatsResponse = await axios.get(`https://valanse.site/quiz/${quiz.quizId}/like-stats`);
-          return {
-            ...quiz,
-            likes: likeStatsResponse.data.data.likeCount,
-            dislikes: likeStatsResponse.data.data.unlikeCount,
-          };
-        })
-      );
-      return quizDataArray;
-    } catch (error) {
-      console.error('Error fetching quiz data:', error.message);
-      return [];
-    }
-  };
 
   const fetchQuizData = async (category) => {
     try {
@@ -53,8 +29,7 @@ function ProblemUI({ categoryName }) {
       });
       const allQuizzes = allQuizzesResponse.data.data;
       const filteredQuizzes = allQuizzes.filter((quiz) => quizIds.includes(quiz.quizId));
-      const quizDataArray = await fetchAllQuizData(filteredQuizzes);
-      setQuizDataList(quizDataArray);
+      setQuizDataList(filteredQuizzes);
     } catch (error) {
       console.error('Error fetching quiz data:', error.message);
       setShowNoProblemDialog(true);
@@ -62,64 +37,7 @@ function ProblemUI({ categoryName }) {
   };
 
   const handleOptionSelect = async (option, quizId) => {
-    setSelectedOption(option);
     setShowConfirmDialog(true);
-  };
-
-  const handleOptionLike = async (quizId) => {
-    try {
-      const isLiked = likedQuizzes[quizId];
-      const response = isLiked
-        ? await axios.post(`https://valanse.site/quiz/${quizId}/decrease-preference`)
-        : await axios.post(`https://valanse.site/quiz/${quizId}/increase-preference`);
-
-      setQuizDataList((prevQuizDataList) => {
-        const updatedQuizDataList = prevQuizDataList.map((quiz) =>
-          quiz.quizId === quizId
-            ? {
-              ...quiz,
-              likes: quiz.likes + (isLiked ? -1 : 1),
-            }
-            : quiz
-        );
-        return updatedQuizDataList;
-      });
-
-      setLikedQuizzes((prevLikedQuizzes) => ({
-        ...prevLikedQuizzes,
-        [quizId]: !isLiked,
-      }));
-    } catch (error) {
-      console.error('Error liking/unliking quiz:', error.message);
-    }
-  };
-
-  const handleOptionDislike = async (quizId) => {
-    try {
-      const isDisliked = dislikedQuizzes[quizId];
-      const response = isDisliked
-        ? await axios.post(`https://valanse.site/quiz/${quizId}/decrease-preference`)
-        : await axios.post(`https://valanse.site/quiz/${quizId}/increase-preference`);
-
-      setQuizDataList((prevQuizDataList) => {
-        const updatedQuizDataList = prevQuizDataList.map((quiz) =>
-          quiz.quizId === quizId
-            ? {
-              ...quiz,
-              dislikes: quiz.dislikes + (isDisliked ? -1 : 1),
-            }
-            : quiz
-        );
-        return updatedQuizDataList;
-      });
-
-      setDislikedQuizzes((prevDislikedQuizzes) => ({
-        ...prevDislikedQuizzes,
-        [quizId]: !isDisliked,
-      }));
-    } catch (error) {
-      console.error('Error disliking/unliking quiz:', error.message);
-    }
   };
 
   const handleNext = async () => {
@@ -147,24 +65,7 @@ function ProblemUI({ categoryName }) {
   };
 
   const handleConfirmSelection = async () => {
-    try {
-      const quizId = quizDataList[currentQuizIndex].quizId;
-      const response = await axios.post(`https://valanse.site/quiz/save-user-answer?category=${encodeURIComponent(categoryName)}`, {
-        userId: 0,
-        quizId: quizId,
-        selectedOption: selectedOption,
-        preference: 0,
-        likeCount: 0,
-        unlikeCount: 0
-      });
-
-      console.log('User answer saved:', response.data);
-      setShowConfirmDialog(false);
-      handleNext();
-    } catch (error) {
-      console.error('Error saving user answer:', error.message);
-      setShowConfirmDialog(false);
-    }
+    // Implement your logic to handle user selection confirmation
   };
 
   const currentQuizData = quizDataList[currentQuizIndex];
@@ -198,7 +99,7 @@ function ProblemUI({ categoryName }) {
         <DialogTitle id="confirm-dialog-title">선택 확인</DialogTitle>
         <DialogContent>
           <Typography variant="body1" id="confirm-dialog-description">
-            선택지: {selectedOption}. 정말 선택하시겠습니까?
+            선택지: {currentQuizData ? currentQuizData.optionA : ''}. 정말 선택하시겠습니까?
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -225,20 +126,6 @@ function ProblemUI({ categoryName }) {
               <Typography variant="h4" align="center" sx={{ color: 'white' }}>
                 {currentQuizData ? currentQuizData.content : ''}
               </Typography>
-            </Grid>
-            <Grid item xs={12} textAlign="center">
-              <IconButton onClick={() => handleOptionLike(currentQuizData.quizId)}>
-                <ThumbUpIcon sx={{ color: 'white' }} />
-                <Typography variant="body2" sx={{ color: 'white', ml: 1, fontWeight: 'bold' }}>
-                  {currentQuizData ? currentQuizData.likes : 0}
-                </Typography>
-              </IconButton>
-              <IconButton onClick={() => handleOptionDislike(currentQuizData.quizId)}>
-                <ThumbDownIcon sx={{ color: 'white' }} />
-                <Typography variant="body2" sx={{ color: 'white', ml: 1, fontWeight: 'bold' }}>
-                  {currentQuizData ? currentQuizData.dislikes : 0}
-                </Typography>
-              </IconButton>
             </Grid>
             <Grid item xs={6} textAlign="center">
               <Card
@@ -306,31 +193,33 @@ function ProblemUI({ categoryName }) {
                 onClick={handlePrevious}
                 disabled={currentQuizIndex === 0}
                 startIcon={<ArrowBackIcon />}
-                sx={{ bgcolor: 'limegreen', color: 'white' }}
-              >
-                이전으로
-              </Button>
-            </Grid>
-            <Grid item xs={6} textAlign="center">
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleNext}
-                disabled={currentQuizIndex === quizDataList.length - 1}
-                endIcon={<ArrowForwardIcon />}
-                sx={{ bgcolor: 'limegreen', color: 'white' }}
-              >
-                다음으로
-              </Button>
-            </Grid>
-            <Grid item xs={12}>
-              {currentQuizData && <CommentUI quizId={currentQuizData.quizId} />}
-            </Grid>
-          </Grid>
+                sx={{ bgcolor:
+                  'limegreen', color: 'white' }}
+                  >
+                    이전으로
+                  </Button>
+                </Grid>
+                <Grid item xs={6} textAlign="center">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleNext}
+                    disabled={currentQuizIndex === quizDataList.length - 1}
+                    endIcon={<ArrowForwardIcon />}
+                    sx={{ bgcolor: 'limegreen', color: 'white' }}
+                  >
+                    다음으로
+                  </Button>
+                </Grid>
+                <Grid item xs={12}>
+                  {currentQuizData && <CommentUI quizId={currentQuizData.quizId} />}
+                </Grid>
+              </Grid>
+            </Container>
+          </Card>
         </Container>
-      </Card>
-    </Container>
-  );
-}
-
-export default ProblemUI;
+      );
+    }
+    
+    export default ProblemUI;
+    
