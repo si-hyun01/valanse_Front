@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import { Container, Typography, Button, TextField, Card, CardContent } from '@mui/material';
 import Header from './Header';
-import './MyPage.css'; // 추가 스타일링을 위한 CSS 파일
+import '../../src/layouts/Mypage.css'; // 추가 스타일링을 위한 CSS 파일
 
 const QuizDetail = ({ quiz, onDelete, onGoBack, onUpdate }) => {
     const [isEditing, setIsEditing] = useState(false);
