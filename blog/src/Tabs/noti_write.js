@@ -99,6 +99,7 @@ const NoticeWrite = () => {
                         variant="outlined"
                     />
                 </div>
+                <div style={{ marginBottom: '16px' }}></div> {/* 간격을 벌리는 부분 */}
                 <div className="textfield2">
                     <TextField
                         label="내용"
