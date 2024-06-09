@@ -41,30 +41,19 @@ function ProblemUI({ categoryName }) {
 
   const fetchQuizData = async (category) => {
     try {
-      // 카테고리에 따른 퀴즈 데이터 조회
       const categoryResponse = await axios.get(
         `https://valanse.site/quiz-category/search?keyword=${encodeURIComponent(category)}`
       );
       const categoryQuizzes = categoryResponse.data.data;
-      
-      // 카테고리에 해당하는 퀴즈의 ID 리스트 추출
       const quizIds = categoryQuizzes.map((quiz) => quiz.quizId);
-      
-      // 추출된 ID 리스트를 이용하여 전체 퀴즈 데이터 조회
       const allQuizzesResponse = await axios.get('https://valanse.site/quiz/all', {
         headers: {
           'accept': 'application/json;charset=UTF-8',
         },
       });
       const allQuizzes = allQuizzesResponse.data.data;
-      
-      // 필터링된 퀴즈 데이터 가져오기
       const filteredQuizzes = allQuizzes.filter((quiz) => quizIds.includes(quiz.quizId));
-      
-      // 가져온 퀴즈 데이터의 상세 정보를 추가하여 quizDataArray에 저장
       const quizDataArray = await fetchAllQuizData(filteredQuizzes);
-      
-      // 상태 업데이트
       setQuizDataList(quizDataArray);
     } catch (error) {
       console.error('Error fetching quiz data:', error.message);
@@ -72,32 +61,9 @@ function ProblemUI({ categoryName }) {
     }
   };
 
-  const saveUserAnswer = async (quizId, selectedOption) => {
-    try {
-      const response = await axios.post(
-        `https://valanse.site/quiz/save-user-answer?category=${encodeURIComponent(categoryName)}`,
-        {
-          userId: 0, // 사용자 ID를 적절히 설정하세요
-          quizId: quizId,
-          selectedOption: selectedOption,
-          preference: 0, // preference 값을 적절히 설정하세요
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json;charset=UTF-8',
-          },
-        }
-      );
-      console.log('User answer saved:', response.data);
-    } catch (error) {
-      console.error('Error saving user answer:', error.message);
-    }
-  };
-
   const handleOptionSelect = async (option, quizId) => {
     setSelectedOption(option);
     setShowConfirmDialog(true);
-    console.log(quizDataList[currentQuizIndex]); // 선택한 퀴즈의 상세 정보 출력
   };
 
   const handleOptionLike = async (quizId) => {
@@ -106,8 +72,6 @@ function ProblemUI({ categoryName }) {
       const response = isLiked
         ? await axios.post(`https://valanse.site/quiz/${quizId}/decrease-preference`)
         : await axios.post(`https://valanse.site/quiz/${quizId}/increase-preference`);
-
-      console.log(isLiked ? 'Dislike response:' : 'Like response:', response.data);
 
       setQuizDataList((prevQuizDataList) => {
         const updatedQuizDataList = prevQuizDataList.map((quiz) =>
@@ -127,7 +91,6 @@ function ProblemUI({ categoryName }) {
       }));
     } catch (error) {
       console.error('Error liking/unliking quiz:', error.message);
-      // 에러 처리
     }
   };
 
@@ -137,8 +100,6 @@ function ProblemUI({ categoryName }) {
       const response = isDisliked
         ? await axios.post(`https://valanse.site/quiz/${quizId}/decrease-preference`)
         : await axios.post(`https://valanse.site/quiz/${quizId}/increase-preference`);
-
-      console.log(isDisliked ? 'Dislike response:' : 'Like response:', response.data);
 
       setQuizDataList((prevQuizDataList) => {
         const updatedQuizDataList = prevQuizDataList.map((quiz) =>
@@ -158,7 +119,6 @@ function ProblemUI({ categoryName }) {
       }));
     } catch (error) {
       console.error('Error disliking/unliking quiz:', error.message);
-      // 에러 처리
     }
   };
 
@@ -186,12 +146,25 @@ function ProblemUI({ categoryName }) {
     setShowConfirmDialog(false);
   };
 
-  const handleConfirmSelection = () => {
-    if (selectedOption && currentQuizData) {
-      saveUserAnswer(currentQuizData.quizId, selectedOption);
+  const handleConfirmSelection = async () => {
+    try {
+      const quizId = quizDataList[currentQuizIndex].quizId;
+      const response = await axios.post(`https://valanse.site/quiz/save-user-answer?category=${encodeURIComponent(categoryName)}`, {
+        userId: 0,
+        quizId: quizId,
+        selectedOption: selectedOption,
+        preference: 0,
+        likeCount: 0,
+        unlikeCount: 0
+      });
+
+      console.log('User answer saved:', response.data);
+      setShowConfirmDialog(false);
+      handleNext();
+    } catch (error) {
+      console.error('Error saving user answer:', error.message);
+      setShowConfirmDialog(false);
     }
-    setShowConfirmDialog(false); // 다이얼로그를 닫기
-    handleNext(); // 다음 퀴즈로 넘어가기
   };
 
   const currentQuizData = quizDataList[currentQuizIndex];
@@ -246,75 +219,116 @@ function ProblemUI({ categoryName }) {
         }}
       >
         <Container maxWidth="lg">
-          <Grid container spacing={2} alignItems="center" justifyContent="center">
-            <Grid item xs={12} sm={6}>
-              <CardMedia
-                component="img"
-                height="400"
-                image={currentQuizData?.imageA}
-                alt="Option A"
+          <Grid container spacing={2}>
+            <Grid item xs={12} style={{ height: '30px' }} />
+            <Grid item xs={12}>
+              <Typography variant="h4" align="center" sx={{ color: 'white' }}>
+                {currentQuizData ? currentQuizData.content : ''}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} textAlign="center">
+              <IconButton onClick={() => handleOptionLike(currentQuizData.quizId)}>
+                <ThumbUpIcon sx={{ color: 'white' }} />
+                <Typography variant="body2" sx={{ color: 'white', ml: 1, fontWeight: 'bold' }}>
+                  {currentQuizData ? currentQuizData.likes : 0}
+                </Typography>
+              </IconButton>
+              <IconButton onClick={() => handleOptionDislike(currentQuizData.quizId)}>
+                <ThumbDownIcon sx={{ color: 'white' }} />
+                <Typography variant="body2" sx={{ color: 'white', ml: 1, fontWeight: 'bold' }}>
+                  {currentQuizData ? currentQuizData.dislikes : 0}
+                </Typography>
+              </IconButton>
+            </Grid>
+            <Grid item xs={6} textAlign="center">
+              <Card
                 onClick={() => handleOptionSelect('A', currentQuizData.quizId)}
-                sx={{ cursor: 'pointer' }}
-              />
-              <CardContent>
-                <Typography variant="h6" color="white" align="center">
-                  {currentQuizData?.optionA}
-                </Typography>
-                <Typography variant="body1" color="white" align="center">
-                  {currentQuizData?.descriptionA}
-                </Typography>
-              </CardContent>
+                sx={{
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  boxShadow: '0px 0px 20px 0px rgba(0, 255, 255, 0.75)',
+                }}
+              >
+                <CardActionArea>
+                  <CardMedia
+                    component="img"
+                    height="400"
+                    image={currentQuizData ? currentQuizData.imageA : ''}
+                    alt=""
+                  />
+                  <CardContent sx={{ height: '100px', backgroundColor: 'black' }}>
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="div"
+                      sx={{ color: 'white' }}
+                    >
+                      {currentQuizData ? currentQuizData.descriptionA : ''}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <CardMedia
-                component="img"
-                height="400"
-                image={currentQuizData?.imageB}
-                alt="Option B"
+            <Grid item xs={6} textAlign="center">
+              <Card
                 onClick={() => handleOptionSelect('B', currentQuizData.quizId)}
-                sx={{ cursor: 'pointer' }}
-              />
-              <CardContent>
-                <Typography variant="h6" color="white" align="center">
-                  {currentQuizData?.optionB}
-                </Typography>
-                <Typography variant="body1" color="white" align="center">
-                  {currentQuizData?.descriptionB}
-                </Typography>
-              </CardContent>
+                sx={{
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  boxShadow: '0px 0px 20px 0px rgba(0, 255, 255, 0.75)',
+                }}
+              >
+                <CardActionArea>
+                  <CardMedia
+                    component="img"
+                    height="400"
+                    image={currentQuizData ? currentQuizData.imageB : ''}
+                    alt=""
+                  />
+                  <CardContent sx={{ height: '100px', backgroundColor: 'black' }}>
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="div"
+                      sx={{ color: 'white' }}
+                    >
+                      {currentQuizData ? currentQuizData.descriptionB : ''}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
             </Grid>
-          </Grid>
-          <Grid container spacing={2} justifyContent="center" alignItems="center">
-            <Grid item>
-              <IconButton onClick={handlePrevious} disabled={currentQuizIndex === 0} color="primary">
-                <ArrowBackIcon />
-              </IconButton>
+
+            <Grid item xs={6} textAlign="center">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handlePrevious}
+                disabled={currentQuizIndex === 0}
+                startIcon={<ArrowBackIcon />}
+                sx={{ bgcolor: 'limegreen', color: 'white' }}
+              >
+                이전으로
+              </Button>
             </Grid>
-            <Grid item>
-              <IconButton onClick={handleNext} color="primary">
-                <ArrowForwardIcon />
-              </IconButton>
+            <Grid item xs={6} textAlign="center">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleNext}
+                disabled={currentQuizIndex === quizDataList.length - 1}
+                endIcon={<ArrowForwardIcon />}
+                sx={{ bgcolor: 'limegreen', color: 'white' }}
+              >
+                다음으로
+              </Button>
             </Grid>
-            <Grid item>
-              <IconButton onClick={() => handleOptionLike(currentQuizData.quizId)} color={likedQuizzes[currentQuizData.quizId] ? 'primary' : 'default'}>
-                <ThumbUpIcon />
-              </IconButton>
-              <Typography variant="body1" color="white" align="center">
-                {currentQuizData?.likes}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <IconButton onClick={() => handleOptionDislike(currentQuizData.quizId)} color={dislikedQuizzes[currentQuizData.quizId] ? 'primary' : 'default'}>
-                <ThumbDownIcon />
-              </IconButton>
-              <Typography variant="body1" color="white" align="center">
-                {currentQuizData?.dislikes}
-              </Typography>
+            <Grid item xs={12}>
+              {currentQuizData && <CommentUI quizId={currentQuizData.quizId} />}
             </Grid>
           </Grid>
         </Container>
       </Card>
-      <CommentUI />
     </Container>
   );
 }
