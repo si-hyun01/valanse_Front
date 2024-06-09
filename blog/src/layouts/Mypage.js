@@ -131,7 +131,7 @@ const MyPage = () => {
     return (
         <div>
             <Header />
-            <Container className="quiz-container" style={{ marginTop: '50px', maxWidth: "80%" }}>
+            <Container className="quiz-container" style={{ marginTop: '50px', maxWidth: "80%", backgroundColor: 'black', padding: '20px', borderRadius: '10px' }}>
                 <Typography variant="h4" className="quiz-title" style={{ fontWeight: 'bold', color: 'white', marginBottom: '10px', textAlign: 'center', fontSize: '2.5rem' }}>
                     마이 페이지
                 </Typography>
