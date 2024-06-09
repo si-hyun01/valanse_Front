@@ -3,7 +3,7 @@ import { Grid, Container } from '@mui/material'; // 또는 사용 중인 UI 라�
 import SliderContainer from "../layouts/SliderContainer";
 import Popularity from "../Tabs/rank_randering";
 import RecentArt from "../components/RecentArt";
-import PopularArt from "../components/PopularArt";
+//import PopularArt from "../components/PopularArt";
 
 const EnterPage = () => (
   <Grid container spacing={1} alignItems="center">
@@ -15,11 +15,6 @@ const EnterPage = () => (
     <Grid item xs={12}>
       <Container style={{ maxWidth: '80%' }}>
           <RecentArt />
-      </Container>
-    </Grid>
-    <Grid item xs={12}>
-      <Container style={{ maxWidth: '80%' }}>
-          <PopularArt />
       </Container>
     </Grid>
   </Grid>

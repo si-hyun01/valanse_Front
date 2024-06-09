@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button, Card, CardContent, CardActionArea, CardMedia, Container, Dialog, DialogActions, DialogTitle, DialogContent, Grid, Typography } from '@mui/material';
+import { Button, Card, CardContent, CardActionArea, CardMedia, Container, Dialog, DialogActions, DialogTitle, DialogContent, Grid, IconButton, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CommentUI from '../../components/comments';  // CommentUI 컴포넌트 import
@@ -8,6 +8,7 @@ import CommentUI from '../../components/comments';  // CommentUI 컴포넌트 im
 function ProblemUI({ categoryName }) {
   const [quizDataList, setQuizDataList] = useState([]);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
+  const [selectedOption, setSelectedOption] = useState(null);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
@@ -17,19 +18,24 @@ function ProblemUI({ categoryName }) {
 
   const fetchQuizData = async (category) => {
     try {
-      const categoryResponse = await axios.get(
-        `https://valanse.site/quiz-category/search?keyword=${encodeURIComponent(category)}`
-      );
-      const categoryQuizzes = categoryResponse.data.data;
-      const quizIds = categoryQuizzes.map((quiz) => quiz.quizId);
       const allQuizzesResponse = await axios.get('https://valanse.site/quiz/all', {
         headers: {
           'accept': 'application/json;charset=UTF-8',
         },
       });
       const allQuizzes = allQuizzesResponse.data.data;
+      const categoryResponse = await axios.get(
+        `https://valanse.site/quiz-category/search?keyword=${encodeURIComponent(category)}`
+      );
+      const categoryQuizzes = categoryResponse.data.data;
+      const quizIds = categoryQuizzes.map((quiz) => quiz.quizId);
       const filteredQuizzes = allQuizzes.filter((quiz) => quizIds.includes(quiz.quizId));
-      setQuizDataList(filteredQuizzes);
+      const quizDataArray = filteredQuizzes.map(quiz => ({
+        ...quiz,
+        likes: 0,
+        dislikes: 0
+      }));
+      setQuizDataList(quizDataArray);
     } catch (error) {
       console.error('Error fetching quiz data:', error.message);
       setShowNoProblemDialog(true);
@@ -37,7 +43,9 @@ function ProblemUI({ categoryName }) {
   };
 
   const handleOptionSelect = async (option, quizId) => {
+    setSelectedOption(option);
     setShowConfirmDialog(true);
+    console.log(quizDataList[currentQuizIndex]); // 선택한 퀴즈의 상세 정보 출력
   };
 
   const handleNext = async () => {
@@ -64,8 +72,9 @@ function ProblemUI({ categoryName }) {
     setShowConfirmDialog(false);
   };
 
-  const handleConfirmSelection = async () => {
-    // Implement your logic to handle user selection confirmation
+  const handleConfirmSelection = () => {
+    setShowConfirmDialog(false); // 다이얼로그를 닫기
+    handleNext(); // 다음 퀴즈로 넘어가기
   };
 
   const currentQuizData = quizDataList[currentQuizIndex];
@@ -99,7 +108,7 @@ function ProblemUI({ categoryName }) {
         <DialogTitle id="confirm-dialog-title">선택 확인</DialogTitle>
         <DialogContent>
           <Typography variant="body1" id="confirm-dialog-description">
-            선택지: {currentQuizData ? currentQuizData.optionA : ''}. 정말 선택하시겠습니까?
+            선택지: {selectedOption}. 정말 선택하시겠습니까?
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -126,6 +135,18 @@ function ProblemUI({ categoryName }) {
               <Typography variant="h4" align="center" sx={{ color: 'white' }}>
                 {currentQuizData ? currentQuizData.content : ''}
               </Typography>
+            </Grid>
+            <Grid item xs={12} textAlign="center">
+              <IconButton onClick={() => handleOptionSelect('A', currentQuizData.quizId)}>
+                <Typography variant="body2" sx={{ color: 'white', ml: 1, fontWeight: 'bold' }}>
+                  {currentQuizData ? currentQuizData.likes : 0}
+                </Typography>
+              </IconButton>
+              <IconButton onClick={() => handleOptionSelect('B', currentQuizData.quizId)}>
+                <Typography variant="body2" sx={{ color: 'white', ml: 1, fontWeight: 'bold' }}>
+                  {currentQuizData ? currentQuizData.dislikes : 0}
+                </Typography>
+              </IconButton>
             </Grid>
             <Grid item xs={6} textAlign="center">
               <Card
@@ -157,7 +178,7 @@ function ProblemUI({ categoryName }) {
               </Card>
             </Grid>
             <Grid item xs={6} textAlign="center">
-              <Card
+            <Card
                 onClick={() => handleOptionSelect('B', currentQuizData.quizId)}
                 sx={{
                   borderRadius: '16px',
@@ -193,33 +214,31 @@ function ProblemUI({ categoryName }) {
                 onClick={handlePrevious}
                 disabled={currentQuizIndex === 0}
                 startIcon={<ArrowBackIcon />}
-                sx={{ bgcolor:
-                  'limegreen', color: 'white' }}
-                  >
-                    이전으로
-                  </Button>
-                </Grid>
-                <Grid item xs={6} textAlign="center">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNext}
-                    disabled={currentQuizIndex === quizDataList.length - 1}
-                    endIcon={<ArrowForwardIcon />}
-                    sx={{ bgcolor: 'limegreen', color: 'white' }}
-                  >
-                    다음으로
-                  </Button>
-                </Grid>
-                <Grid item xs={12}>
-                  {currentQuizData && <CommentUI quizId={currentQuizData.quizId} />}
-                </Grid>
-              </Grid>
-            </Container>
-          </Card>
+                sx={{ bgcolor: 'limegreen', color: 'white' }}
+              >
+                이전으로
+              </Button>
+            </Grid>
+            <Grid item xs={6} textAlign="center">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleNext}
+                disabled={currentQuizIndex === quizDataList.length - 1}
+                endIcon={<ArrowForwardIcon />}
+                sx={{ bgcolor: 'limegreen', color: 'white' }}
+              >
+                다음으로
+              </Button>
+            </Grid>
+            <Grid item xs={12}>
+              {currentQuizData && <CommentUI quizId={currentQuizData.quizId} />} {/* CommentUI 컴포넌트 추가 */}
+            </Grid>
+          </Grid>
         </Container>
-      );
-    }
-    
-    export default ProblemUI;
-    
+      </Card>
+    </Container>
+  );
+}
+
+export default ProblemUI;
