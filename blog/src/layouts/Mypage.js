@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import { Card, CardContent, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Card, CardContent, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import Header from './Header';
 import EditQuestionDialog from './remake_problem';
 
@@ -75,8 +75,6 @@ const MyPage = () => {
                                     <TableCell>왼쪽 설명</TableCell>
                                     <TableCell>오른쪽 사진</TableCell>
                                     <TableCell>오른쪽 설명</TableCell>
-                                    <TableCell>선호도</TableCell>
-                                    <TableCell>조회수</TableCell>
                                     <TableCell>작업</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -96,8 +94,6 @@ const MyPage = () => {
                                             )}
                                         </TableCell>
                                         <TableCell>{quiz.descriptionB}</TableCell>
-                                        <TableCell>{quiz.preference}</TableCell>
-                                        <TableCell>{quiz.view}</TableCell>
                                         <TableCell>
                                             <Button
                                                 variant="contained"
