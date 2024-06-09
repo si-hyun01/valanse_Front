@@ -2,50 +2,49 @@
     background-color: black;
     border-radius: 16px;
     padding: 16px;
-  }
-  
-  .custom-title {
+}
+
+.custom-title {
     font-weight: bold;
     color: white;
     margin-bottom: 10px;
     text-align: center;
     font-size: 2.5rem;
-  }
-  
-  .custom-table {
+}
+
+.custom-table {
     font-weight: bold;
     color: white;
     margin-bottom: 30px;
-  }
-  
-  .custom-table table {
+}
+
+.custom-table table {
     width: 100%;
     border-collapse: collapse;
-  }
-  
-  .custom-table th, .custom-table td {
-    border: 1px solid white;
+}
+
+.custom-table th, .custom-table td {
+    border: 1px solid white; /* 테두리 색상을 하얀색으로 변경 */
     padding: 8px;
     text-align: left;
-  }
-  
-  .custom-table th {
+}
+
+.custom-table th {
     background-color: #333;
-  }
-  
-  .custom-table tr:hover {
+}
+
+.custom-table tr:hover {
     background-color: #444;
     cursor: pointer;
-  }
-  
-  .custom-button {
+}
+
+.custom-button {
     background-color: hotpink;
     color: white;
     border-color: lime;
-  }
-  
-  .neon-container {
+}
+
+.neon-container {
     max-width: 80%;
     margin: 0 auto;
-  }
-  
+}
