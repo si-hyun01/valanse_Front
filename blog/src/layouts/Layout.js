@@ -220,7 +220,7 @@ const Layout = () => {
                         {selectedCategory === '연애' && <Problem_UI_Omaju categoryName={selectedCategory} />}
                         {selectedCategory === '노래' && <Problem_UI_Omaju categoryName={selectedCategory} />}
                         {selectedCategory === '생존' && <Problem_UI_Omaju categoryName={selectedCategory} />}
-                        {selectedCategory === '드라마&영화' && <Problem_UI categoryName={selectedCategory} />}
+                        {selectedCategory === '드라마&영화' && <Problem_UI_Omaju categoryName={selectedCategory} />}
                         {selectedCategory === '일상' && <Problem_UI_Omaju categoryName={selectedCategory} />}
                     </div>
                     )}
