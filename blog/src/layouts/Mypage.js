@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import { Card, CardContent, CardMedia, CardActions, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Grid } from '@mui/material';
+import { Card, CardContent, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import Header from './Header';
 import EditQuestionDialog from './remake_problem';
 
@@ -51,9 +51,7 @@ const MyPage = () => {
                 image_B: selectedQuiz.imageB
             });
             setOpenDialog(false);
-            // Update quizzes state to reflect changes
             setQuizzes(quizzes.map(quiz => quiz.quizId === selectedQuiz.quizId ? { ...quiz, content: updatedContent } : quiz));
-            // Reset updated content
             setUpdatedContent("");
         } catch (error) {
             console.error('Error updating quiz:', error);
@@ -63,68 +61,67 @@ const MyPage = () => {
     return (
         <>
             <Header />
-            <div>
-                <Typography variant="h4" gutterBottom>
-                    마이 페이지 개발 중입니다.....
-                </Typography>
-                <Grid container spacing={2}>
-                    {quizzes.map((quiz) => (
-                        <Grid item xs={12} sm={6} md={4} key={quiz.quizId}>
-                            <Card>
-                                {quiz.imageA && (
-                                    <CardMedia
-                                        component="img"
-                                        height="140"
-                                        image={quiz.imageA}
-                                        alt="Option A"
-                                    />
-                                )}
-                                <CardContent>
-                                    <Typography gutterBottom variant="h5" component="div">
-                                        {quiz.content}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        {quiz.descriptionA}
-                                    </Typography>
-                                    {quiz.imageB && (
-                                        <CardMedia
-                                            component="img"
-                                            height="140"
-                                            image={quiz.imageB}
-                                            alt="Option B"
-                                            style={{ marginTop: '16px' }}
-                                        />
-                                    )}
-                                    <Typography variant="body2" color="text.secondary">
-                                        {quiz.descriptionB}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        선호도: {quiz.preference} 조회수: {quiz.view}
-                                    </Typography>
-                                </CardContent>
-                                <CardActions>
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={() => handleEdit(quiz)}
-                                        style={{ marginRight: '8px' }}
-                                    >
-                                        수정하기
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        color="secondary"
-                                        onClick={() => handleDelete(quiz.quizId)}
-                                    >
-                                        삭제하기
-                                    </Button>
-                                </CardActions>
-                            </Card>
-                        </Grid>
-                    ))}
-                </Grid>
-            </div>
-            {/* 수정 다이얼로그 */}
+            <Card style={{ margin: '20px', padding: '20px' }}>
+                <CardContent>
+                    <Typography variant="h4" gutterBottom>
+                        마이 페이지 개발 중입니다.....
+                    </Typography>
+                    <TableContainer>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>제목</TableCell>
+                                    <TableCell>왼쪽 사진</TableCell>
+                                    <TableCell>왼쪽 설명</TableCell>
+                                    <TableCell>오른쪽 사진</TableCell>
+                                    <TableCell>오른쪽 설명</TableCell>
+                                    <TableCell>선호도</TableCell>
+                                    <TableCell>조회수</TableCell>
+                                    <TableCell>작업</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {quizzes.map((quiz) => (
+                                    <TableRow key={quiz.quizId}>
+                                        <TableCell>{quiz.content}</TableCell>
+                                        <TableCell>
+                                            {quiz.imageA && (
+                                                <img src={quiz.imageA} alt="Option A" style={{ width: '100%', height: '250px', objectFit: 'cover' }} />
+                                            )}
+                                        </TableCell>
+                                        <TableCell>{quiz.descriptionA}</TableCell>
+                                        <TableCell>
+                                            {quiz.imageB && (
+                                                <img src={quiz.imageB} alt="Option B" style={{ width: '100%', height: '250px', objectFit: 'cover' }} />
+                                            )}
+                                        </TableCell>
+                                        <TableCell>{quiz.descriptionB}</TableCell>
+                                        <TableCell>{quiz.preference}</TableCell>
+                                        <TableCell>{quiz.view}</TableCell>
+                                        <TableCell>
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => handleEdit(quiz)}
+                                                style={{ marginRight: '8px' }}
+                                            >
+                                                수정하기
+                                            </Button>
+                                            <Button
+                                                variant="contained"
+                                                color="secondary"
+                                                onClick={() => handleDelete(quiz.quizId)}
+                                            >
+                                                삭제하기
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </CardContent>
+            </Card>
             <EditQuestionDialog
                 open={openDialog}
                 handleClose={() => setOpenDialog(false)}
