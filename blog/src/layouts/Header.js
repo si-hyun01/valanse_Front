@@ -65,7 +65,8 @@ const Header = () => {
             const userId = decodedPayload.userid; // 페이로드에서 userid 추출
             setUserId(userId);
         }
-    }, []);
+    }, [accessTokenCookie]); // accessTokenCookie를 의존성 배열에 추가
+    
 
     const getAccessToken = async (stateToken) => {
         try {
