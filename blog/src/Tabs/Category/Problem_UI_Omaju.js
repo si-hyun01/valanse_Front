@@ -130,28 +130,57 @@ function ProblemUI({ categoryName }) {
           <Typography variant="body1" id="confirm-dialog-description">
             선택지: {selectedOption}. 정말 선택하시겠습니까?
           </Typography>
+          <Typography variant="body2" sx={{ color: 'black', mt: 2 }}>
+            이 퀴즈에 대해 평가를 내려주세요. 
+          </Typography>
           <FormControlLabel
             control={<Checkbox checked={preference === -2} onChange={() => handlePreferenceChange(-2)} />}
-            label={<Typography variant="body1" sx={{ color: 'white' }}>-2</Typography>}
+            label={
+              <Typography variant="body1" sx={{ color: 'black' }}>
+                매우 싫음
+              </Typography>
+            }
+            sx={{ bgcolor: 'transparent' }}
           />
           <FormControlLabel
             control={<Checkbox checked={preference === -1} onChange={() => handlePreferenceChange(-1)} />}
-            label={<Typography variant="body1" sx={{ color: 'white' }}>-1</Typography>}
+            label={
+              <Typography variant="body1" sx={{ color: 'black' }}>
+                싫음
+              </Typography>
+            }
+            sx={{ bgcolor: 'transparent' }}
           />
           <FormControlLabel
             control={<Checkbox checked={preference === 0} onChange={() => handlePreferenceChange(0)} />}
-            label={<Typography variant="body1" sx={{ color: 'white' }}>0</Typography>}
+            label={
+              <Typography variant="body1" sx={{ color: 'black' }}>
+                보통
+              </Typography>
+            }
+            sx={{ bgcolor: 'transparent' }}
           />
           <FormControlLabel
             control={<Checkbox checked={preference === 1} onChange={() => handlePreferenceChange(1)} />}
-            label={<Typography variant="body1" sx={{ color: 'white' }}>1</Typography>}
+            label={
+              <Typography variant="body1" sx={{ color: 'black' }}>
+                좋음
+              </Typography>
+            }
+            sx={{ bgcolor: 'transparent' }}
           />
           <FormControlLabel
             control={<Checkbox checked={preference === 2} onChange={() => handlePreferenceChange(2)} />}
-            label={<Typography variant="body1" sx={{ color: 'white' }}>2</Typography>}
+            label={
+              <Typography variant="body1" sx={{ color: 'black' }}>
+                매우 좋음
+              </Typography>
+            }
+            sx={{ bgcolor: 'transparent' }}
           />
 
         </DialogContent>
+
         <DialogActions>
           <Button onClick={handleCloseConfirmDialog} color="primary">
             취소
