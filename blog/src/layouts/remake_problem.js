@@ -54,14 +54,28 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate }) {
         setImageFunc(e.target.files[0]);
     };
 
-    const handleCategoryChange = (event) => {
-        setSelectedCategory(event.target.value);
-    };
-
     return (
         <Dialog open={open} onClose={handleClose}>
             <DialogTitle>퀴즈 수정</DialogTitle>
             <DialogContent>
+                {/* 카테고리 선택 */}
+                <FormControl fullWidth style={{ backgroundColor: 'gray', marginBottom: '30px' }}>
+                    <InputLabel style={{ color: 'white' }}>카테고리 선택</InputLabel>
+                    <Select
+                        value={selectedCategory}
+                        onChange={(e) => setSelectedCategory(e.target.value)}
+                        label="카테고리 선택"
+                    >
+                        <MenuItem value="축구">축구</MenuItem>
+                        <MenuItem value="음식">음식</MenuItem>
+                        <MenuItem value="연애">연애</MenuItem>
+                        <MenuItem value="노래">노래</MenuItem>
+                        <MenuItem value="생존">생존</MenuItem>
+                        <MenuItem value="드라마&영화">드라마&영화</MenuItem>
+                        <MenuItem value="일상">일상</MenuItem>
+                    </Select>
+                </FormControl>
+
                 <TextField
                     fullWidth
                     label="퀴즈 제목"
@@ -90,24 +104,6 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate }) {
                     accept="image/*"
                     onChange={handleImageChange(setImageB)}
                 />
-
-                {/* 카테고리 선택 */}
-                <FormControl fullWidth style={{ backgroundColor: 'gray', marginBottom: '30px' }}>
-                    <InputLabel style={{ color: 'white' }}>카테고리 선택</InputLabel>
-                    <Select
-                        value={selectedCategory}
-                        onChange={handleCategoryChange}
-                        label="카테고리 선택"
-                    >
-                        <MenuItem value="축구">축구</MenuItem>
-                        <MenuItem value="음식">음식</MenuItem>
-                        <MenuItem value="연애">연애</MenuItem>
-                        <MenuItem value="노래">노래</MenuItem>
-                        <MenuItem value="생존">생존</MenuItem>
-                        <MenuItem value="드라마&영화">드라마&영화</MenuItem>
-                        <MenuItem value="일상">일상</MenuItem>
-                    </Select>
-                </FormControl>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>취소</Button>
