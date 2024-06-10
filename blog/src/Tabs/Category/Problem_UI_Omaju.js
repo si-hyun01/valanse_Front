@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button, Card, CardContent, CardActionArea, CardMedia, Container, Dialog, DialogActions, DialogTitle, DialogContent, Grid, IconButton, Typography } from '@mui/material';
+import { Button, Card, CardContent, CardActionArea, CardMedia, Container, Dialog, DialogActions, DialogTitle, DialogContent, Grid, IconButton, Typography, Checkbox, FormControlLabel } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CommentUI from '../../components/comments';  // CommentUI 컴포넌트 import
@@ -9,6 +9,7 @@ function ProblemUI({ categoryName }) {
   const [quizDataList, setQuizDataList] = useState([]);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
+  const [preference, setPreference] = useState(0);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
@@ -51,6 +52,7 @@ function ProblemUI({ categoryName }) {
   const handleNext = async () => {
     const nextIndex = currentQuizIndex + 1;
     if (nextIndex < quizDataList.length) {
+      saveUserAnswer(); // 사용자의 답변 저장
       setCurrentQuizIndex(nextIndex);
     } else {
       setShowNoProblemDialog(true);
@@ -74,7 +76,25 @@ function ProblemUI({ categoryName }) {
 
   const handleConfirmSelection = () => {
     setShowConfirmDialog(false); // 다이얼로그를 닫기
+    saveUserAnswer(); // 사용자의 답변 저장
     handleNext(); // 다음 퀴즈로 넘어가기
+  };
+
+  const handlePreferenceChange = (value) => {
+    setPreference(value);
+  };
+
+  const saveUserAnswer = async () => {
+    try {
+      const response = await axios.post('https://valanse.site/quiz/save-user-answer', {
+        quizId: quizDataList[currentQuizIndex].quizId,
+        selectedOption: selectedOption,
+        preference: preference
+      });
+      console.log('User answer saved:', response.data);
+    } catch (error) {
+      console.error('Error saving user answer:', error.message);
+    }
   };
 
   const currentQuizData = quizDataList[currentQuizIndex];
@@ -107,9 +127,29 @@ function ProblemUI({ categoryName }) {
       >
         <DialogTitle id="confirm-dialog-title">선택 확인</DialogTitle>
         <DialogContent>
-          <Typography variant="body1" id="confirm-dialog-description">
+        <Typography variant="body1" id="confirm-dialog-description">
             선택지: {selectedOption}. 정말 선택하시겠습니까?
           </Typography>
+          <FormControlLabel
+            control={<Checkbox checked={preference === -2} onChange={() => handlePreferenceChange(-2)} />}
+            label="-2"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={preference === -1} onChange={() => handlePreferenceChange(-1)} />}
+            label="-1"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={preference === 0} onChange={() => handlePreferenceChange(0)} />}
+            label="0"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={preference === 1} onChange={() => handlePreferenceChange(1)} />}
+            label="1"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={preference === 2} onChange={() => handlePreferenceChange(2)} />}
+            label="2"
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseConfirmDialog} color="primary">
@@ -178,7 +218,7 @@ function ProblemUI({ categoryName }) {
               </Card>
             </Grid>
             <Grid item xs={6} textAlign="center">
-            <Card
+              <Card
                 onClick={() => handleOptionSelect('B', currentQuizData.quizId)}
                 sx={{
                   borderRadius: '16px',
