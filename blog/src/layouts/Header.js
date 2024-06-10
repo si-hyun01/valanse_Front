@@ -165,9 +165,7 @@ const Header = () => {
 
     // 로그인 상태가 변경될 때마다 사용자 정보를 서버에 전달
     useEffect(() => {
-        if (isLoggedIn && userId) {
-            sendUserInfoToServer();
-        }
+        sendUserInfoToServer();
     }, [isLoggedIn, userId]);
 
     return (
@@ -196,11 +194,11 @@ const Header = () => {
                                 color: 'cyan',
                                 fontSize: '24px',
                                 fontWeight: 'bold',
-                                textShadow: '0 0 10px cyan, 0 0 20px cyan',
+                                textShadow: '0 0 10px cyan',
                                 fontFamily: 'monospace'
                             }}>
                                 {currentTime}
-                            </div>
+                                </div>
                         </div>
                     </div>
 
