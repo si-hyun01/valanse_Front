@@ -1,10 +1,9 @@
-// ProblemUI.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Card, CardContent, CardActionArea, CardMedia, Container, Dialog, DialogActions, DialogTitle, DialogContent, Grid, IconButton, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import CommentUI from '../../components/comments';  // CommentUI 컴포넌트 import
+import CommentUI from '../../components/comments';
 
 function ProblemUI({ categoryName, userId }) {
   const [quizDataList, setQuizDataList] = useState([]);
@@ -43,28 +42,16 @@ function ProblemUI({ categoryName, userId }) {
     }
   };
 
-  const handleOptionSelect = (option, quizId) => {
+  const handleOptionSelect = async (option, quizId) => {
     setSelectedOption(option);
     setShowConfirmDialog(true);
+    console.log(quizDataList[currentQuizIndex]); // 선택한 퀴즈의 상세 정보 출력
   };
 
   const handleNext = async () => {
-    if (selectedOption && quizDataList[currentQuizIndex]) {
-      try {
-        await axios.post('https://valanse.site/quiz/save-user-answer', {
-          userId: userId,
-          quizId: quizDataList[currentQuizIndex].quizId,
-          selectedOption: selectedOption
-        });
-      } catch (error) {
-        console.error('Error saving user answer:', error.message);
-      }
-    }
-
     const nextIndex = currentQuizIndex + 1;
     if (nextIndex < quizDataList.length) {
       setCurrentQuizIndex(nextIndex);
-      setSelectedOption(null);
     } else {
       setShowNoProblemDialog(true);
     }
@@ -74,7 +61,6 @@ function ProblemUI({ categoryName, userId }) {
     const previousIndex = currentQuizIndex - 1;
     if (previousIndex >= 0) {
       setCurrentQuizIndex(previousIndex);
-      setSelectedOption(null);
     }
   };
 
@@ -86,8 +72,24 @@ function ProblemUI({ categoryName, userId }) {
     setShowConfirmDialog(false);
   };
 
-  const handleConfirmSelection = () => {
+  const handleConfirmSelection = async () => {
     setShowConfirmDialog(false);
+
+    // 선택한 답안을 백엔드에 저장
+    try {
+      await axios.post(
+        `https://valanse.site/quiz/save-user-answer?category=${encodeURIComponent(categoryName)}`,
+        { userId, quizId: quizDataList[currentQuizIndex].quizId, answer: selectedOption },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+    } catch (error) {
+      console.error('Error saving user answer:', error.message);
+    }
+
     handleNext();
   };
 
@@ -238,6 +240,7 @@ function ProblemUI({ categoryName, userId }) {
                 color="primary"
                 onClick={handleNext}
                 disabled={currentQuizIndex === quizDataList.length - 1}
+               
                 endIcon={<ArrowForwardIcon />}
                 sx={{ bgcolor: 'limegreen', color: 'white' }}
               >
@@ -245,7 +248,7 @@ function ProblemUI({ categoryName, userId }) {
               </Button>
             </Grid>
             <Grid item xs={12}>
-              {currentQuizData && <CommentUI quizId={currentQuizData.quizId} />} {/* CommentUI 컴포넌트 추가 */}
+              {currentQuizData && <CommentUI quizId={currentQuizData.quizId} />}
             </Grid>
           </Grid>
         </Container>
