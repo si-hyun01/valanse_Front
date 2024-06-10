@@ -5,13 +5,13 @@ import SignUpmodel from "../modal/SignUpmodel";
 import Cookies from 'js-cookie';
 import valanse_logo from "./img/valanse_logo3.png";
 
-const Header = () => {
+const Header = ({ onUserIdUpdate }) => {
     const [showSignUpModal, setShowSignUpModal] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [stateToken, setStateToken] = useState('');
     const [accessToken, setAccessToken] = useState('');
     const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Seoul', hour12: true, hourCycle: 'h12' }));
-    const [userId, setUserId] = useState(''); // 추가: userid 상태 추가
+    const [userId, setUserId] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -60,10 +60,11 @@ const Header = () => {
     useEffect(() => {
         const accessTokenCookie = Cookies.get('access_token');
         if (accessTokenCookie) {
-            const tokenPayload = accessTokenCookie.split('.')[1]; // 토큰의 payload 부분 가져오기
-            const decodedPayload = JSON.parse(atob(tokenPayload)); // Base64 디코딩 및 JSON 파싱
-            const userId = decodedPayload.userid; // 페이로드에서 userid 추출
+            const tokenPayload = accessTokenCookie.split('.')[1];
+            const decodedPayload = JSON.parse(atob(tokenPayload));
+            const userId = decodedPayload.userid;
             setUserId(userId);
+            onUserIdUpdate(userId); // 추가: 상위 컴포넌트로 userId 전달
         }
     }, []);
 
@@ -141,7 +142,7 @@ const Header = () => {
             margin: '0 10px',
             textShadow: '0 0 5px',
             color: '#fff',
-            backgroundColor: '#333' //연한 검은색
+            backgroundColor: '#333'
         },
         logout: {
             borderColor: 'red',

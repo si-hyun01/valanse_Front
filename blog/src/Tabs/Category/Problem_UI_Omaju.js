@@ -1,3 +1,4 @@
+// ProblemUI.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Card, CardContent, CardActionArea, CardMedia, Container, Dialog, DialogActions, DialogTitle, DialogContent, Grid, IconButton, Typography } from '@mui/material';
@@ -5,7 +6,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CommentUI from '../../components/comments';  // CommentUI 컴포넌트 import
 
-function ProblemUI({ categoryName }) {
+function ProblemUI({ categoryName, userId }) {
   const [quizDataList, setQuizDataList] = useState([]);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -42,16 +43,28 @@ function ProblemUI({ categoryName }) {
     }
   };
 
-  const handleOptionSelect = async (option, quizId) => {
+  const handleOptionSelect = (option, quizId) => {
     setSelectedOption(option);
     setShowConfirmDialog(true);
-    console.log(quizDataList[currentQuizIndex]); // 선택한 퀴즈의 상세 정보 출력
   };
 
   const handleNext = async () => {
+    if (selectedOption && quizDataList[currentQuizIndex]) {
+      try {
+        await axios.post('https://valanse.site/quiz/save-user-answer', {
+          userId: userId,
+          quizId: quizDataList[currentQuizIndex].quizId,
+          selectedOption: selectedOption
+        });
+      } catch (error) {
+        console.error('Error saving user answer:', error.message);
+      }
+    }
+
     const nextIndex = currentQuizIndex + 1;
     if (nextIndex < quizDataList.length) {
       setCurrentQuizIndex(nextIndex);
+      setSelectedOption(null);
     } else {
       setShowNoProblemDialog(true);
     }
@@ -61,6 +74,7 @@ function ProblemUI({ categoryName }) {
     const previousIndex = currentQuizIndex - 1;
     if (previousIndex >= 0) {
       setCurrentQuizIndex(previousIndex);
+      setSelectedOption(null);
     }
   };
 
@@ -73,8 +87,8 @@ function ProblemUI({ categoryName }) {
   };
 
   const handleConfirmSelection = () => {
-    setShowConfirmDialog(false); // 다이얼로그를 닫기
-    handleNext(); // 다음 퀴즈로 넘어가기
+    setShowConfirmDialog(false);
+    handleNext();
   };
 
   const currentQuizData = quizDataList[currentQuizIndex];
@@ -178,7 +192,7 @@ function ProblemUI({ categoryName }) {
               </Card>
             </Grid>
             <Grid item xs={6} textAlign="center">
-            <Card
+              <Card
                 onClick={() => handleOptionSelect('B', currentQuizData.quizId)}
                 sx={{
                   borderRadius: '16px',
@@ -206,7 +220,6 @@ function ProblemUI({ categoryName }) {
                 </CardActionArea>
               </Card>
             </Grid>
-
             <Grid item xs={6} textAlign="center">
               <Button
                 variant="contained"
