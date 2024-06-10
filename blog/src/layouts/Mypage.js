@@ -1,80 +1,33 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import { Container, Typography, Button, TextField, Card, CardContent, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-import Header from './Header';
+import { Container, Typography, Button, Card, CardContent } from '@mui/material';
 import '../../src/layouts/Mypage.css'; 
 import Bground from "../layouts/img/green_hexa.png";
+import CreateQuestionDialog from '../layouts/remake_problem'; 
 
-const QuizDetail = ({ quiz, onDelete, onGoBack, onUpdate }) => {
-    const [isEditing, setIsEditing] = useState(false);
-    const [updatedContent, setUpdatedContent] = useState(quiz.content);
-    const [openDialog, setOpenDialog] = useState(false);
-
-    const handleUpdate = () => {
-        onUpdate(quiz.quizId, updatedContent);
-        setIsEditing(false);
-    };
+const QuizDetail = ({ quiz, onDelete, onGoBack }) => {
+    const [openDialog, setOpenDialog] = useState(false); // 다이얼로그 열림 상태 추가
 
     const handleDeleteConfirmation = () => {
         setOpenDialog(true);
     };
 
-    const handleDelete = async () => {
-        await onDelete(quiz.quizId);
-        setOpenDialog(false);
-    };
-
     return (
         <Card className="quiz-detail" sx={{ bgcolor: 'black', borderRadius: '16px', p: 2 }}>
             <CardContent>
-                {isEditing ? (
-                    <>
-                        <TextField
-                            label="Content"
-                            value={updatedContent}
-                            onChange={(e) => setUpdatedContent(e.target.value)}
-                            fullWidth
-                            margin="normal"
-                            sx={{ input: { color: 'white' }, label: { color: 'white' } }}
-                        />
-                        <Button onClick={handleUpdate} color="primary" sx={{ borderColor: 'lime', color: 'lime' }}>확인</Button>
-                        <Button onClick={() => setIsEditing(false)} color="secondary" sx={{ borderColor: 'red', color: 'red' }}>취소</Button>
-                    </>
-                ) : (
-                    <>
-                        <Typography variant="h6" gutterBottom sx={{ color: 'white' }}>{quiz.content}</Typography>
-                        <Typography variant="subtitle2" sx={{ color: 'white' }}>퀴즈 ID: {quiz.quizId}</Typography>
-                        {quiz.imageA && <img src={quiz.imageA} alt="Option A" style={{ width: '100%', height: '250px', objectFit: 'cover', marginBottom: '8px' }} />}
-                        <Typography sx={{ color: 'white' }}>{quiz.descriptionA}</Typography>
-                        {quiz.imageB && <img src={quiz.imageB} alt="Option B" style={{ width: '100%', height: '250px', objectFit: 'cover', marginBottom: '8px' }} />}
-                        <Typography sx={{ color: 'white' }}>{quiz.descriptionB}</Typography>
-                        <Button onClick={onGoBack} color="primary" sx={{ borderColor: 'lime', color: 'lime' }}>뒤로가기</Button>
-                        <Button onClick={handleDeleteConfirmation} color="error" sx={{ borderColor: 'red', color: 'red' }}>삭제하기</Button>
-                        <Button onClick={() => setIsEditing(true)} color="primary" sx={{ borderColor: 'lime', color: 'lime' }}>수정하기</Button>
-                    </>
-                )}
+                <Typography variant="h6" gutterBottom sx={{ color: 'white' }}>{quiz.content}</Typography>
+                <Typography variant="subtitle2" sx={{ color: 'white' }}>퀴즈 ID: {quiz.quizId}</Typography>
+                <Button onClick={onGoBack} color="primary" sx={{ borderColor: 'lime', color: 'lime' }}>뒤로가기</Button>
+                <Button onClick={handleDeleteConfirmation} color="error" sx={{ borderColor: 'red', color: 'red' }}>삭제하기</Button>
+                <Button onClick={() => setOpenDialog(true)} color="primary" sx={{ borderColor: 'lime', color: 'lime' }}>수정하기</Button>
             </CardContent>
-            <Dialog
+            {/* 새로운 다이얼로그 */}
+            <CreateQuestionDialog
                 open={openDialog}
-                onClose={() => setOpenDialog(false)}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">{"퀴즈 삭제"}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        퀴즈를 삭제하시겠습니까? 삭제한 퀴즈는 복구할 수 없습니다.
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setOpenDialog(false)} color="primary">
-                        취소
-                    </Button>
-                    <Button onClick={handleDelete} color="error" autoFocus>
-                        삭제
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                handleClose={() => setOpenDialog(false)}
+                quiz={quiz}
+                handleCreate={onDelete}
+            />
         </Card>
     );
 };
@@ -121,27 +74,6 @@ const MyPage = () => {
         }
     };
 
-    const handleUpdateQuiz = async (quizId, content) => {
-        try {
-            await axios.patch(`https://valanse.site/quiz/${quizId}`, {
-                quizRegisterDto: {
-                    content,
-                    optionA: selectedQuiz.optionA,
-                    optionB: selectedQuiz.optionB,
-                    descriptionA: selectedQuiz.descriptionA,
-                    descriptionB: selectedQuiz.descriptionB,
-                    category: selectedQuiz.category
-                },
-                image_A: selectedQuiz.imageA,
-                image_B: selectedQuiz.imageB
-            });
-            setQuizzes(quizzes.map(quiz => (quiz.quizId === quizId ? { ...quiz, content } : quiz)));
-            setSelectedQuiz({ ...selectedQuiz, content });
-        } catch (error) {
-            console.error('Error updating quiz:', error);
-        }
-    };
-
     const handleGoBack = () => {
         setShowDetail(false);
         setSelectedQuiz(null);
@@ -175,7 +107,6 @@ const MyPage = () => {
                         quiz={selectedQuiz}
                         onDelete={handleDeleteQuiz}
                         onGoBack={handleGoBack}
-                        onUpdate={handleUpdateQuiz}
                     />
                 )}
             </Container>
@@ -184,4 +115,3 @@ const MyPage = () => {
 };
 
 export default MyPage;
-
