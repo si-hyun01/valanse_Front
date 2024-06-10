@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
 import SignUpmodel from "../modal/SignUpmodel";
 import Cookies from 'js-cookie';
 import valanse_logo from "./img/valanse_logo3.png";
 
-const Header = ({ onUserIdUpdate }) => {
+const Header = () => {
     const [showSignUpModal, setShowSignUpModal] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [stateToken, setStateToken] = useState('');
     const [accessToken, setAccessToken] = useState('');
     const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Seoul', hour12: true, hourCycle: 'h12' }));
     const [userId, setUserId] = useState('');
-    const navigate = useNavigate();
 
     useEffect(() => {
         const accessTokenCookie = Cookies.get('access_token');
@@ -50,21 +49,12 @@ const Header = ({ onUserIdUpdate }) => {
     }, []);
 
     useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentTime(new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Seoul', hour12: true, hourCycle: 'h12' }));
-        }, 1000);
-
-        return () => clearInterval(timer);
-    }, []);
-
-    useEffect(() => {
         const accessTokenCookie = Cookies.get('access_token');
         if (accessTokenCookie) {
-            const tokenPayload = accessTokenCookie.split('.')[1];
-            const decodedPayload = JSON.parse(atob(tokenPayload));
-            const userId = decodedPayload.userid;
+            const tokenPayload = accessTokenCookie.split('.')[1]; 
+            const decodedPayload = JSON.parse(atob(tokenPayload)); 
+            const userId = decodedPayload.userid; 
             setUserId(userId);
-            onUserIdUpdate(userId); // 추가: 상위 컴포넌트로 userId 전달
         }
     }, []);
 
@@ -142,7 +132,7 @@ const Header = ({ onUserIdUpdate }) => {
             margin: '0 10px',
             textShadow: '0 0 5px',
             color: '#fff',
-            backgroundColor: '#333'
+            backgroundColor: '#333' //연한 검은색
         },
         logout: {
             borderColor: 'red',
@@ -188,7 +178,7 @@ const Header = ({ onUserIdUpdate }) => {
                                 fontFamily: 'monospace'
                             }}>
                                 {currentTime}
-                            </div>
+                                </div>
                         </div>
                     </div>
 
@@ -215,7 +205,7 @@ const Header = ({ onUserIdUpdate }) => {
                                 onClick={toggleSignUpModal}
                             >
                                 로그인
-                                </button>
+                            </button>
                         )}
                         <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} />
                     </div>
@@ -226,3 +216,4 @@ const Header = ({ onUserIdUpdate }) => {
 };
 
 export default Header;
+
