@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import SignUpmodel from "../modal/SignUpmodel";
 import Cookies from 'js-cookie';
 import valanse_logo from "./img/valanse_logo3.png";
@@ -11,7 +11,8 @@ const Header = () => {
     const [stateToken, setStateToken] = useState('');
     const [accessToken, setAccessToken] = useState('');
     const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Seoul', hour12: true, hourCycle: 'h12' }));
-    const [userId, setUserId] = useState('');
+    const [userId, setUserId] = useState(''); // 추가: userid 상태 추가
+    const navigate = useNavigate();
 
     useEffect(() => {
         const accessTokenCookie = Cookies.get('access_token');
@@ -49,11 +50,19 @@ const Header = () => {
     }, []);
 
     useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentTime(new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Seoul', hour12: true, hourCycle: 'h12' }));
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, []);
+
+    useEffect(() => {
         const accessTokenCookie = Cookies.get('access_token');
         if (accessTokenCookie) {
-            const tokenPayload = accessTokenCookie.split('.')[1]; 
-            const decodedPayload = JSON.parse(atob(tokenPayload)); 
-            const userId = decodedPayload.userid; 
+            const tokenPayload = accessTokenCookie.split('.')[1]; // 토큰의 payload 부분 가져오기
+            const decodedPayload = JSON.parse(atob(tokenPayload)); // Base64 디코딩 및 JSON 파싱
+            const userId = decodedPayload.userid; // 페이로드에서 userid 추출
             setUserId(userId);
         }
     }, []);
@@ -147,27 +156,7 @@ const Header = () => {
             boxShadow: '0 0 10px blue'
         }
     };
-
-    // 사용자 정보를 서버에 전달하는 함수
-    const sendUserInfoToServer = async () => {
-        try {
-            // 사용자 정보와 함께 POST 요청을 보냄
-            await axios.post('https://valanse.site/save-user-info', { userId }, {
-                headers: {
-                    'Authorization': accessToken,
-                    'Content-Type': 'application/json'
-                }
-            });
-        } catch (error) {
-            console.error('Error sending user info to server:', error.message);
-        }
-    };
-
-    // 로그인 상태가 변경될 때마다 사용자 정보를 서버에 전달
-    useEffect(() => {
-        sendUserInfoToServer();
-    }, [isLoggedIn, userId]);
-
+    
     return (
         <>
             <header style={{ backgroundColor: 'black', padding: '10px 0' }}>
@@ -194,11 +183,11 @@ const Header = () => {
                                 color: 'cyan',
                                 fontSize: '24px',
                                 fontWeight: 'bold',
-                                textShadow: '0 0 10px cyan',
+                                textShadow: '0 0 10px cyan, 0 0 20px cyan',
                                 fontFamily: 'monospace'
                             }}>
                                 {currentTime}
-                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -225,7 +214,7 @@ const Header = () => {
                                 onClick={toggleSignUpModal}
                             >
                                 로그인
-                            </button>
+                                </button>
                         )}
                         <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} />
                     </div>
