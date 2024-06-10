@@ -52,8 +52,12 @@ function ProblemUI({ categoryName }) {
   const handleNext = async () => {
     const nextIndex = currentQuizIndex + 1;
     if (nextIndex < quizDataList.length) {
-      saveUserAnswer(); // 사용자의 답변 저장
-      setCurrentQuizIndex(nextIndex);
+      try {
+        await saveUserAnswer(); // 사용자의 답변 저장
+        setCurrentQuizIndex(nextIndex);
+      } catch (error) {
+        console.error('Error saving user answer:', error.message);
+      }
     } else {
       setShowNoProblemDialog(true);
     }
@@ -131,7 +135,7 @@ function ProblemUI({ categoryName }) {
             선택지: {selectedOption}. 정말 선택하시겠습니까?
           </Typography>
           <Typography variant="body2" sx={{ color: 'black', mt: 2 }}>
-            이 퀴즈에 대해 평가를 내려주세요. 
+            이 퀴즈에 대해 평가를 내려주세요.
           </Typography>
           <FormControlLabel
             control={<Checkbox checked={preference === -2} onChange={() => handlePreferenceChange(-2)} />}
@@ -182,7 +186,7 @@ function ProblemUI({ categoryName }) {
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={handleCloseConfirmDialog} color="primary">
+          <Button onClick={handleCloseCloseConfirmDialog} color="primary">
             취소
           </Button>
           <Button onClick={handleConfirmSelection} color="primary" autoFocus>
@@ -276,7 +280,6 @@ function ProblemUI({ categoryName }) {
                 </CardActionArea>
               </Card>
             </Grid>
-
             <Grid item xs={6} textAlign="center">
               <Button
                 variant="contained"
@@ -302,7 +305,7 @@ function ProblemUI({ categoryName }) {
               </Button>
             </Grid>
             <Grid item xs={12}>
-              {currentQuizData && <CommentUI quizId={currentQuizData.quizId} />} {/* CommentUI 컴포넌트 추가 */}
+              {currentQuizData && <CommentUI quizId={currentQuizData.quizId} />}
             </Grid>
           </Grid>
         </Container>
