@@ -3,8 +3,9 @@ import axios from 'axios';
 import { Button, Card, CardContent, CardActionArea, CardMedia, Container, Dialog, DialogActions, DialogTitle, DialogContent, Grid, IconButton, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import CommentUI from '../../components/comments';  // CommentUI 컴포넌트 import
 
-function ProblemUI({ categoryName, userId }) { // userId 추가
+function ProblemUI({ categoryName, userId }) {
   const [quizDataList, setQuizDataList] = useState([]);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -23,20 +24,11 @@ function ProblemUI({ categoryName, userId }) { // userId 추가
         },
       });
       const allQuizzes = allQuizzesResponse.data.data;
-
       const categoryResponse = await axios.get(
         `https://valanse.site/quiz-category/search?keyword=${encodeURIComponent(category)}`
       );
-      const categoryData = categoryResponse.data;
-
-      await axios.post(`https://valanse.site/quiz/save-user-answer?category=${encodeURIComponent(category)}`, {
-        userId: userId, // 사용자 ID 전달
-        quizId: 0, // 퀴즈 ID (필요에 따라 수정)
-        selectedOption: "", // 선택한 옵션
-        preference: 0 // 선호도 (필요에 따라 수정)
-      });
-
-      const quizIds = categoryData.quizIds;
+      const categoryQuizzes = categoryResponse.data.data;
+      const quizIds = categoryQuizzes.map((quiz) => quiz.quizId);
       const filteredQuizzes = allQuizzes.filter((quiz) => quizIds.includes(quiz.quizId));
       const quizDataArray = filteredQuizzes.map(quiz => ({
         ...quiz,
@@ -50,12 +42,26 @@ function ProblemUI({ categoryName, userId }) { // userId 추가
     }
   };
 
-  const handleOptionSelect = (option, quizId) => {
+  const handleOptionSelect = async (option, quizId) => {
     setSelectedOption(option);
     setShowConfirmDialog(true);
+    console.log(quizDataList[currentQuizIndex]); // 선택한 퀴즈의 상세 정보 출력
+
+    try {
+      // 사용자의 답변과 카테고리 통계를 저장하는 API 호출
+      await axios.post(`https://valanse.site/quiz/save-user-answer?category=${encodeURIComponent(categoryName)}`, {
+        userId: userId, // 로그인한 사용자의 ID 사용
+        quizId: quizId,
+        selectedOption: option,
+        preference: 0 // 선호도 (필요에 따라 수정)
+      });
+    } catch (error) {
+      console.error('Error saving user answer:', error.message);
+      // 에러 처리
+    }
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     const nextIndex = currentQuizIndex + 1;
     if (nextIndex < quizDataList.length) {
       setCurrentQuizIndex(nextIndex);
@@ -79,28 +85,9 @@ function ProblemUI({ categoryName, userId }) { // userId 추가
     setShowConfirmDialog(false);
   };
 
-  const handleConfirmSelection = async () => {
+  const handleConfirmSelection = () => {
     setShowConfirmDialog(false); // 다이얼로그를 닫기
-
-    // 선택한 옵션과 퀴즈 ID를 가져오기
-    const selectedOption = selectedOption;
-    const quizId = quizDataList[currentQuizIndex].quizId;
-
-    try {
-      // 사용자의 답변과 카테고리 통계를 저장하는 API 호출
-      await axios.post(`http://valanse.site/quiz/save-user-answer?category=${encodeURIComponent(categoryName)}`, {
-        userId: userId, // 사용자 ID 전달
-        quizId: quizId,
-        selectedOption: selectedOption,
-        preference: 0 // 선호도 (필요에 따라 수정)
-      });
-
-      // 다음 퀴즈로 넘어가기
-      handleNext();
-    } catch (error) {
-      console.error('Error saving user answer:', error.message);
-      // 에러 처리
-    }
+    handleNext(); // 다음 퀴즈로 넘어가기
   };
 
   const currentQuizData = quizDataList[currentQuizIndex];
@@ -158,7 +145,7 @@ function ProblemUI({ categoryName, userId }) { // userId 추가
           <Grid container spacing={2}>
             <Grid item xs={12} style={{ height: '30px' }} />
             <Grid item xs={12}>
-              <Typography variant="h4"align="center" sx={{ color: 'white' }}>
+              <Typography variant="h4" align="center" sx={{ color: 'white' }}>
                 {currentQuizData ? currentQuizData.content : ''}
               </Typography>
             </Grid>
@@ -204,7 +191,7 @@ function ProblemUI({ categoryName, userId }) { // userId 추가
               </Card>
             </Grid>
             <Grid item xs={6} textAlign="center">
-              <Card
+            <Card
                 onClick={() => handleOptionSelect('B', currentQuizData.quizId)}
                 sx={{
                   borderRadius: '16px',
@@ -256,6 +243,9 @@ function ProblemUI({ categoryName, userId }) { // userId 추가
               >
                 다음으로
               </Button>
+            </Grid>
+            <Grid item xs={12}>
+              {currentQuizData && <CommentUI quizId={currentQuizData.quizId} />} {/* CommentUI 컴포넌트 추가 */}
             </Grid>
           </Grid>
         </Container>
