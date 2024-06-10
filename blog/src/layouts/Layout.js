@@ -101,7 +101,6 @@ const Layout = () => {
 
     return (
         <div>
-            <Header />
             <div style={{ backgroundColor: 'black', backgroundSize: 'cover' }}>
                 <div style={{ backgroundColor: 'black', backgroundSize: 'cover', display: 'flex', flexDirection: 'column', alignItems: 'center', border: '1px solid white' }}>
                     <ul className="nav nav-tabs" style={{ border: 'none' }}>

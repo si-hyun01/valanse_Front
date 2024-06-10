@@ -5,7 +5,7 @@ import Layout from './layouts/Layout';
 import NoticeBoard from '../src/Tabs/notinoti';
 import NoticeWrite from '../src/Tabs/noti_write';
 import Mypage from '../src/layouts/Mypage';
-import Header from './components/Header';
+import Header from '../src/layouts/Header';
 import ProblemUI from '../src/Tabs/Category/Problem_UI_Omaju';
 import { useParams } from 'react-router-dom';
 
