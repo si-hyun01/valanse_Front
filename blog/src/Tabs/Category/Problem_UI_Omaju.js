@@ -4,7 +4,6 @@ import { Button, Card, CardContent, CardActionArea, CardMedia, Container, Dialog
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CommentUI from '../../components/comments';  // CommentUI 컴포넌트 import
-import Header from '../../layouts/Header'; // Header 컴포넌트 import
 
 function ProblemUI({ categoryName }) {
   const [quizDataList, setQuizDataList] = useState([]);
@@ -12,7 +11,6 @@ function ProblemUI({ categoryName }) {
   const [selectedOption, setSelectedOption] = useState(null);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const userId = Header.getUserId(); // Header 컴포넌트에서 userId 가져오기
 
   useEffect(() => {
     fetchQuizData(categoryName);
@@ -177,72 +175,70 @@ function ProblemUI({ categoryName }) {
                     </Typography>
                   </CardContent>
                 </CardActionArea>
-             
-                </Card>
-          </Grid>
-          <Grid item xs={6} textAlign="center">
+              </Card>
+            </Grid>
+            <Grid item xs={6} textAlign="center">
             <Card
-              onClick={() => handleOptionSelect('B', currentQuizData.quizId)}
-              sx={{
-                borderRadius: '16px',
-                overflow: 'hidden',
-                boxShadow: '0px 0px 20px 0px rgba(0, 255, 255, 0.75)',
-              }}
-            >
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  height="400"
-                  image={currentQuizData ? currentQuizData.imageB : ''}
-                  alt=""
-                />
-                <CardContent sx={{ height: '100px', backgroundColor: 'black' }}>
-                  <Typography
-                    gutterBottom
-                    variant="h5"
-                    component="div"
-                    sx={{ color: 'white' }}
-                  >
-                    {currentQuizData ? currentQuizData.descriptionB : ''}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
+                onClick={() => handleOptionSelect('B', currentQuizData.quizId)}
+                sx={{
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  boxShadow: '0px 0px 20px 0px rgba(0, 255, 255, 0.75)',
+                }}
+              >
+                <CardActionArea>
+                  <CardMedia
+                    component="img"
+                    height="400"
+                    image={currentQuizData ? currentQuizData.imageB : ''}
+                    alt=""
+                  />
+                  <CardContent sx={{ height: '100px', backgroundColor: 'black' }}>
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="div"
+                      sx={{ color: 'white' }}
+                    >
+                      {currentQuizData ? currentQuizData.descriptionB : ''}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
 
-          <Grid item xs={6} textAlign="center">
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handlePrevious}
-              disabled={currentQuizIndex === 0}
-              startIcon={<ArrowBackIcon />}
-              sx={{ bgcolor: 'limegreen', color: 'white' }}
-            >
-              이전으로
-            </Button>
+            <Grid item xs={6} textAlign="center">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handlePrevious}
+                disabled={currentQuizIndex === 0}
+                startIcon={<ArrowBackIcon />}
+                sx={{ bgcolor: 'limegreen', color: 'white' }}
+              >
+                이전으로
+              </Button>
+            </Grid>
+            <Grid item xs={6} textAlign="center">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleNext}
+                disabled={currentQuizIndex === quizDataList.length - 1}
+                endIcon={<ArrowForwardIcon />}
+                sx={{ bgcolor: 'limegreen', color: 'white' }}
+              >
+                다음으로
+              </Button>
+            </Grid>
+            <Grid item xs={12}>
+              {currentQuizData && <CommentUI quizId={currentQuizData.quizId} />} {/* CommentUI 컴포넌트 추가 */}
+            </Grid>
           </Grid>
-          <Grid item xs={6} textAlign="center">
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleNext}
-              disabled={currentQuizIndex === quizDataList.length - 1}
-              endIcon={<ArrowForwardIcon />}
-              sx={{ bgcolor: 'limegreen', color: 'white' }}
-            >
-              다음으로
-            </Button>
-          </Grid>
-          <Grid item xs={12}>
-            {currentQuizData && <CommentUI quizId={currentQuizData.quizId} userId={userId} />} {/* CommentUI 컴포넌트 추가 */}
-          </Grid>
-        </Grid>
-      </Container>
-    </Card>
-  </Container>
-);
-
+        </Container>
+      </Card>
+    </Container>
+  );
 }
 
 export default ProblemUI;
