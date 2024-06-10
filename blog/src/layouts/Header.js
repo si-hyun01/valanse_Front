@@ -79,10 +79,12 @@ const Header = () => {
             setAccessToken(token);
             Cookies.set('access_token', token);
             setIsLoggedIn(true);
+            window.location.replace('https://valanse.vercel.app/');
         } catch (error) {
             console.error('Error getting access token:', error.message);
         }
     };
+
     const refreshAccessToken = async (refreshToken) => {
         try {
             const response = await axios.post('https://valanse.site/token/refresh', null, {
@@ -114,6 +116,7 @@ const Header = () => {
                 setIsLoggedIn(false);
                 setAccessToken('');
                 setStateToken('');
+                window.location.replace('https://valanse.vercel.app/');
             }
         } catch (error) {
             console.error('Error during logout:', error.message);
