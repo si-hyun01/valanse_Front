@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Button, Card, CardContent, CardActionArea, CardMedia, Container, Dialog, DialogActions, DialogTitle, DialogContent, Grid, IconButton, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import CommentUI from '../../components/comments';  // CommentUI 컴포넌트 import
+import CommentUI from '../../components/comments';  
 
 function ProblemUI({ categoryName }) {
   const [quizDataList, setQuizDataList] = useState([]);
@@ -72,7 +72,28 @@ function ProblemUI({ categoryName }) {
     setShowConfirmDialog(false);
   };
 
-  const handleConfirmSelection = () => {
+  const handleConfirmSelection = async () => {
+    // POST 요청 보내기
+    const currentQuizData = quizDataList[currentQuizIndex];
+    const userId = 0; // 실제 userId로 대체해야 합니다
+    const preference = 0; // preference 값을 필요에 따라 설정해야 합니다
+
+    try {
+      await axios.post(`https://valanse.site/quiz/save-user-answer?category=${encodeURIComponent(categoryName)}`, {
+        userId,
+        quizId: currentQuizData.quizId,
+        selectedOption,
+        preference,
+      }, {
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+          'accept': 'application/json;charset=UTF-8',
+        },
+      });
+    } catch (error) {
+      console.error('Error saving user answer:', error.message);
+    }
+
     setShowConfirmDialog(false); // 다이얼로그를 닫기
     handleNext(); // 다음 퀴즈로 넘어가기
   };
@@ -178,7 +199,7 @@ function ProblemUI({ categoryName }) {
               </Card>
             </Grid>
             <Grid item xs={6} textAlign="center">
-            <Card
+              <Card
                 onClick={() => handleOptionSelect('B', currentQuizData.quizId)}
                 sx={{
                   borderRadius: '16px',
@@ -232,7 +253,7 @@ function ProblemUI({ categoryName }) {
               </Button>
             </Grid>
             <Grid item xs={12}>
-              {currentQuizData && <CommentUI quizId={currentQuizData.quizId} />} {/* CommentUI 컴포넌트 추가 */}
+              {currentQuizData && <CommentUI quizId={currentQuizData.quizId} />} 
             </Grid>
           </Grid>
         </Container>
