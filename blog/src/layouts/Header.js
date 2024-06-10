@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import SignUpmodel from "../modal/SignUpmodel";
 import Cookies from 'js-cookie';
 import valanse_logo from "./img/valanse_logo3.png";
@@ -147,7 +147,29 @@ const Header = () => {
             boxShadow: '0 0 10px blue'
         }
     };
-    
+
+    // 사용자 정보를 서버에 전달하는 함수
+    const sendUserInfoToServer = async () => {
+        try {
+            // 사용자 정보와 함께 POST 요청을 보냄
+            await axios.post('https://valanse.site/save-user-info', { userId }, {
+                headers: {
+                    'Authorization': accessToken,
+                    'Content-Type': 'application/json'
+                }
+            });
+        } catch (error) {
+            console.error('Error sending user info to server:', error.message);
+        }
+    };
+
+    // 로그인 상태가 변경될 때마다 사용자 정보를 서버에 전달
+    useEffect(() => {
+        if (isLoggedIn && userId) {
+            sendUserInfoToServer();
+        }
+    }, [isLoggedIn, userId]);
+
     return (
         <>
             <header style={{ backgroundColor: 'black', padding: '10px 0' }}>
@@ -178,7 +200,7 @@ const Header = () => {
                                 fontFamily: 'monospace'
                             }}>
                                 {currentTime}
-                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -216,4 +238,3 @@ const Header = () => {
 };
 
 export default Header;
-
