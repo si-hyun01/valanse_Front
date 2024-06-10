@@ -22,7 +22,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout activeTab="전체" />} />
         <Route path="/category/:categoryName" element={<Layout />} />
-        <Route path="/problems/:categoryName" element={<ProblemUIWrapper userId={userId} />} />
+        <Route path="/problems/:categoryName" element={<ProblemUIWrapper />} />
         <Route path="/notice" element={<Layout />} />
         <Route path="/write-notice" element={<Layout />} />
         <Route path="/popularity" element={<Layout />} />
@@ -34,9 +34,15 @@ function App() {
   );
 }
 
-function ProblemUIWrapper({ userId }) {
+function ProblemUIWrapper() {
   const { categoryName } = useParams();
-  return <ProblemUI categoryName={categoryName} userId={userId} />;
+  const [userId, setUserId] = useState('');
+
+  const handleUserIdUpdate = (id) => {
+    setUserId(id);
+  };
+
+  return <ProblemUI categoryName={categoryName} userId={userId} onUserIdUpdate={handleUserIdUpdate} />;
 }
 
 export default App;
