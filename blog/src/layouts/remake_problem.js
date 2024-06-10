@@ -59,7 +59,7 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate }) {
             <DialogTitle>퀴즈 수정</DialogTitle>
             <DialogContent>
                 {/* 카테고리 선택 */}
-                <FormControl fullWidth style={{ marginBottom: '30px' }}>
+                <FormControl fullWidth style={{ marginBottom: '30px', marginTop: '20px' }}>
                     <InputLabel>카테고리 선택</InputLabel>
                     <Select
                         value={selectedCategory}
