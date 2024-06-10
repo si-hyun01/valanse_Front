@@ -73,24 +73,26 @@ function ProblemUI({ categoryName, userId }) {
   };
 
   const handleConfirmSelection = async () => {
-    setShowConfirmDialog(false);
+    if (selectedOption !== null) {
+      setShowConfirmDialog(false);
 
-    // 선택한 답안을 백엔드에 저장
-    try {
-      await axios.post(
-        `https://valanse.site/quiz/save-user-answer?category=${encodeURIComponent(categoryName)}`,
-        { userId, quizId: quizDataList[currentQuizIndex].quizId, answer: selectedOption },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-    } catch (error) {
-      console.error('Error saving user answer:', error.message);
+      // 선택한 답안을 백엔드에 저장
+      try {
+        await axios.post(
+          `https://valanse.site/quiz/save-user-answer?category=${encodeURIComponent(categoryName)}`,
+          { userId, quizId: quizDataList[currentQuizIndex].quizId, answer: selectedOption },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+      } catch (error) {
+        console.error('Error saving user answer:', error.message);
+      }
+
+      handleNext();
     }
-
-    handleNext();
   };
 
   const currentQuizData = quizDataList[currentQuizIndex];
@@ -240,7 +242,6 @@ function ProblemUI({ categoryName, userId }) {
                 color="primary"
                 onClick={handleNext}
                 disabled={currentQuizIndex === quizDataList.length - 1}
-               
                 endIcon={<ArrowForwardIcon />}
                 sx={{ bgcolor: 'limegreen', color: 'white' }}
               >
