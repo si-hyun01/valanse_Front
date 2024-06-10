@@ -3,9 +3,9 @@ import axios from 'axios';
 import { Button, Card, CardContent, CardActionArea, CardMedia, Container, Dialog, DialogActions, DialogTitle, DialogContent, Grid, IconButton, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import CommentUI from '../../components/comments';  
+import CommentUI from '../../components/comments';
 
-function ProblemUI({ categoryName }) {
+function ProblemUI({ categoryName, userId }) { // userId props 추가
   const [quizDataList, setQuizDataList] = useState([]);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -75,7 +75,6 @@ function ProblemUI({ categoryName }) {
   const handleConfirmSelection = async () => {
     // POST 요청 보내기
     const currentQuizData = quizDataList[currentQuizIndex];
-    const userId = 0; // 실제 userId로 대체해야 합니다
     const preference = 0; // preference 값을 필요에 따라 설정해야 합니다
 
     try {
@@ -253,7 +252,7 @@ function ProblemUI({ categoryName }) {
               </Button>
             </Grid>
             <Grid item xs={12}>
-              {currentQuizData && <CommentUI quizId={currentQuizData.quizId} />} 
+              {currentQuizData && <CommentUI quizId={currentQuizData.quizId} userId={userId} />}
             </Grid>
           </Grid>
         </Container>

@@ -119,6 +119,7 @@ const Header = () => {
                 window.location.replace('https://valanse.vercel.app/');
             }
         } catch (error) {
+           
             console.error('Error during logout:', error.message);
         }
     };

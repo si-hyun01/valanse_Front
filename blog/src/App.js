@@ -4,8 +4,11 @@ import Layout from './layouts/Layout';
 import NoticeBoard from '../src/Tabs/notinoti';
 import NoticeWrite from '../src/Tabs/noti_write';
 import Mypage from '../src/layouts/Mypage';
+import ProblemUI from '../src/Tabs/Category/Problem_UI_Omaju';
 
 function App() {
+  const userId = ''; // userId 설정
+
   return (
     <Router>
       <Routes>
@@ -17,7 +20,8 @@ function App() {
         <Route path="/popularity" element={<Layout />} />
         <Route path="/noti_board" element={<NoticeBoard />} />
         <Route path="/noti_write" element={<NoticeWrite />} />
-        <Route path="/mypage" element={<Mypage />}/>
+        <Route path="/mypage" element={<Mypage />} />
+        <Route path="/problemui/:categoryName" element={<ProblemUI userId={userId} />} /> {/* userId 전달 */}
       </Routes>
     </Router>
   );
