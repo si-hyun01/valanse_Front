@@ -156,7 +156,7 @@ const Header = () => {
             boxShadow: '0 0 10px blue'
         }
     };
-
+    
     return (
         <>
             <header style={{ backgroundColor: 'black', padding: '10px 0' }}>
@@ -194,9 +194,6 @@ const Header = () => {
                     <div>
                         {isLoggedIn ? (
                             <>
-                                <div style={{ color: 'white', marginRight: '10px' }}>
-                                    현재 ID값은 {userId} 입니다.
-                                </div>
                                 <button
                                     style={{ ...buttonStyles.base, ...buttonStyles.logout }}
                                     onClick={handleLogout}
@@ -217,7 +214,7 @@ const Header = () => {
                                 onClick={toggleSignUpModal}
                             >
                                 로그인
-                            </button>
+                                </button>
                         )}
                         <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} />
                     </div>

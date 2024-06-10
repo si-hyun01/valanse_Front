@@ -3,8 +3,7 @@ import axios from 'axios';
 import { Button, Card, CardContent, CardActionArea, CardMedia, Container, Dialog, DialogActions, DialogTitle, DialogContent, Grid, IconButton, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import CommentUI from '../../components/comments';
-import Cookies from 'js-cookie';
+import CommentUI from '../../components/comments';  // CommentUI 컴포넌트 import
 
 function ProblemUI({ categoryName }) {
   const [quizDataList, setQuizDataList] = useState([]);
@@ -12,21 +11,10 @@ function ProblemUI({ categoryName }) {
   const [selectedOption, setSelectedOption] = useState(null);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [userId, setUserId] = useState('');
 
   useEffect(() => {
     fetchQuizData(categoryName);
   }, [categoryName]);
-
-  useEffect(() => {
-    const accessTokenCookie = Cookies.get('access_token');
-    if (accessTokenCookie) {
-      const tokenPayload = accessTokenCookie.split('.')[1];
-      const decodedPayload = JSON.parse(atob(tokenPayload));
-      const userId = decodedPayload.userid;
-      setUserId(userId);
-    }
-  }, []);
 
   const fetchQuizData = async (category) => {
     try {
@@ -57,6 +45,7 @@ function ProblemUI({ categoryName }) {
   const handleOptionSelect = async (option, quizId) => {
     setSelectedOption(option);
     setShowConfirmDialog(true);
+    console.log(quizDataList[currentQuizIndex]); // 선택한 퀴즈의 상세 정보 출력
   };
 
   const handleNext = async () => {
@@ -83,27 +72,9 @@ function ProblemUI({ categoryName }) {
     setShowConfirmDialog(false);
   };
 
-  const handleConfirmSelection = async () => {
-    setShowConfirmDialog(false);
-    const currentQuizData = quizDataList[currentQuizIndex];
-    try {
-      const response = await axios.post(`https://valanse.site/quiz/save-user-answer?category=${encodeURIComponent(categoryName)}`, {
-        userId: userId,
-        quizId: currentQuizData.quizId,
-        selectedOption: selectedOption,
-        preference: 0
-      }, {
-        headers: {
-          'accept': 'application/json;charset=UTF-8',
-          'Content-Type': 'application/json;charset=UTF-8',
-          'Authorization': Cookies.get('access_token')
-        }
-      });
-      console.log(response.data);
-      handleNext();
-    } catch (error) {
-      console.error('Error saving user answer:', error.message);
-    }
+  const handleConfirmSelection = () => {
+    setShowConfirmDialog(false); // 다이얼로그를 닫기
+    handleNext(); // 다음 퀴즈로 넘어가기
   };
 
   const currentQuizData = quizDataList[currentQuizIndex];
@@ -207,7 +178,7 @@ function ProblemUI({ categoryName }) {
               </Card>
             </Grid>
             <Grid item xs={6} textAlign="center">
-              <Card
+            <Card
                 onClick={() => handleOptionSelect('B', currentQuizData.quizId)}
                 sx={{
                   borderRadius: '16px',
@@ -235,6 +206,7 @@ function ProblemUI({ categoryName }) {
                 </CardActionArea>
               </Card>
             </Grid>
+
             <Grid item xs={6} textAlign="center">
               <Button
                 variant="contained"
@@ -260,7 +232,7 @@ function ProblemUI({ categoryName }) {
               </Button>
             </Grid>
             <Grid item xs={12}>
-              {currentQuizData && <CommentUI quizId={currentQuizData.quizId} />}
+              {currentQuizData && <CommentUI quizId={currentQuizData.quizId} />} {/* CommentUI 컴포넌트 추가 */}
             </Grid>
           </Grid>
         </Container>
