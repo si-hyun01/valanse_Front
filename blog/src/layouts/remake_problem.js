@@ -27,7 +27,7 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate }) {
             optionB: optionB,
             descriptionA: descriptionA,
             descriptionB: descriptionB,
-            category: selectedCategory ? [selectedCategory] : [] // Ensure this is not null
+            category: selectedCategory ? [selectedCategory] : [] 
         };
 
         const formData = new FormData();
@@ -58,6 +58,38 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate }) {
         <Dialog open={open} onClose={handleClose}>
             <DialogTitle>퀴즈 수정</DialogTitle>
             <DialogContent>
+                {selectedCategory && (
+                    <>
+                        <TextField
+                            fullWidth
+                            label="퀴즈 제목"
+                            value={question}
+                            onChange={(e) => setQuestion(e.target.value)}
+                        />
+                        <TextField
+                            fullWidth
+                            label="왼쪽 설명"
+                            value={descriptionA}
+                            onChange={(e) => setDescriptionA(e.target.value)}
+                        />
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange(setImageA)}
+                        />
+                        <TextField
+                            fullWidth
+                            label="오른쪽 설명"
+                            value={descriptionB}
+                            onChange={(e) => setDescriptionB(e.target.value)}
+                        />
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange(setImageB)}
+                        />
+                    </>
+                )}
                 {/* 카테고리 선택 */}
                 <FormControl fullWidth style={{ backgroundColor: 'gray', marginBottom: '30px' }}>
                     <InputLabel style={{ color: 'white' }}>카테고리 선택</InputLabel>
@@ -75,35 +107,6 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate }) {
                         <MenuItem value="일상">일상</MenuItem>
                     </Select>
                 </FormControl>
-
-                <TextField
-                    fullWidth
-                    label="퀴즈 제목"
-                    value={question}
-                    onChange={(e) => setQuestion(e.target.value)}
-                />
-                <TextField
-                    fullWidth
-                    label="왼쪽 설명"
-                    value={descriptionA}
-                    onChange={(e) => setDescriptionA(e.target.value)}
-                />
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange(setImageA)}
-                />
-                <TextField
-                    fullWidth
-                    label="오른쪽 설명"
-                    value={descriptionB}
-                    onChange={(e) => setDescriptionB(e.target.value)}
-                />
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange(setImageB)}
-                />
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>취소</Button>
