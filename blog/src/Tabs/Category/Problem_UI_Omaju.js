@@ -29,7 +29,7 @@ function ProblemUI({ categoryName, userId }) { // userId 추가
       );
       const categoryData = categoryResponse.data;
 
-      await axios.post(`http://valanse.site/quiz/save-user-answer?category=${encodeURIComponent(category)}`, {
+      await axios.post(`https://valanse.site/quiz/save-user-answer?category=${encodeURIComponent(category)}`, {
         userId: userId, // 사용자 ID 전달
         quizId: 0, // 퀴즈 ID (필요에 따라 수정)
         selectedOption: "", // 선택한 옵션
