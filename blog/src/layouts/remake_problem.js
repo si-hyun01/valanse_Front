@@ -55,7 +55,7 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate }) {
     };
 
     return (
-        <Dialog open={open} onClose={handleClose}>
+        <Dialog open={open} onClose={handleClose} maxWidth="md">
             <DialogTitle>퀴즈 수정</DialogTitle>
             <DialogContent>
                 {/* 카테고리 선택 */}
