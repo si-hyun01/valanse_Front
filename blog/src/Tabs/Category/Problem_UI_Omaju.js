@@ -3,14 +3,16 @@ import axios from 'axios';
 import { Button, Card, CardContent, CardActionArea, CardMedia, Container, Dialog, DialogActions, DialogTitle, DialogContent, Grid, IconButton, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import CommentUI from '../../components/comments';
+import CommentUI from '../../components/comments';  // CommentUI 컴포넌트 import
+import Header from '../../layouts/Header'; // Header 컴포넌트 import
 
-function ProblemUI({ categoryName, userId }) { // userId props 추가
+function ProblemUI({ categoryName }) {
   const [quizDataList, setQuizDataList] = useState([]);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const userId = Header.getUserId(); // Header 컴포넌트에서 userId 가져오기
 
   useEffect(() => {
     fetchQuizData(categoryName);
@@ -72,27 +74,7 @@ function ProblemUI({ categoryName, userId }) { // userId props 추가
     setShowConfirmDialog(false);
   };
 
-  const handleConfirmSelection = async () => {
-    // POST 요청 보내기
-    const currentQuizData = quizDataList[currentQuizIndex];
-    const preference = 0; // preference 값을 필요에 따라 설정해야 합니다
-
-    try {
-      await axios.post(`https://valanse.site/quiz/save-user-answer?category=${encodeURIComponent(categoryName)}`, {
-        userId,
-        quizId: currentQuizData.quizId,
-        selectedOption,
-        preference,
-      }, {
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-          'accept': 'application/json;charset=UTF-8',
-        },
-      });
-    } catch (error) {
-      console.error('Error saving user answer:', error.message);
-    }
-
+  const handleConfirmSelection = () => {
     setShowConfirmDialog(false); // 다이얼로그를 닫기
     handleNext(); // 다음 퀴즈로 넘어가기
   };
@@ -195,70 +177,72 @@ function ProblemUI({ categoryName, userId }) { // userId props 추가
                     </Typography>
                   </CardContent>
                 </CardActionArea>
-              </Card>
-            </Grid>
-            <Grid item xs={6} textAlign="center">
-              <Card
-                onClick={() => handleOptionSelect('B', currentQuizData.quizId)}
-                sx={{
-                  borderRadius: '16px',
-                  overflow: 'hidden',
-                  boxShadow: '0px 0px 20px 0px rgba(0, 255, 255, 0.75)',
-                }}
-              >
-                <CardActionArea>
-                  <CardMedia
-                    component="img"
-                    height="400"
-                    image={currentQuizData ? currentQuizData.imageB : ''}
-                    alt=""
-                  />
-                  <CardContent sx={{ height: '100px', backgroundColor: 'black' }}>
-                    <Typography
-                      gutterBottom
-                      variant="h5"
-                      component="div"
-                      sx={{ color: 'white' }}
-                    >
-                      {currentQuizData ? currentQuizData.descriptionB : ''}
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Grid>
-
-            <Grid item xs={6} textAlign="center">
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handlePrevious}
-                disabled={currentQuizIndex === 0}
-                startIcon={<ArrowBackIcon />}
-                sx={{ bgcolor: 'limegreen', color: 'white' }}
-              >
-                이전으로
-              </Button>
-            </Grid>
-            <Grid item xs={6} textAlign="center">
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleNext}
-                disabled={currentQuizIndex === quizDataList.length - 1}
-                endIcon={<ArrowForwardIcon />}
-                sx={{ bgcolor: 'limegreen', color: 'white' }}
-              >
-                다음으로
-              </Button>
-            </Grid>
-            <Grid item xs={12}>
-              {currentQuizData && <CommentUI quizId={currentQuizData.quizId} userId={userId} />}
-            </Grid>
+             
+                </Card>
           </Grid>
-        </Container>
-      </Card>
-    </Container>
-  );
+          <Grid item xs={6} textAlign="center">
+            <Card
+              onClick={() => handleOptionSelect('B', currentQuizData.quizId)}
+              sx={{
+                borderRadius: '16px',
+                overflow: 'hidden',
+                boxShadow: '0px 0px 20px 0px rgba(0, 255, 255, 0.75)',
+              }}
+            >
+              <CardActionArea>
+                <CardMedia
+                  component="img"
+                  height="400"
+                  image={currentQuizData ? currentQuizData.imageB : ''}
+                  alt=""
+                />
+                <CardContent sx={{ height: '100px', backgroundColor: 'black' }}>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="div"
+                    sx={{ color: 'white' }}
+                  >
+                    {currentQuizData ? currentQuizData.descriptionB : ''}
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Grid>
+
+          <Grid item xs={6} textAlign="center">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handlePrevious}
+              disabled={currentQuizIndex === 0}
+              startIcon={<ArrowBackIcon />}
+              sx={{ bgcolor: 'limegreen', color: 'white' }}
+            >
+              이전으로
+            </Button>
+          </Grid>
+          <Grid item xs={6} textAlign="center">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleNext}
+              disabled={currentQuizIndex === quizDataList.length - 1}
+              endIcon={<ArrowForwardIcon />}
+              sx={{ bgcolor: 'limegreen', color: 'white' }}
+            >
+              다음으로
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            {currentQuizData && <CommentUI quizId={currentQuizData.quizId} userId={userId} />} {/* CommentUI 컴포넌트 추가 */}
+          </Grid>
+        </Grid>
+      </Container>
+    </Card>
+  </Container>
+);
+
 }
 
 export default ProblemUI;

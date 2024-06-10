@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import SignUpmodel from "../modal/SignUpmodel";
+import { Link, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import SignUpmodel from "../modal/SignUpmodel";
 import valanse_logo from "./img/valanse_logo3.png";
 
 const Header = () => {
@@ -119,7 +119,6 @@ const Header = () => {
                 window.location.replace('https://valanse.vercel.app/');
             }
         } catch (error) {
-           
             console.error('Error during logout:', error.message);
         }
     };
@@ -157,7 +156,7 @@ const Header = () => {
             boxShadow: '0 0 10px blue'
         }
     };
-    
+
     return (
         <>
             <header style={{ backgroundColor: 'black', padding: '10px 0' }}>
@@ -215,8 +214,19 @@ const Header = () => {
                                 onClick={toggleSignUpModal}
                             >
                                 로그인
-                                </button>
+                            </button>
                         )}
+
+                        {isLoggedIn && (
+                            <Link to={`/mypage/${userId}`}> {/* userId를 이용해 URL 동적으로 생성 */}
+                                <button
+                                    style={{ ...buttonStyles.base, ...buttonStyles.myPage }}
+                                >
+                                    마이페이지
+                                </button>
+                            </Link>
+                        )}
+
                         <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} />
                     </div>
                 </div>
@@ -226,3 +236,4 @@ const Header = () => {
 };
 
 export default Header;
+
