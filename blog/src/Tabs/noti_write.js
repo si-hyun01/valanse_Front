@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Container, Typography, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import Header from '../layouts/Header';
-import Footer from '../layouts/Footer';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -75,7 +73,6 @@ const NoticeWrite = () => {
 
     return (
         <>
-            <Header />
             <div style={{ backgroundColor: 'black' }}>
                 <Container maxWidth="md" className="notii">
                     <Typography variant="h4" className="notii-title2" style={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}>
