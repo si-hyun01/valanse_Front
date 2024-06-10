@@ -127,29 +127,30 @@ function ProblemUI({ categoryName }) {
       >
         <DialogTitle id="confirm-dialog-title">선택 확인</DialogTitle>
         <DialogContent>
-        <Typography variant="body1" id="confirm-dialog-description">
+          <Typography variant="body1" id="confirm-dialog-description">
             선택지: {selectedOption}. 정말 선택하시겠습니까?
           </Typography>
           <FormControlLabel
             control={<Checkbox checked={preference === -2} onChange={() => handlePreferenceChange(-2)} />}
-            label="-2"
+            label={<Typography variant="body1" sx={{ color: 'white' }}>-2</Typography>}
           />
           <FormControlLabel
             control={<Checkbox checked={preference === -1} onChange={() => handlePreferenceChange(-1)} />}
-            label="-1"
+            label={<Typography variant="body1" sx={{ color: 'white' }}>-1</Typography>}
           />
           <FormControlLabel
             control={<Checkbox checked={preference === 0} onChange={() => handlePreferenceChange(0)} />}
-            label="0"
+            label={<Typography variant="body1" sx={{ color: 'white' }}>0</Typography>}
           />
           <FormControlLabel
             control={<Checkbox checked={preference === 1} onChange={() => handlePreferenceChange(1)} />}
-            label="1"
+            label={<Typography variant="body1" sx={{ color: 'white' }}>1</Typography>}
           />
           <FormControlLabel
             control={<Checkbox checked={preference === 2} onChange={() => handlePreferenceChange(2)} />}
-            label="2"
+            label={<Typography variant="body1" sx={{ color: 'white' }}>2</Typography>}
           />
+
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseConfirmDialog} color="primary">
