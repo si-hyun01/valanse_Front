@@ -186,7 +186,7 @@ function ProblemUI({ categoryName }) {
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={handleCloseCloseConfirmDialog} color="primary">
+          <Button onClick={handleCloseConfirmDialog} color="primary">
             취소
           </Button>
           <Button onClick={handleConfirmSelection} color="primary" autoFocus>
