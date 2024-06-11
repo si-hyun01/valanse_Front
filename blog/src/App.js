@@ -28,7 +28,7 @@ function App() {
         <Route path="/write-notice" element={<Layout />} />
         <Route path="/popularity" element={<Layout />} />
         <Route path="/problems" element={<Layout />} />
-        <Route path="/popularity" element={<makeproblem />} />
+        <Route path="/problems" element={<makeproblem />} />
         <Route path="/noti_board" element={<NoticeBoard />} />
         <Route path="/noti_write" element={<NoticeWrite />} />
         <Route path="/mypage" element={<Mypage />} />
