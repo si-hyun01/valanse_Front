@@ -31,7 +31,6 @@ const MyQuizzesPage = () => {
     <div style={{ marginTop: '20px', color: 'white' }}>
       <h2 style={{ marginBottom: '10px', color: 'white', fontWeight: 'bold' }}>최근 작품</h2>
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-        {/* 상태에 저장된 최근 퀴즈 사진과 제목을 표시 */}
         {recentQuizzes.map((quiz, index) => (
           <div key={index} style={{ width: 'calc(33.33% - 20px)', margin: '10px', border: '1px solid #ccc', borderRadius: '5px', padding: '10px', overflow: 'hidden' }}>
             {quiz.imageA ? (
@@ -39,7 +38,7 @@ const MyQuizzesPage = () => {
             ) : (
               <div style={{ width: '100%', height: '250px', backgroundColor: '#ddd' }}></div> // 빈 사진
             )}
-            <h3 style={{ marginTop: '10px', marginBottom: '5px', color: 'white' }}>{quiz.content || '로그인 하셈'}</h3> {/* 데이터 없음 메시지 */}
+            <h3 style={{ marginTop: '10px', marginBottom: '5px', color: 'white' }}>{quiz.content || '로그인 하셈'}</h3> 
           </div>
         ))}
       </div>

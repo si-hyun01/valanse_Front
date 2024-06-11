@@ -8,7 +8,7 @@ const Popularity = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [page, setPage] = useState(1);
-    const [sortOrder, setSortOrder] = useState('desc'); // Default sort order
+    const [sortOrder, setSortOrder] = useState('desc'); 
     const itemsPerPage = 5;
 
     useEffect(() => {
@@ -18,20 +18,14 @@ const Popularity = () => {
     const fetchData = async () => {
         try {
             const response = await axios.get('https://valanse.site/quiz/sort-by-preference');
-            const quizIds = response.data.data.map(quiz => quiz.quizId);
-            const likeStatsResponses = await Promise.all(quizIds.map(quizId => axios.get(`https://valanse.site/quiz/${quizId}/like-stats`)));
-            const quizDataWithLikesAndDislikes = response.data.data.map((quiz, index) => ({
-                ...quiz,
-                likes: likeStatsResponses[index].data.data.likeCount,
-                dislikes: likeStatsResponses[index].data.data.unlikeCount
-            }));
+            let quizData = response.data.data;
 
             // 정렬하기
-            const sortedData = [...quizDataWithLikesAndDislikes].sort((a, b) => {
+            const sortedData = [...quizData].sort((a, b) => {
                 if (sortOrder === 'asc') {
-                    return a.likes - b.likes;
+                    return a.preference - b.preference;
                 } else {
-                    return b.likes - a.likes;
+                    return b.preference - a.preference;
                 }
             });
 
@@ -118,7 +112,7 @@ const Popularity = () => {
                                 </div>
                             </td>
                             <td style={{ textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>
-                                <div style={{ fontSize: '12px', color: 'white', fontWeight: 'bold' }}>{item.likes}</div>
+                                <div style={{ fontSize: '12px', color: 'white', fontWeight: 'bold' }}>{item.preference}</div>
                             </td>
                             <td style={{ textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>
                                 <div style={{ fontSize: '12px', color: 'white', fontWeight: 'bold' }}>{item.dislikes}</div>
