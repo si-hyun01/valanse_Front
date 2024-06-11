@@ -30,7 +30,7 @@ const Header = () => {
             refreshAccessToken(refreshToken);
         }
 
-        const interceptor = axios.interceptors.request.use(
+        const requestInterceptor = axios.interceptors.request.use(
             config => {
                 const token = Cookies.get('access_token');
                 if (token) {
@@ -38,13 +38,39 @@ const Header = () => {
                 }
                 return config;
             },
-            error => {
+            error => Promise.reject(error)
+        );
+
+        const responseInterceptor = axios.interceptors.response.use(
+            response => response,
+            async error => {
+                const originalRequest = error.config;
+                if (error.response && error.response.status === 401 && error.response.data === "Access Token 만료!") {
+                    const refreshToken = Cookies.get('refresh_token');
+                    if (refreshToken) {
+                        try {
+                            await refreshAccessToken(refreshToken);
+                            originalRequest.headers['Authorization'] = Cookies.get('access_token');
+                            return axios(originalRequest);
+                        } catch (refreshError) {
+                            console.error('Error refreshing access token:', refreshError.message);
+                            handleLogout();
+                        }
+                    } else {
+                        handleLogout();
+                    }
+                } else if (error.response && error.response.status >= 400 && error.response.status < 500) {
+                    // 4xx 에러가 발생한 경우
+                    console.error('Authentication required:', error.message);
+                    toggleSignUpModal();
+                }
                 return Promise.reject(error);
             }
         );
 
         return () => {
-            axios.interceptors.request.eject(interceptor);
+            axios.interceptors.request.eject(requestInterceptor);
+            axios.interceptors.response.eject(responseInterceptor);
         };
     }, []);
 
@@ -82,11 +108,20 @@ const Header = () => {
                     'Content-Type': 'application/json'
                 }
             });
-            const newToken = response.data.data;
-            setAccessToken(newToken);
-            Cookies.set('access_token', newToken);
+
+            // 응답을 확인하여 처리
+            if (response.status === 200) {
+                const newToken = response.data.data;
+                setAccessToken(newToken);
+                Cookies.set('access_token', newToken);
+            } else {
+                // 4xx 응답이 오면 로그인 화면을 표시
+                console.error('Refresh token renewal required.');
+                toggleSignUpModal(); // 로그인 모달 열기 또는 다른 로그인 화면 표시 로직 추가
+            }
         } catch (error) {
             console.error('Error refreshing access token:', error.message);
+            throw error;
         }
     };
 
@@ -130,7 +165,7 @@ const Header = () => {
             margin: '0 10px',
             textShadow: '0 0 5px',
             color: '#fff',
-            backgroundColor: '#333' //연한 검은색
+            backgroundColor: '#333'
         },
         logout: {
             borderColor: 'red',
@@ -145,7 +180,7 @@ const Header = () => {
             boxShadow: '0 0 10px blue'
         }
     };
-    
+
     return (
         <>
             <header style={{ backgroundColor: 'black', padding: '10px 0' }}>
@@ -175,42 +210,42 @@ const Header = () => {
                                 textShadow: '0 0 10px cyan, 0 0 20px cyan',
                                 fontFamily: 'monospace'
                             }}>
-                                {currentTime}
-                            </div>
+                            {currentTime}
                         </div>
                     </div>
-
-                    <div>
-                        {isLoggedIn ? (
-                            <>
-                                <button
-                                    style={{ ...buttonStyles.base, ...buttonStyles.logout }}
-                                    onClick={handleLogout}
-                                >
-                                    로그아웃
-                                </button>
-                                <Link to="/mypage">
-                                    <button
-                                        style={{ ...buttonStyles.base, ...buttonStyles.myPage }}
-                                    >
-                                        마이페이지
-                                    </button>
-                                </Link>
-                            </>
-                        ) : (
-                            <button
-                                style={{ ...buttonStyles.base, ...buttonStyles.login }}
-                                onClick={toggleSignUpModal}
-                            >
-                                로그인
-                                </button>
-                        )}
-                        <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} />
-                    </div>
                 </div>
-            </header>
-        </>
-    );
+
+                <div>
+                    {isLoggedIn ? (
+                        <>
+                            <button
+                                style={{ ...buttonStyles.base, ...buttonStyles.logout }}
+                                onClick={handleLogout}
+                            >
+                                로그아웃
+                            </button>
+                            <Link to="/mypage">
+                                <button
+                                    style={{ ...buttonStyles.base, ...buttonStyles.myPage }}
+                                >
+                                    마이페이지
+                                </button>
+                            </Link>
+                        </>
+                    ) : (
+                        <button
+                            style={{ ...buttonStyles.base, ...buttonStyles.login }}
+                            onClick={toggleSignUpModal}
+                        >
+                            로그인
+                        </button>
+                    )}
+                    <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} />
+                </div>
+            </div>
+        </header>
+    </>
+);
 };
 
 export default Header;
