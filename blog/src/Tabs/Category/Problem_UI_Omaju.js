@@ -215,18 +215,6 @@ function ProblemUI({ categoryName }) {
                 {currentQuizData ? currentQuizData.content : ''}
               </Typography>
             </Grid>
-            <Grid item xs={12} textAlign="center">
-              <IconButton onClick={() => handleOptionSelect('A', currentQuizData.quizId)}>
-                <Typography variant="body2" sx={{ color: 'white', ml: 1, fontWeight: 'bold' }}>
-                  {currentQuizData ? currentQuizData.likes : 0}
-                </Typography>
-              </IconButton>
-              <IconButton onClick={() => handleOptionSelect('B', currentQuizData.quizId)}>
-                <Typography variant="body2" sx={{ color: 'white', ml: 1, fontWeight: 'bold' }}>
-                  {currentQuizData ? currentQuizData.dislikes : 0}
-                </Typography>
-              </IconButton>
-            </Grid>
             <Grid item xs={6} textAlign="center">
               <Card
                 onClick={() => handleOptionSelect('A', currentQuizData.quizId)}

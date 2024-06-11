@@ -11,7 +11,6 @@ const Header = () => {
     const [stateToken, setStateToken] = useState('');
     const [accessToken, setAccessToken] = useState('');
     const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Seoul', hour12: true, hourCycle: 'h12' }));
-    const [userId, setUserId] = useState(''); // 추가: userid 상태 추가
     const navigate = useNavigate();
 
     useEffect(() => {
