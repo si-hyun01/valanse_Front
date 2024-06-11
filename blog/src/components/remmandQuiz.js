@@ -2,33 +2,32 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const MyQuizzesPage = () => {
-  const [recentQuizzes, setRecentQuizzes] = useState([{}, {}, {}]); // 초기 상태를 3개의 빈 객체로 설정
+const RecommendedQuizzesPage = () => {
+  const [recommendedQuizzes, setRecommendedQuizzes] = useState([]);
 
-  const fetchRecentQuizzes = async () => {
+  const fetchRecommendedQuizzes = async () => {
     try {
-      const accessToken = Cookies.get('access_token');
-      const response = await axios.get('https://valanse.site/quiz/sort-by-created-at', {
+      const accessToken = Cookies.get('access_token'); 
+      const response = await axios.get('https://valanse.site/quiz/recommend', {
         headers: {
           'Authorization': accessToken 
         }
       });
-      const recentQuizzesData = response.data.data.slice(0, 3);
-      setRecentQuizzes(recentQuizzesData);
+      setRecommendedQuizzes(response.data.data);
     } catch (error) {
-      console.error('Error fetching recent quizzes:', error);
+      console.error('Error fetching recommended quizzes:', error);
     }
   };
 
   useEffect(() => {
-    fetchRecentQuizzes();
+    fetchRecommendedQuizzes();
   }, []);
 
   return (
     <div style={{ marginTop: '20px', color: 'white' }}>
-      <h2 style={{ marginBottom: '10px', color: 'white', fontWeight: 'bold' }}>최근 작품</h2>
+      <h2 style={{ marginBottom: '10px', color: 'white', fontWeight: 'bold' }}>추천 퀴즈</h2>
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-        {recentQuizzes.map((quiz, index) => (
+        {recommendedQuizzes.map((quiz, index) => (
           <div key={index} style={{ width: 'calc(33.33% - 20px)', margin: '10px', border: '1px solid #ccc', borderRadius: '5px', padding: '10px', overflow: 'hidden' }}>
             {quiz.imageA ? (
               <img src={quiz.imageA} alt={quiz.content} style={{ width: '100%', height: '250px', objectFit: 'cover' }} />
@@ -43,4 +42,4 @@ const MyQuizzesPage = () => {
   );
 };
 
-export default MyQuizzesPage;
+export default RecommendedQuizzesPage;

@@ -3,6 +3,7 @@ import { Grid, Container } from '@mui/material';
 import SliderContainer from "../layouts/SliderContainer";
 import RecentArt from "../components/RecentArt";
 import PopularArt from "../components/PopularArt";
+import RecommanQuiz from "../components/remmandQuiz"
 
 const EnterPage = () => (
   <Grid container spacing={1} alignItems="center">
@@ -19,6 +20,11 @@ const EnterPage = () => (
     <Grid item xs={12}>
       <Container style={{ maxWidth: '80%' }}>
           <PopularArt />
+      </Container>
+    </Grid>
+    <Grid item xs={12}>
+      <Container style={{ maxWidth: '80%' }}>
+          <RecommanQuiz />
       </Container>
     </Grid>
   </Grid>
