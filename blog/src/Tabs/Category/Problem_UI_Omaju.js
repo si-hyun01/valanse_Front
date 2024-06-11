@@ -78,10 +78,15 @@ function ProblemUI({ categoryName }) {
     setShowConfirmDialog(false);
   };
 
-  const handleConfirmSelection = () => {
+  const handleConfirmSelection = async () => {
     setShowConfirmDialog(false); // 다이얼로그를 닫기
-    saveUserAnswer(); // 사용자의 답변 저장
-    handleNext(); // 다음 퀴즈로 넘어가기
+    try {
+      await saveUserAnswer(); // 사용자의 답변 저장
+      handleNext(); // 사용자의 답변 저장이 성공하면 다음 퀴즈로 넘어가기
+    } catch (error) {
+      console.error('Error saving user answer:', error.message);
+      // 사용자의 답변 저장에 실패한 경우에 대한 처리
+    }
   };
 
   const handlePreferenceChange = (value) => {
@@ -98,6 +103,7 @@ function ProblemUI({ categoryName }) {
       console.log('User answer saved:', response.data);
     } catch (error) {
       console.error('Error saving user answer:', error.message);
+      throw new Error('Failed to save user answer');
     }
   };
 
@@ -182,7 +188,6 @@ function ProblemUI({ categoryName }) {
             }
             sx={{ bgcolor: 'transparent' }}
           />
-
         </DialogContent>
 
         <DialogActions>
@@ -315,3 +320,4 @@ function ProblemUI({ categoryName }) {
 }
 
 export default ProblemUI;
+
