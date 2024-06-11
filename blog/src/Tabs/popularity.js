@@ -112,10 +112,10 @@ const Popularity = () => {
                                 </div>
                             </td>
                             <td style={{ textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>
-                                <div style={{ fontSize: '12px', color: 'white', fontWeight: 'bold' }}>{item.preference}</div>
+                                <div style={{ fontSize: '20px', color: 'white', fontWeight: 'bold' }}>{item.preference}</div> {/* 폰트 크기 조정 */}
                             </td>
                             <td style={{ textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>
-                                <div style={{ fontSize: '12px', color: 'white', fontWeight: 'bold' }}>{item.viewCount}</div>
+                                <div style={{ fontSize: '20px', color: 'white', fontWeight: 'bold' }}>{item.viewCount}</div> {/* 폰트 크기 조정 */}
                             </td>
                         </tr>
                     ))}
