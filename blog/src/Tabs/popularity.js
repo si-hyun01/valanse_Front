@@ -93,8 +93,8 @@ const Popularity = () => {
                     <tr>
                         <th style={{ width: '50px', textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>순위</th>
                         <th style={{ width: '400px', textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>제목</th>
-                        <th style={{ width: '200px', textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>좋아요</th>
-                        <th style={{ width: '200px', textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>싫어요</th>
+                        <th style={{ width: '200px', textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>선호도</th>
+                        <th style={{ width: '200px', textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>조회수</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -115,7 +115,7 @@ const Popularity = () => {
                                 <div style={{ fontSize: '12px', color: 'white', fontWeight: 'bold' }}>{item.preference}</div>
                             </td>
                             <td style={{ textAlign: 'center', border: '1px solid #dee2e6', color: 'white', fontWeight: 'bold' }}>
-                                <div style={{ fontSize: '12px', color: 'white', fontWeight: 'bold' }}>{item.dislikes}</div>
+                                <div style={{ fontSize: '12px', color: 'white', fontWeight: 'bold' }}>{item.viewCount}</div>
                             </td>
                         </tr>
                     ))}
