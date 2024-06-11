@@ -15,13 +15,13 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Layout activeTab="전체" />} />
+        <Route path="/mypage" element={<Mypage />} />
         <Route path="/category/:categoryName" element={<Layout />} />
         <Route path="/problems/:categoryName" element={<ProblemUI />} />
         <Route path="/notice" element={<Layout />} />
         <Route path="/write-notice" element={<Layout />} />
         <Route path="/popularity" element={<Layout />} />
         <Route path="/problems" element={<Layout />} />
-        <Route path="/mypage" element={<Layout />} />
       </Routes>
     </Router>
   );
