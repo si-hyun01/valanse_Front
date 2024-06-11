@@ -56,16 +56,6 @@ const Header = () => {
         return () => clearInterval(timer);
     }, []);
 
-    useEffect(() => {
-        const accessTokenCookie = Cookies.get('access_token');
-        if (accessTokenCookie) {
-            const tokenPayload = accessTokenCookie.split('.')[1]; // 토큰의 payload 부분 가져오기
-            const decodedPayload = JSON.parse(atob(tokenPayload)); // Base64 디코딩 및 JSON 파싱
-            const userId = decodedPayload.userid; // 페이로드에서 userid 추출
-            setUserId(userId);
-        }
-    }, []);
-
     const getAccessToken = async (stateToken) => {
         try {
             const response = await axios.post('https://valanse.site/token/get', null, {
