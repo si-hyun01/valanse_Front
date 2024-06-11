@@ -1,11 +1,8 @@
 import React from 'react';
-import { Container } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import Header from './Header';
 import Footer from './Footer';
 import Popularity from '../Tabs/popularity';
 import Notice from '../Tabs/notinoti';
-import Problem_UI from '../Tabs/Category/Problem_UI';
 import Problem_UI_Omaju from '../Tabs/Category/Problem_UI_Omaju';
 import Make_ploblem from '../Tabs/make_ploblem';
 import Entire from '../Tabs/entire';
@@ -175,8 +172,7 @@ const Layout = () => {
                                 className={`nav-link ${activeTab === '문제 만들기' && 'active'}`}
                                 style={{
                                     width: '100%',
-                                    backgroundColor: activeTab === '문제 만들기'
-                                        ? 'rgba(0, 0, 255, 0.3)' : 'initial',
+                                    backgroundColor: activeTab === '문제 만들기'? 'rgba(0, 0, 255, 0.3)' : 'initial',
                                     fontWeight: 'bold',
                                     color: 'white',
                                     borderRadius: '0', // 사각형으로 만들기 위해 borderRadius를 0으로 설정
