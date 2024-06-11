@@ -21,7 +21,7 @@ function App() {
         <Route path="/write-notice" element={<Layout />} />
         <Route path="/popularity" element={<Layout />} />
         <Route path="/problems" element={<Layout />} />
-        <Route path="/mypage" element={<Mypage />} />
+        <Route path="/mypage" element={<Layout />} />
       </Routes>
     </Router>
   );
