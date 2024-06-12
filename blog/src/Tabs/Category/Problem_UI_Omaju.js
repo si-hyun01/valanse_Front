@@ -32,7 +32,7 @@ function ProblemUI({ categoryName }) {
       const quizIds = categoryQuizzes.map((quiz) => quiz.quizId);
       const filteredQuizzes = allQuizzes.filter((quiz) => quizIds.includes(quiz.quizId));
 
-      // 사용자가 푼 퀴즈 목록을 저장할 배열
+      // 이미 푼 퀴즈를 저장할 배열
       const answeredQuizzes = [];
 
       // 각 퀴즈에 대해 사용자가 이미 답변했는지 확인
@@ -40,8 +40,8 @@ function ProblemUI({ categoryName }) {
         try {
           // 사용자가 퀴즈를 이미 풀었는지 확인하는 요청
           const response = await axios.get(`https://valanse.site/quiz/check-user-answer/${quiz.quizId}`);
-          // 만약 사용자가 퀴즈를 풀었다면, 답변 목록에 추가하지 않음
-          if (response.data.status === 200) {
+          // 만약 사용자가 퀴즈를 풀었다면, answeredQuizzes에 추가
+          if (response.data.status === 200 && response.data.data === "User has answered the quiz") {
             answeredQuizzes.push(quiz.quizId);
           }
         } catch (error) {
