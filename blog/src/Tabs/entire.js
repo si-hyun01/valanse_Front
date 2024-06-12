@@ -4,7 +4,7 @@ import SliderContainer from "../layouts/SliderContainer";
 import RecentArt from "../components/RecentArt";
 import PopularArt from "../components/PopularArt";
 import RecommanQuiz from "../components/remmandQuiz"
-import test1 from "../components/onlytest";
+import asdf from "../components/onlytest";
 
 const EnterPage = () => (
   <Grid container spacing={1} alignItems="center">
@@ -25,7 +25,7 @@ const EnterPage = () => (
     </Grid>
     <Grid item xs={12}>
       <Container style={{ maxWidth: '80%' }}>
-          <test1 />
+          <asdf />
       </Container>
     </Grid>
   </Grid>
