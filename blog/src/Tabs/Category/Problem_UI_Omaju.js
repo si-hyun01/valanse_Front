@@ -54,6 +54,7 @@ function ProblemUI({ categoryName }) {
     if (nextIndex < quizDataList.length) {
       try {
         await saveUserAnswer();
+        await checkUserAnswer(quizDataList[currentQuizIndex].quizId); // 이 부분 추가
         setCurrentQuizIndex(nextIndex);
       } catch (error) {
         console.error('Error saving user answer:', error.message);
@@ -111,6 +112,16 @@ function ProblemUI({ categoryName }) {
     } catch (error) {
       console.error('Error saving user answer:', error.message);
       throw new Error('Failed to save user answer');
+    }
+  };
+
+  const checkUserAnswer = async (quizId) => {
+    try {
+      const response = await axios.get(`https://valanse.site/quiz/check-user-answer/${quizId}`);
+      console.log('User answer for quiz', quizId, ':', response.data);
+      // 여기서 응답 데이터를 확인하고 필요한 처리를 추가할 수 있습니다.
+    } catch (error) {
+      console.error('Error checking user answer:', error.message);
     }
   };
 
