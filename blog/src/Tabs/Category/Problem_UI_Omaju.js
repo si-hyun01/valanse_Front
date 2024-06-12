@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button, Card, CardContent, CardActionArea, CardMedia, Container, Dialog, DialogActions, DialogTitle, DialogContent, Grid, IconButton, Typography, Checkbox, FormControlLabel } from '@mui/material';
+import { Button, Card, CardContent, CardActionArea, CardMedia, Container, Dialog, DialogActions, DialogTitle, DialogContent, Grid, Typography, Checkbox, FormControlLabel } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import CommentUI from '../../components/comments';  // CommentUI 컴포넌트 import
+import CommentUI from '../../components/comments';
 
 function ProblemUI({ categoryName }) {
   const [quizDataList, setQuizDataList] = useState([]);
@@ -46,18 +46,27 @@ function ProblemUI({ categoryName }) {
   const handleOptionSelect = async (option, quizId) => {
     setSelectedOption(option);
     setShowConfirmDialog(true);
-    console.log(quizDataList[currentQuizIndex]); // 선택한 퀴즈의 상세 정보 출력
+    console.log(quizDataList[currentQuizIndex]);
   };
 
   const handleNext = async () => {
     const nextIndex = currentQuizIndex + 1;
     if (nextIndex < quizDataList.length) {
       try {
-        await saveUserAnswer(); // 사용자의 답변 저장
+        await saveUserAnswer();
         setCurrentQuizIndex(nextIndex);
       } catch (error) {
         console.error('Error saving user answer:', error.message);
       }
+    } else {
+      setShowNoProblemDialog(true);
+    }
+  };
+
+  const handleNext2 = () => {
+    const nextIndex = currentQuizIndex + 1;
+    if (nextIndex < quizDataList.length) {
+      setCurrentQuizIndex(nextIndex);
     } else {
       setShowNoProblemDialog(true);
     }
@@ -79,13 +88,12 @@ function ProblemUI({ categoryName }) {
   };
 
   const handleConfirmSelection = async () => {
-    setShowConfirmDialog(false); // 다이얼로그를 닫기
+    setShowConfirmDialog(false);
     try {
-      await saveUserAnswer(); // 사용자의 답변 저장
-      handleNext(); // 사용자의 답변 저장이 성공하면 다음 퀴즈로 넘어가기
+      await saveUserAnswer();
+      handleNext();
     } catch (error) {
       console.error('Error saving user answer:', error.message);
-      // 사용자의 답변 저장에 실패한 경우에 대한 처리
     }
   };
 
@@ -289,7 +297,7 @@ function ProblemUI({ categoryName }) {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={handleNext}
+                onClick={handleNext2}
                 disabled={currentQuizIndex === quizDataList.length - 1}
                 endIcon={<ArrowForwardIcon />}
                 sx={{ bgcolor: 'limegreen', color: 'white' }}
@@ -308,4 +316,3 @@ function ProblemUI({ categoryName }) {
 }
 
 export default ProblemUI;
-
