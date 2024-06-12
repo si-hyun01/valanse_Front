@@ -1,45 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import axios from 'axios';
-import Cookies from 'js-cookie';
+import { Button, Container, Typography } from '@mui/material';
 
-const RecommendedQuizzesPage = () => {
-  const [recommendedQuizzes, setRecommendedQuizzes] = useState([]);
-
-  const fetchRecommendedQuizzes = async () => {
+function RecommendQuiz() {
+  const handleRecommendClick = async () => {
     try {
-      const accessToken = Cookies.get('access_token'); 
       const response = await axios.get('https://valanse.site/quiz/recommend', {
         headers: {
-          'Authorization': accessToken 
-        }
+          'accept': 'application/json;charset=UTF-8',
+        },
       });
-      setRecommendedQuizzes(response.data.data);
+      console.log('Recommended Quiz Data:', response.data);
     } catch (error) {
-      console.error('Error fetching recommended quizzes:', error);
+      console.error('Error fetching recommended quiz:', error.message);
     }
   };
 
-  useEffect(() => {
-    fetchRecommendedQuizzes();
-  }, []);
-
   return (
-    <div style={{ marginTop: '20px', color: 'white' }}>
-      <h2 style={{ marginBottom: '10px', color: 'white', fontWeight: 'bold' }}>추천 퀴즈</h2>
-      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-        {recommendedQuizzes.map((quiz, index) => (
-          <div key={index} style={{ width: 'calc(33.33% - 20px)', margin: '10px', border: '1px solid #ccc', borderRadius: '5px', padding: '10px', overflow: 'hidden' }}>
-            {quiz.imageA ? (
-              <img src={quiz.imageA} alt={quiz.content} style={{ width: '100%', height: '250px', objectFit: 'cover' }} />
-            ) : (
-              <div style={{ width: '100%', height: '250px', backgroundColor: '#ddd' }}></div> // 빈 사진
-            )}
-            <h3 style={{ marginTop: '10px', marginBottom: '5px', color: 'white' }}>{quiz.content || '로그인 하셈'}</h3> 
-          </div>
-        ))}
-      </div>
-    </div>
+    <Container maxWidth="lg">
+      <Typography variant="h4" align="center" sx={{ mt: 4 }}>
+        추천 퀴즈 조회
+      </Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleRecommendClick}
+        sx={{ mt: 2 }}
+      >
+        추천 퀴즈 요청
+      </Button>
+    </Container>
   );
-};
+}
 
-export default RecommendedQuizzesPage;
+export default RecommendQuiz;
