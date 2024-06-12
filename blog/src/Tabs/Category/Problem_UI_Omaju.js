@@ -12,24 +12,10 @@ function ProblemUI({ categoryName }) {
   const [preference, setPreference] = useState(0);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [answeredQuizIds, setAnsweredQuizIds] = useState([]);
 
   useEffect(() => {
     fetchQuizData(categoryName);
   }, [categoryName]);
-
-  useEffect(() => {
-    const fetchAnsweredQuizIds = async () => {
-      try {
-        const response = await axios.get('https://valanse.site/user/answered-quizzes');
-        setAnsweredQuizIds(response.data);
-      } catch (error) {
-        console.error('Error fetching answered quiz ids:', error.message);
-      }
-    };
-
-    fetchAnsweredQuizIds();
-  }, []);
 
   const fetchQuizData = async (category) => {
     try {
@@ -45,14 +31,36 @@ function ProblemUI({ categoryName }) {
       const categoryQuizzes = categoryResponse.data.data;
       const quizIds = categoryQuizzes.map((quiz) => quiz.quizId);
       const filteredQuizzes = allQuizzes.filter((quiz) => quizIds.includes(quiz.quizId));
-      const quizDataArray = filteredQuizzes.map(quiz => ({
-        ...quiz,
-        likes: 0,
-        dislikes: 0
-      }));
+
+      // 사용자가 푼 퀴즈 목록을 저장할 배열
+      const answeredQuizzes = [];
+
+      // 각 퀴즈에 대해 사용자가 이미 답변했는지 확인
+      for (const quiz of filteredQuizzes) {
+        try {
+          // 사용자가 퀴즈를 이미 풀었는지 확인하는 요청
+          const response = await axios.post('https://valanse.site/quiz/save-user-answer', {
+            quizId: quiz.quizId,
+          });
+          // 만약 사용자가 퀴즈를 풀었다면, 답변 목록에 추가하지 않음
+          if (response.data.status === 200) {
+            answeredQuizzes.push(quiz.quizId);
+          }
+        } catch (error) {
+          console.error('퀴즈 답변 확인 중 오류 발생:', error.message);
+        }
+      }
+
+      // 사용자가 풀지 않은 퀴즈만 반환
+      const quizDataArray = filteredQuizzes.filter(quiz => !answeredQuizzes.includes(quiz.quizId))
+        .map(quiz => ({
+          ...quiz,
+          likes: 0,
+          dislikes: 0
+        }));
       setQuizDataList(quizDataArray);
     } catch (error) {
-      console.error('Error fetching quiz data:', error.message);
+      console.error('퀴즈 데이터 불러오기 중 오류 발생:', error.message);
       setShowNoProblemDialog(true);
     }
   };
@@ -68,7 +76,6 @@ function ProblemUI({ categoryName }) {
     if (nextIndex < quizDataList.length) {
       try {
         await saveUserAnswer();
-        await checkUserAnswer(quizDataList[currentQuizIndex].quizId);
         setCurrentQuizIndex(nextIndex);
       } catch (error) {
         console.error('Error saving user answer:', error.message);
@@ -129,22 +136,7 @@ function ProblemUI({ categoryName }) {
     }
   };
 
-  const checkUserAnswer = async (quizId) => {
-    try {
-      const response = await axios.get(`https://valanse.site/quiz/check-user-answer/${quizId}`);
-      console.log('User answer for quiz', quizId, ':', response.data);
-      // 여기서 Response를 확인하고 처리하였음
-      if (response.data === 'User has answered the quiz') {
-        const updatedAnsweredQuizIds = [...answeredQuizIds, quizId];
-        setAnsweredQuizIds(updatedAnsweredQuizIds);
-      }
-    } catch (error) {
-      console.error('Error checking user answer:', error.message);
-    }
-  };
-
   const currentQuizData = quizDataList[currentQuizIndex];
-  const isAnswered = answeredQuizIds.includes(currentQuizData.quizId);
 
   return (
     <Container maxWidth="lg">
@@ -327,7 +319,7 @@ function ProblemUI({ categoryName }) {
                 variant="contained"
                 color="primary"
                 onClick={handleNext2}
-                disabled={currentQuizIndex === quizDataList.length - 1 || isAnswered}
+                disabled={currentQuizIndex === quizDataList.length - 1}
                 endIcon={<ArrowForwardIcon />}
                 sx={{ bgcolor: 'limegreen', color: 'white' }}
               >
