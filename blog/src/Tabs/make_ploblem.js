@@ -4,7 +4,6 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-
 function CreateQuestionPage({ onCreate, selectedCategory }) {
     const [question, setQuestion] = useState('');
     const [story1, setStory1] = useState('');
@@ -63,8 +62,8 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     };
 
     return (
-        <Card style={{border: '2px solid transparent', background: 'black', boxShadow: '0 0 10px #00FF00'}}>
-            <Container >
+        <Card style={{ border: '2px solid transparent', background: 'black', boxShadow: '0 0 10px #00FF00' }}>
+            <Container>
                 <Grid container spacing={2} justifyContent="center">
                     <Grid item xs={12} style={{ height: '30px' }} />
                     <Grid item xs={12}>
@@ -101,10 +100,10 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
                         />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload setImage={setStory1Image} setUploadImgUrl={setStory1ImageUrl} />
+                        <ImageUpload setImage={setStory1Image} setImageUrl={setStory1ImageUrl} resetImage={story1ImageUrl === ''} />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload setImage={setStory2Image} setUploadImgUrl={setStory2ImageUrl} />
+                        <ImageUpload setImage={setStory2Image} setImageUrl={setStory2ImageUrl} resetImage={story2ImageUrl === ''} />
                     </Grid>
                     <Grid item xs={12} style={{ height: '30px' }} />
                     <Grid item xs={12} textAlign="center">
@@ -130,7 +129,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     );
 }
 
-const ImageUpload = ({ setImage, setImageUrl }) => {
+const ImageUpload = ({ setImage, setImageUrl, resetImage }) => {
     const [uploadImgUrl, setUploadImgUrl] = useState('');
 
     const onchangeImageUpload = (e) => {
@@ -141,12 +140,19 @@ const ImageUpload = ({ setImage, setImageUrl }) => {
         reader.readAsDataURL(uploadFile);
         reader.onloadend = () => {
             setUploadImgUrl(reader.result);
-            // 이미지 URL 설정
             setImageUrl(reader.result);
         };
     };
+
+    // resetImage가 true인 경우 기본 이미지로 초기화
+    React.useEffect(() => {
+        if (resetImage) {
+            setUploadImgUrl('');
+        }
+    }, [resetImage]);
+
     return (
-        <Grid container alignItems="center" justifyContent="space-around" >
+        <Grid container alignItems="center" justifyContent="space-around">
             <Grid item>
                 <img src={uploadImgUrl || "https://via.placeholder.com/200x150"} alt="사진 업로드 해주세요" style={{ width: '200px', height: '150px' }} />
             </Grid>
@@ -177,7 +183,7 @@ function App() {
     };
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' , background: 'black'}}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: 'black' }}>
             <Container
                 maxWidth="md"
                 sx={{
