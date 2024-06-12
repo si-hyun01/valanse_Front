@@ -12,10 +12,24 @@ function ProblemUI({ categoryName }) {
   const [preference, setPreference] = useState(0);
   const [showNoProblemDialog, setShowNoProblemDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [answeredQuizIds, setAnsweredQuizIds] = useState([]);
 
   useEffect(() => {
     fetchQuizData(categoryName);
   }, [categoryName]);
+
+  useEffect(() => {
+    const fetchAnsweredQuizIds = async () => {
+      try {
+        const response = await axios.get('https://valanse.site/user/answered-quizzes');
+        setAnsweredQuizIds(response.data);
+      } catch (error) {
+        console.error('Error fetching answered quiz ids:', error.message);
+      }
+    };
+
+    fetchAnsweredQuizIds();
+  }, []);
 
   const fetchQuizData = async (category) => {
     try {
@@ -54,7 +68,7 @@ function ProblemUI({ categoryName }) {
     if (nextIndex < quizDataList.length) {
       try {
         await saveUserAnswer();
-        await checkUserAnswer(quizDataList[currentQuizIndex].quizId); // 이 부분 추가
+        await checkUserAnswer(quizDataList[currentQuizIndex].quizId);
         setCurrentQuizIndex(nextIndex);
       } catch (error) {
         console.error('Error saving user answer:', error.message);
@@ -119,13 +133,18 @@ function ProblemUI({ categoryName }) {
     try {
       const response = await axios.get(`https://valanse.site/quiz/check-user-answer/${quizId}`);
       console.log('User answer for quiz', quizId, ':', response.data);
-      // 여기서 응답 데이터를 확인하고 필요한 처리를 추가할 수 있습니다.
+      // 여기서 Response를 확인하고 처리하였음
+      if (response.data === 'User has answered the quiz') {
+        const updatedAnsweredQuizIds = [...answeredQuizIds, quizId];
+        setAnsweredQuizIds(updatedAnsweredQuizIds);
+      }
     } catch (error) {
       console.error('Error checking user answer:', error.message);
     }
   };
 
   const currentQuizData = quizDataList[currentQuizIndex];
+  const isAnswered = answeredQuizIds.includes(currentQuizData.quizId);
 
   return (
     <Container maxWidth="lg">
@@ -308,7 +327,7 @@ function ProblemUI({ categoryName }) {
                 variant="contained"
                 color="primary"
                 onClick={handleNext2}
-                disabled={currentQuizIndex === quizDataList.length - 1}
+                disabled={currentQuizIndex === quizDataList.length - 1 || isAnswered}
                 endIcon={<ArrowForwardIcon />}
                 sx={{ bgcolor: 'limegreen', color: 'white' }}
               >
