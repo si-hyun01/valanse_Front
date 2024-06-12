@@ -39,9 +39,7 @@ function ProblemUI({ categoryName }) {
       for (const quiz of filteredQuizzes) {
         try {
           // 사용자가 퀴즈를 이미 풀었는지 확인하는 요청
-          const response = await axios.post('https://valanse.site/quiz/save-user-answer', {
-            quizId: quiz.quizId,
-          });
+          const response = await axios.get(`https://valanse.site/quiz/check-user-answer/${quiz.quizId}`);
           // 만약 사용자가 퀴즈를 풀었다면, 답변 목록에 추가하지 않음
           if (response.data.status === 200) {
             answeredQuizzes.push(quiz.quizId);
