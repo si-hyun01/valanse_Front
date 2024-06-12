@@ -90,7 +90,6 @@ function ProblemUI({ categoryName }) {
   const handleConfirmSelection = async () => {
     setShowConfirmDialog(false);
     try {
-      await saveUserAnswer();
       handleNext();
     } catch (error) {
       console.error('Error saving user answer:', error.message);
