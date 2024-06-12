@@ -3,7 +3,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const MyQuizzesPage = () => {
-  const [recentQuizzes, setRecentQuizzes] = useState([{}, {}, {}]); // 초기 상태를 3개의 빈 객체로 설정
+  const [recentQuizzes, setRecentQuizzes] = useState([null, null, null]); // 초기 상태를 null로 설정
 
   const fetchRecentQuizzes = async () => {
     try {
@@ -13,6 +13,7 @@ const MyQuizzesPage = () => {
           'Authorization': accessToken 
         }
       });
+      console.log('Response Data:', response.data.data);
       const recentQuizzesData = response.data.data.slice(0, 3);
       setRecentQuizzes(recentQuizzesData);
     } catch (error) {
@@ -30,12 +31,14 @@ const MyQuizzesPage = () => {
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         {recentQuizzes.map((quiz, index) => (
           <div key={index} style={{ width: 'calc(33.33% - 20px)', margin: '10px', border: '1px solid #ccc', borderRadius: '5px', padding: '10px', overflow: 'hidden' }}>
-            {quiz.imageA ? (
+            {quiz && quiz.imageA ? (
               <img src={quiz.imageA} alt={quiz.content} style={{ width: '100%', height: '250px', objectFit: 'cover' }} />
             ) : (
-              <div style={{ width: '100%', height: '250px', backgroundColor: '#ddd' }}></div> // 빈 사진
+              <div style={{ width: '100%', height: '250px', backgroundColor: '#ddd', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#333' }}>
+                No Image Available
+              </div> 
             )}
-            <h3 style={{ marginTop: '10px', marginBottom: '5px', color: 'white' }}>{quiz.content || '로그인 하셈'}</h3> 
+            <h3 style={{ marginTop: '10px', marginBottom: '5px', color: 'white' }}>{quiz ? quiz.content : '로딩 중...'}</h3> 
           </div>
         ))}
       </div>
