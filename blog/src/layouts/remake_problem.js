@@ -12,6 +12,8 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
     const [imageA, setImageA] = useState(null);
     const [imageB, setImageB] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState(quiz?.category || '');
+    const [existingImageA, setExistingImageA] = useState(quiz?.imageA || null);
+    const [existingImageB, setExistingImageB] = useState(quiz?.imageB || null);
 
     useEffect(() => {
         // Ensure that selectedCategory is not null
@@ -19,6 +21,14 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
             setSelectedCategory(quiz.category);
         }
     }, [quiz, selectedCategory]);
+
+    useEffect(() => {
+        // Set existing images if available
+        if (quiz) {
+            setExistingImageA(quiz.imageA || null);
+            setExistingImageB(quiz.imageB || null);
+        }
+    }, [quiz]);
 
     const handleCreateQuestion = async () => {
         const quizRegisterDto = {
@@ -32,8 +42,8 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
 
         const formData = new FormData();
         formData.append('quizRegisterDto', new Blob([JSON.stringify(quizRegisterDto)], { type: 'application/json' }));
-        if (imageA) formData.append('image_A', imageA);
-        if (imageB) formData.append('image_B', imageB);
+        if (imageA || existingImageA) formData.append('image_A', imageA || existingImageA);
+        if (imageB || existingImageB) formData.append('image_B', imageB || existingImageB);
 
         try {
             const response = await axios.patch(`https://valanse.site/quiz/${quiz.quizId}`, formData, {
