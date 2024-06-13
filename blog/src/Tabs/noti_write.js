@@ -38,7 +38,7 @@ const NoticeWrite = () => {
                 const config = {
                     headers: {
                         'Authorization': `Bearer ${accessToken}`,
-                        'Content-Type': 'application/json', // 변경된 부분
+                        'Content-Type': 'application/json',
                     },
                 };
     
@@ -75,17 +75,17 @@ const NoticeWrite = () => {
         <>
             <div style={{ backgroundColor: 'black' }}>
                 <Container maxWidth="md" className="notii">
-                    <Typography variant="h4" className="notii-title2" style={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}>
+                    <Typography variant="h4" className="notii-title2" style={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>
                         공지작성
                     </Typography>
                     <Button
                         variant="contained"
                         className="button1_write"
-                        style={{ backgroundColor: 'white', boxShadow: 'none' }}
+                        style={{ color: 'white', backgroundColor: 'transparent', boxShadow: 'none' }}
                         onClick={() => navigate(-1)}
                     >
-                        <ArrowBackIcon style={{ color: 'black', fontSize: '24px' }} />
-                        <span style={{ color: 'black', fontWeight: 'bold', fontSize: '20px' }}>뒤로가기</span>
+                        <ArrowBackIcon style={{ color: 'white', fontSize: '24px' }} />
+                        <span style={{ color: 'white', fontWeight: 'bold', fontSize: '20px' }}>뒤로가기</span>
                     </Button>
                     <div className="textfield1">
                         <TextField
@@ -95,7 +95,7 @@ const NoticeWrite = () => {
                             onChange={(e) => setNewNotice(e.target.value)}
                             variant="outlined"
                             InputLabelProps={{ style: { color: 'white' } }} // 레이블 텍스트 색상 변경
-                            InputProps={{ style: { color: 'black' } }} // 텍스트 필드의 텍스트 색상 변경
+                            InputProps={{ style: { color: 'black', backgroundColor: '#f0f0f0' } }} // 텍스트 필드의 텍스트 색상 및 배경색 변경
                         />
                     </div>
                     <div style={{ marginBottom: '16px' }}></div> {/* 간격을 벌리는 부분 */}
@@ -109,10 +109,10 @@ const NoticeWrite = () => {
                             onChange={(e) => setNewNoticeContent(e.target.value)}
                             variant="outlined"
                             InputLabelProps={{ style: { color: 'white' } }} // 레이블 텍스트 색상 변경
-                            InputProps={{ style: { color: 'black' } }} // 텍스트 필드의 텍스트 색상 변경
+                            InputProps={{ style: { color: 'black', backgroundColor: '#f0f0f0' } }} // 텍스트 필드의 텍스트 색상 및 배경색 변경
                         />
                     </div>
-                    <Button variant="contained" className="notii-button2" color="primary" onClick={handleAddNotice} style={{ marginTop: '16px' }}>
+                    <Button variant="contained" className="notii-button2" style={{ marginTop: '16px', backgroundColor: 'lime', color: 'white' }} onClick={handleAddNotice}>
                         작성
                     </Button>
                 </Container>

@@ -44,8 +44,8 @@ const NoticeDetail = ({ notice, onDelete, onGoBack, onUpdate }) => {
               margin="normal"
               sx={{ textarea: { color: 'white' }, label: { color: 'white' } }}
             />
-            <Button onClick={handleUpdate} color="primary" sx={{ borderColor: 'lime', color: 'lime' }}>확인</Button>
-            <Button onClick={() => setIsEditing(false)} color="secondary" sx={{ borderColor: 'red', color: 'red' }}>취소</Button>
+            <Button onClick={handleUpdate} sx={{ borderColor: 'lime', color: 'lime' }}>확인</Button>
+            <Button onClick={() => setIsEditing(false)} sx={{ borderColor: 'red', color: 'red' }}>취소</Button>
           </>
         ) : (
           <>
@@ -55,9 +55,9 @@ const NoticeDetail = ({ notice, onDelete, onGoBack, onUpdate }) => {
             <Typography variant="body1" sx={{ color: 'white' }}>
               {formattedContent}
             </Typography>
-            <Button onClick={onGoBack} aria-label="go-back" color="primary" sx={{ borderColor: 'lime', color: 'lime' }}>뒤로가기</Button>
-            <Button onClick={() => onDelete(notice.noticeId)} aria-label="delete" color="error" sx={{ borderColor: 'red', color: 'red' }}>삭제하기</Button>
-            <Button onClick={() => setIsEditing(true)} aria-label="edit" color="primary" sx={{ borderColor: 'lime', color: 'lime' }}>수정하기</Button>
+            <Button onClick={onGoBack} aria-label="go-back" sx={{ borderColor: 'lime', color: 'lime' }}>뒤로가기</Button>
+            <Button onClick={() => onDelete(notice.noticeId)} aria-label="delete" sx={{ borderColor: 'red', color: 'red' }}>삭제하기</Button>
+            <Button onClick={() => setIsEditing(true)} aria-label="edit" sx={{ borderColor: 'lime', color: 'lime' }}>수정하기</Button>
           </>
         )}
       </CardContent>
@@ -180,7 +180,7 @@ const NoticeBoard = () => {
   }, []);
 
   return (
-    <div style={{background: 'black'}}>
+    <div style={{backgroundColor: 'black'}}>
       <Container className="neon-container" style={{ marginTop: '50px', maxWidth: "80%" }}>
         <Typography variant="h4" className="notii-title" style={{ fontWeight: 'bold', color: 'white', marginBottom: '10px', textAlign: 'center', fontSize: '2.5rem' }}>
           공지게시판

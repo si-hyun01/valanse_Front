@@ -1,77 +1,86 @@
 .notii {
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: black;
+  margin-bottom: 20px;
+}
+
+.notii-title {
+  margin-bottom: 20px;
+}
+
+.notii-table {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.notii-table table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid black;
+}
+
+.notii-table th,
+.notii-table td {
+  border: 1px solid white;
+  padding: 8px;
+  vertical-align: middle;
+  /* 수직 가운데 정렬 */
+  text-align: center;
+  /* 기본적으로 가운데 정렬 */
+}
+
+.notii-table th {
+  background-color: black;
+  color: white;
+  /* 헤더 텍스트 색상 */
+}
+
+.notii-table tbody tr:hover {
+  background-color: gray;
+  cursor: pointer;
+}
+
+.notii-button {
+  margin-top: 20px;
+}
+
+/* 제목 열의 td 요소만 왼쪽 정렬 */
+.notii-table tbody td.title-cell {
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+  /* 원하는 최대 너비를 설정 */
+}
+
+@keyframes neon {
+  0% {
+    box-shadow: 0 0 5px #ff73fa, 0 0 10px #ff73fa, 0 0 15px #ff73fa, 0 0 20px #ff73fa, 0 0 25px #ff73fa, 0 0 30px #ff73fa, 0 0 35px #ff73fa;
   }
-  
-  .notii-title {
-    margin-bottom: 20px;
+
+  25% {
+    box-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 15px #ff00ff, 0 0 20px #ff00ff, 0 0 25px #ff00ff, 0 0 30px #ff00ff, 0 0 35px #ff00ff;
   }
-  
-  .notii-table {
-    max-width: 1200px;
-    margin: 0 auto;
+
+  50% {
+    box-shadow: 0 0 5px #ff5f00, 0 0 10px #ff5f00, 0 0 15px #ff5f00, 0 0 20px #ff5f00, 0 0 25px #ff5f00, 0 0 30px #ff5f00, 0 0 35px #ff5f00;
   }
-  
-  .notii-table table {
-    width: 100%;
-    border-collapse: collapse;
-    border: 1px solid black;
+
+  75% {
+    box-shadow: 0 0 5px #ffff00, 0 0 10px #ffff00, 0 0 15px #ffff00, 0 0 20px #ffff00, 0 0 25px #ffff00, 0 0 30px #ffff00, 0 0 35px #ffff00;
   }
-  
-  .notii-table th, .notii-table td {
-    border: 1px solid white;
-    padding: 8px;
-    vertical-align: middle; /* 수직 가운데 정렬 */
-    text-align: center; /* 기본적으로 가운데 정렬 */
+
+  100% {
+    box-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 15px #00ff00, 0 0 20px #00ff00, 0 0 25px #00ff00, 0 0 30px #00ff00, 0 0 35px #00ff00;
   }
-  
-  .notii-table th {
-    background-color: black;
-  }
-  
-  .notii-table tbody tr:hover {
-    background-color: gray;
-    cursor: pointer;
-  }
-  
-  .notii-button {
-    margin-top: 20px;
-  }
-  
-  /* 제목 열의 td 요소만 왼쪽 정렬 */
-  .notii-table tbody td.title-cell {
-    text-align: left;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 500px; /* 원하는 최대 너비를 설정 */
-  }
-  
-  @keyframes neon {
-    0% {
-      box-shadow: 0 0 5px #ff73fa, 0 0 10px #ff73fa, 0 0 15px #ff73fa, 0 0 20px #ff73fa, 0 0 25px #ff73fa, 0 0 30px #ff73fa, 0 0 35px #ff73fa;
-    }
-    25% {
-      box-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 15px #ff00ff, 0 0 20px #ff00ff, 0 0 25px #ff00ff, 0 0 30px #ff00ff, 0 0 35px #ff00ff;
-    }
-    50% {
-      box-shadow: 0 0 5px #ff5f00, 0 0 10px #ff5f00, 0 0 15px #ff5f00, 0 0 20px #ff5f00, 0 0 25px #ff5f00, 0 0 30px #ff5f00, 0 0 35px #ff5f00;
-    }
-    75% {
-      box-shadow: 0 0 5px #ffff00, 0 0 10px #ffff00, 0 0 15px #ffff00, 0 0 20px #ffff00, 0 0 25px #ffff00, 0 0 30px #ffff00, 0 0 35px #ffff00;
-    }
-    100% {
-      box-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 15px #00ff00, 0 0 20px #00ff00, 0 0 25px #00ff00, 0 0 30px #00ff00, 0 0 35px #00ff00;
-    }
-  }
-  
-  .neon-container {
-    background-color: black;
-    border-radius: 16px;
-    padding: 16px;
-    animation: neon 5s infinite;
-  }
-  
+}
+
+.neon-container {
+  background-color: black;
+  border-radius: 16px;
+  padding: 16px;
+  animation: neon 5s infinite;
+}
