@@ -7,9 +7,16 @@ import CreateQuestionDialog from '../layouts/remake_problem';
 
 const QuizDetail = ({ quiz, onDelete, onGoBack }) => {
     const [openDialog, setOpenDialog] = useState(false); // 다이얼로그 열림 상태 추가
+    const [actionType, setActionType] = useState(''); // 액션 타입 상태 추가 (delete 또는 edit)
 
     const handleDeleteConfirmation = () => {
         setOpenDialog(true);
+        setActionType('delete'); // 삭제 버튼 클릭 시 액션 타입을 delete로 설정
+    };
+
+    const handleEdit = () => {
+        setOpenDialog(true);
+        setActionType('edit'); // 수정 버튼 클릭 시 액션 타입을 edit으로 설정
     };
 
     return (
@@ -19,7 +26,7 @@ const QuizDetail = ({ quiz, onDelete, onGoBack }) => {
                 <Typography variant="subtitle2" sx={{ color: 'white' }}>퀴즈 ID: {quiz.quizId}</Typography>
                 <Button onClick={onGoBack} color="primary" sx={{ borderColor: 'lime', color: 'lime' }}>뒤로가기</Button>
                 <Button onClick={handleDeleteConfirmation} color="error" sx={{ borderColor: 'red', color: 'red' }}>삭제하기</Button>
-                <Button onClick={() => setOpenDialog(true)} color="primary" sx={{ borderColor: 'lime', color: 'lime' }}>수정하기</Button>
+                <Button onClick={handleEdit} color="primary" sx={{ borderColor: 'lime', color: 'lime' }}>수정하기</Button>
             </CardContent>
             {/* 새로운 다이얼로그 */}
             <CreateQuestionDialog
@@ -27,6 +34,7 @@ const QuizDetail = ({ quiz, onDelete, onGoBack }) => {
                 handleClose={() => setOpenDialog(false)}
                 quiz={quiz}
                 handleCreate={onDelete}
+                actionType={actionType} // 액션 타입을 다이얼로그에 전달
             />
         </Card>
     );
