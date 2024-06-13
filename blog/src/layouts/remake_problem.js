@@ -12,6 +12,8 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
     const [imageA, setImageA] = useState(null);
     const [imageB, setImageB] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState('');
+    const [fileAName, setFileAName] = useState('');
+    const [fileBName, setFileBName] = useState('');
 
     useEffect(() => {
         if (quiz) {
@@ -55,8 +57,9 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
         }
     };
 
-    const handleImageChange = (setImageFunc) => (e) => {
+    const handleImageChange = (setImageFunc, setFileNameFunc) => (e) => {
         setImageFunc(e.target.files[0]);
+        setFileNameFunc(e.target.files[0].name); // 파일 이름 설정
     };
 
     return (
@@ -99,9 +102,10 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
                         <input
                             type="file"
                             accept="image/*"
-                            onChange={handleImageChange(setImageA)}
+                            onChange={handleImageChange(setImageA, setFileAName)}
                             style={{ marginBottom: '20px' }}
                         />
+                        <div>{fileAName}</div> {/* 파일 이름 표시 */}
                         <TextField
                             fullWidth
                             label="오른쪽 설명"
@@ -112,9 +116,10 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
                         <input
                             type="file"
                             accept="image/*"
-                            onChange={handleImageChange(setImageB)}
+                            onChange={handleImageChange(setImageB, setFileBName)}
                             style={{ marginBottom: '20px' }}
                         />
+                        <div>{fileBName}</div> {/* 파일 이름 표시 */}
                     </>
                 )}
             </DialogContent>
