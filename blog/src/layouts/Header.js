@@ -10,11 +10,9 @@ const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [stateToken, setStateToken] = useState('');
     const [accessToken, setAccessToken] = useState('');
-    const [expiration, setExpiration] = useState(null);
     const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Seoul', hour12: true, hourCycle: 'h12' }));
-    const [errorStatus, setErrorStatus] = useState('');
+    const navigate = useNavigate();
 
-    // 페이지 로드 시 로그인 상태 확인
     useEffect(() => {
         const accessTokenCookie = Cookies.get('access_token');
         setIsLoggedIn(accessTokenCookie ? true : false);
@@ -32,13 +30,50 @@ const Header = () => {
             refreshAccessToken(refreshToken);
         }
 
-        // Cleanup 함수
+        const requestInterceptor = axios.interceptors.request.use(
+            config => {
+                const token = Cookies.get('access_token');
+                if (token) {
+                    config.headers['Authorization'] = token;
+                }
+                return config;
+            },
+            error => Promise.reject(error)
+        );
+
+        const responseInterceptor = axios.interceptors.response.use(
+            response => response,
+            async error => {
+                const originalRequest = error.config;
+                if (error.response && error.response.status === 401 && error.response.data === "Access Token 만료!") {
+                    const refreshToken = Cookies.get('refresh_token');
+                    if (refreshToken) {
+                        try {
+                            await refreshAccessToken(refreshToken);
+                            originalRequest.headers['Authorization'] = Cookies.get('access_token');
+                            return axios(originalRequest);
+                        } catch (refreshError) {
+                            console.error('Error refreshing access token:', refreshError.message);
+                            handleLogout();
+                        }
+                    } else {
+                        handleLogout();
+                    }
+                } else if (error.response && error.response.status >= 400 && error.response.status < 500) {
+                    // 4xx 에러가 발생한 경우
+                    console.error('Authentication required:', error.message);
+                    toggleSignUpModal();
+                }
+                return Promise.reject(error);
+            }
+        );
+
         return () => {
-            // 여기에 cleanup 코드 추가 (axios interceptors 제거)
+            axios.interceptors.request.eject(requestInterceptor);
+            axios.interceptors.response.eject(responseInterceptor);
         };
     }, []);
 
-    // 페이지 로드 시 현재 시각 표시
     useEffect(() => {
         const timer = setInterval(() => {
             setCurrentTime(new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Seoul', hour12: true, hourCycle: 'h12' }));
@@ -47,40 +82,6 @@ const Header = () => {
         return () => clearInterval(timer);
     }, []);
 
-    // Access Token 유효 기간 체크 함수
-    const checkTokenExpiration = async () => {
-        try {
-            const accessToken = Cookies.get('access_token');
-            const response = await axios.post('https://valanse.site/token/check/expiration', null, {
-                headers: {
-                    'Authorization': accessToken,
-                    'accept': 'application/json;charset=UTF-8'
-                }
-            });
-            setExpiration(response.data.data);
-            console.log('Token expiration:', response.data);
-        } catch (error) {
-            console.error('Error checking token expiration:', error.message);
-            if (error.response && error.response.status === 401 && error.response.data === "Access Token 만료!") {
-                const refreshToken = Cookies.get('refresh_token');
-                if (refreshToken) {
-                    try {
-                        await refreshAccessToken(refreshToken);
-                        await checkTokenExpiration(); 
-                    } catch (refreshError) {
-                        console.error('Error refreshing access token:', refreshError.message);
-                        handleLogout();
-                    }
-                } else {
-                    handleLogout();
-                }
-            } else {
-                setErrorStatus('다시 로그인이 필요합니다.'); // 다른 상황에 맞는 메시지 설정
-            }
-        }
-    };
-
-    // Access Token 발급 함수
     const getAccessToken = async (stateToken) => {
         try {
             const response = await axios.post('https://valanse.site/token/get', null, {
@@ -99,7 +100,6 @@ const Header = () => {
         }
     };
 
-    // Access Token 갱신 함수
     const refreshAccessToken = async (refreshToken) => {
         try {
             const response = await axios.post('https://valanse.site/token/refresh', null, {
@@ -109,13 +109,15 @@ const Header = () => {
                 }
             });
 
+            // 응답을 확인하여 처리
             if (response.status === 200) {
                 const newToken = response.data.data;
                 setAccessToken(newToken);
                 Cookies.set('access_token', newToken);
             } else {
+                // 4xx 응답이 오면 로그인 화면을 표시
                 console.error('Refresh token renewal required.');
-                setErrorStatus('다시 로그인이 필요합니다.'); // 다른 상황에 맞는 메시지 
+                toggleSignUpModal(); // 로그인 모달 열기 또는 다른 로그인 화면 표시 로직 추가
             }
         } catch (error) {
             console.error('Error refreshing access token:', error.message);
@@ -123,7 +125,6 @@ const Header = () => {
         }
     };
 
-    // 로그아웃 처리 함수
     const handleLogout = async () => {
         try {
             const accessTokenCookie = Cookies.get('access_token');
@@ -146,17 +147,14 @@ const Header = () => {
         }
     };
 
-    // 로그인 모달 토글 함수
     const toggleSignUpModal = () => {
         setShowSignUpModal(!showSignUpModal);
     };
 
-    // 로고 클릭 처리 함수
     const handleLogoClick = () => {
         window.location.href = 'https://valanse.vercel.app/';
     };
 
-    // 버튼 스타일 정의
     const buttonStyles = {
         base: {
             padding: '10px 20px',
@@ -212,45 +210,42 @@ const Header = () => {
                                 textShadow: '0 0 10px cyan, 0 0 20px cyan',
                                 fontFamily: 'monospace'
                             }}>
-                                {currentTime}
-                            </div>
+                            {currentTime}
                         </div>
                     </div>
-
-                    <div>
-                        {isLoggedIn ? (
-                            <>
-                                <button
-                                    style={{ ...buttonStyles.base, ...buttonStyles.logout }}
-                                    onClick={handleLogout}
-                                >
-                                    로그아웃
-                                </button>
-                                <Link to="/mypage">
-                                    <button
-                                        style={{ ...buttonStyles.base, ...buttonStyles.myPage }}
-                                    >
-                                        마이페이지
-                                    </button>
-                                </Link>
-                            </>
-                        ) : (
-                            <div>
-                                <div style={{ marginBottom: '10px', color: 'red' }}>{errorStatus}</div>
-                                <button
-                                    style={{ ...buttonStyles.base, ...buttonStyles.login }}
-                                    onClick={toggleSignUpModal}
-                                >
-                                    로그인
-                                </button>
-                            </div>
-                        )}
-                        <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} />
-                    </div>
                 </div>
-            </header>
-        </>
-    );
+
+                <div>
+                    {isLoggedIn ? (
+                        <>
+                            <button
+                                style={{ ...buttonStyles.base, ...buttonStyles.logout }}
+                                onClick={handleLogout}
+                            >
+                                로그아웃
+                            </button>
+                            <Link to="/mypage">
+                                <button
+                                    style={{ ...buttonStyles.base, ...buttonStyles.myPage }}
+                                >
+                                    마이페이지
+                                </button>
+                            </Link>
+                        </>
+                    ) : (
+                        <button
+                            style={{ ...buttonStyles.base, ...buttonStyles.login }}
+                            onClick={toggleSignUpModal}
+                        >
+                            로그인
+                        </button>
+                    )}
+                    <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} />
+                </div>
+            </div>
+        </header>
+    </>
+);
 };
 
 export default Header;
