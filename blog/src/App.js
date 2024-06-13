@@ -25,7 +25,7 @@ function App() {
           <Route path="/" element={<Layout><Entire /></Layout>} />
           <Route path="/mypage" element={<Layout><Mypage /></Layout>} />
           <Route path="/category/:categoryName" element={<Layout><ProblemUI /></Layout>} />
-          <Route path="/category/:categoryName/:quizId?" element={<Layout><ProblemUI /></Layout>} />
+          <Route path="/category/:categoryName/:quizId" element={<Layout><ProblemUI /></Layout>} />
           <Route path="/problems/:categoryName" element={<Layout><ProblemUI /></Layout>} />
           <Route path="/notice" element={<Layout><NoticeBoard /></Layout>} />
           <Route path="/noti_write" element={<Layout><NoticeWrite /></Layout>} />

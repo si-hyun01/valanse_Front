@@ -33,44 +33,56 @@ function ProblemUI() {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   useEffect(() => {
-    fetchQuizData(categoryName);
-  }, [categoryName]);
+    if (quizId) {
+      fetchQuizData(categoryName, quizId);
+    } else {
+      fetchQuizData(categoryName);
+    }
+  }, [categoryName, quizId]);
 
-  const fetchQuizData = async (category) => {
+  const fetchQuizData = async (category, quizId = null) => {
     try {
-      const allQuizzesResponse = await axios.get('https://valanse.site/quiz/all', {
-        headers: {
-          'accept': 'application/json;charset=UTF-8',
-        },
-      });
-      const allQuizzes = allQuizzesResponse.data.data;
+      let quizDataArray = [];
 
-      const categoryResponse = await axios.get(
-        `https://valanse.site/quiz-category/search?keyword=${encodeURIComponent(category)}`
-      );
-      const categoryQuizzes = categoryResponse.data.data;
-      const quizIds = categoryQuizzes.map((quiz) => quiz.quizId);
-      const filteredQuizzes = allQuizzes.filter((quiz) => quizIds.includes(quiz.quizId));
+      if (quizId) {
+        const response = await axios.get(`https://valanse.site/quiz/${quizId}`);
+        quizDataArray = [response.data];
+      } else {
+        const allQuizzesResponse = await axios.get('https://valanse.site/quiz/all', {
+          headers: {
+            'accept': 'application/json;charset=UTF-8',
+          },
+        });
+        const allQuizzes = allQuizzesResponse.data.data;
 
-      const answeredQuizzes = [];
+        const categoryResponse = await axios.get(
+          `https://valanse.site/quiz-category/search?keyword=${encodeURIComponent(category)}`
+        );
+        const categoryQuizzes = categoryResponse.data.data;
+        const quizIds = categoryQuizzes.map((quiz) => quiz.quizId);
+        const filteredQuizzes = allQuizzes.filter((quiz) => quizIds.includes(quiz.quizId));
 
-      for (const quiz of filteredQuizzes) {
-        try {
-          const response = await axios.get(`https://valanse.site/quiz/check-user-answer/${quiz.quizId}`);
-          if (response.data.status === 200 && response.data.data === "User has answered the quiz") {
-            answeredQuizzes.push(quiz.quizId);
+        const answeredQuizzes = [];
+
+        for (const quiz of filteredQuizzes) {
+          try {
+            const response = await axios.get(`https://valanse.site/quiz/check-user-answer/${quiz.quizId}`);
+            if (response.data.status === 200 && response.data.data === "User has answered the quiz") {
+              answeredQuizzes.push(quiz.quizId);
+            }
+          } catch (error) {
+            console.error('Error checking user answer:', error.message);
           }
-        } catch (error) {
-          console.error('Error checking user answer:', error.message);
         }
+
+        quizDataArray = filteredQuizzes.filter(quiz => !answeredQuizzes.includes(quiz.quizId))
+          .map(quiz => ({
+            ...quiz,
+            likes: 0,
+            dislikes: 0
+          }));
       }
 
-      const quizDataArray = filteredQuizzes.filter(quiz => !answeredQuizzes.includes(quiz.quizId))
-        .map(quiz => ({
-          ...quiz,
-          likes: 0,
-          dislikes: 0
-        }));
       setQuizDataList(quizDataArray);
     } catch (error) {
       console.error('Error fetching quiz data:', error.message);
@@ -180,7 +192,7 @@ function ProblemUI() {
         <DialogTitle id="confirm-dialog-title">Confirm Selection</DialogTitle>
         <DialogContent>
           <Typography variant="body1" id="confirm-dialog-description">
-            Selected option: {selectedOption}. Are you sure you want to select this?
+            Selected option: {selectedOption}. Are you sure you want to selectthis?
           </Typography>
           <Typography variant="body2" sx={{ color: 'black', mt: 2 }}>
             Please rate this quiz.
@@ -220,7 +232,6 @@ function ProblemUI() {
           </Button>
         </DialogActions>
       </Dialog>
-
       <Card
         sx={{
           bgcolor: 'black',
