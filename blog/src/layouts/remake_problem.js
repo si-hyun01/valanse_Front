@@ -23,8 +23,6 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
             setDescriptionA(quiz.descriptionA || '');
             setDescriptionB(quiz.descriptionB || '');
             setSelectedCategory(quiz.category || '');
-
-            // Set file names for display
             setFileAName(quiz.imageA ? quiz.imageA.split('/').pop() : '');
             setFileBName(quiz.imageB ? quiz.imageB.split('/').pop() : '');
         }
@@ -53,17 +51,24 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
                 }
             });
             console.log('Quiz updated successfully:', response.data);
-            handleClose(); // Close dialog
-            handleCreate(); // Trigger handleCreate function if needed
-            onUpdateQuizzes(); // Refresh quizzes list
+            handleClose();
+            handleCreate();
+            onUpdateQuizzes();
         } catch (error) {
             console.error('퀴즈 수정 오류:', error.response ? error.response.data : error.message);
         }
     };
 
-    const handleImageChange = (setImageFunc, setFileNameFunc) => (e) => {
+    const handleImageChange = (setImageFunc, setFileNameFunc, currentImage) => (e) => {
         setImageFunc(e.target.files[0]);
-        setFileNameFunc(e.target.files[0].name); // Set file name for display
+        setFileNameFunc(e.target.files[0].name);
+    };
+
+    // 이미지를 고정 크기로 표시하는 스타일 설정
+    const imagePreviewStyle = {
+        maxWidth: '100%',
+        height: 'auto',
+        maxHeight: 200, // 원하는 높이로 설정
     };
 
     return (
@@ -106,10 +111,15 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
                         <input
                             type="file"
                             accept="image/*"
-                            onChange={handleImageChange(setImageA, setFileAName)}
+                            onChange={handleImageChange(setImageA, setFileAName, quiz.imageA)}
                             style={{ marginBottom: '20px' }}
                         />
-                        <div>{fileAName}</div> {/* Display file name */}
+                        {fileAName && (
+                            <div>
+                                <img src={URL.createObjectURL(imageA)} alt="이미지 A" style={imagePreviewStyle} />
+                                <div>{fileAName}</div>
+                            </div>
+                        )}
                         <TextField
                             fullWidth
                             label="오른쪽 설명"
@@ -120,10 +130,15 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
                         <input
                             type="file"
                             accept="image/*"
-                            onChange={handleImageChange(setImageB, setFileBName)}
+                            onChange={handleImageChange(setImageB, setFileBName, quiz.imageB)}
                             style={{ marginBottom: '20px' }}
                         />
-                        <div>{fileBName}</div> {/* Display file name */}
+                        {fileBName && (
+                            <div>
+                                <img src={URL.createObjectURL(imageB)} alt="이미지 B" style={imagePreviewStyle} />
+                                <div>{fileBName}</div>
+                            </div>
+                        )}
                     </>
                 )}
             </DialogContent>
