@@ -33,7 +33,7 @@ function ProblemUI() {
 
   useEffect(() => {
     fetchQuizData(categoryName); // 컴포넌트가 마운트되거나 categoryName이 변경될 때마다 퀴즈 데이터를 가져옴
-  }, [categoryName]);
+  }, [categoryName, quizId]); // quizId도 useEffect의 의존성 배열에 추가
 
   // 카테고리명을 기반으로 퀴즈 데이터를 가져오는 함수
   const fetchQuizData = async (category) => {
