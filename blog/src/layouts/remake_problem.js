@@ -23,6 +23,9 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
             setDescriptionA(quiz.descriptionA || '');
             setDescriptionB(quiz.descriptionB || '');
             setSelectedCategory(quiz.category || '');
+            // Set file names for display
+            setFileAName(quiz.imageA ? quiz.imageA.split('/').pop() : '');
+            setFileBName(quiz.imageB ? quiz.imageB.split('/').pop() : '');
         }
     }, [quiz]);
 
@@ -57,7 +60,7 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
         }
     };
 
-    const handleImageChange = (setImageFunc, setFileNameFunc) => (e) => {
+    const handleImageChange = (setImageFunc, setFileNameFunc, currentImage) => (e) => {
         setImageFunc(e.target.files[0]);
         setFileNameFunc(e.target.files[0].name); // 파일 이름 설정
     };
@@ -102,7 +105,7 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
                         <input
                             type="file"
                             accept="image/*"
-                            onChange={handleImageChange(setImageA, setFileAName)}
+                            onChange={handleImageChange(setImageA, setFileAName, quiz.imageA)}
                             style={{ marginBottom: '20px' }}
                         />
                         <div>{fileAName}</div> {/* 파일 이름 표시 */}
@@ -116,7 +119,7 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
                         <input
                             type="file"
                             accept="image/*"
-                            onChange={handleImageChange(setImageB, setFileBName)}
+                            onChange={handleImageChange(setImageB, setFileBName, quiz.imageB)}
                             style={{ marginBottom: '20px' }}
                         />
                         <div>{fileBName}</div> {/* 파일 이름 표시 */}
