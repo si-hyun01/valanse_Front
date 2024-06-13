@@ -107,9 +107,6 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
 
                 {selectedCategory && (
                     <>
-                        <div style={{ marginTop: '10px', color: 'gray', fontSize: '12px' }}>
-                            이미지는 다시 업로드해야 수정이 가능합니다.
-                        </div>
                         <TextField
                             fullWidth
                             label="퀴즈 제목"
@@ -124,6 +121,9 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
                             onChange={(e) => setDescriptionA(e.target.value)}
                             style={{ marginBottom: '20px' }}
                         />
+                        <div style={{ marginTop: '10px', color: 'gray', fontSize: '15px' }}>
+                            이미지는 다시 업로드해야 수정이 가능합니다.
+                        </div>
                         <input
                             type="file"
                             accept="image/*"
@@ -138,6 +138,9 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
                             onChange={(e) => setDescriptionB(e.target.value)}
                             style={{ marginBottom: '20px' }}
                         />
+                        <div style={{ marginTop: '10px', color: 'gray', fontSize: '15px' }}>
+                            이미지는 다시 업로드해야 수정이 가능합니다.
+                        </div>
                         <input
                             type="file"
                             accept="image/*"
