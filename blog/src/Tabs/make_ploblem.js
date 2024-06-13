@@ -28,24 +28,19 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     };
 
     const handleCreate = async () => {
+        const formData = new FormData();
         const quizRegisterDto = {
             content: question,
             optionA: story1,
             optionB: story2,
-            descriptionA: story1, // 이 필드는 필요한 경우 수정하세요
-            descriptionB: story2, // 이 필드는 필요한 경우 수정하세요
+            descriptionA: story1,
+            descriptionB: story2,
             category: [selectedCategory]
         };
 
-        // FormData 생성
-        const formData = new FormData();
-        formData.append('quizRegisterDto', JSON.stringify(quizRegisterDto));
-        if (story1Image) {
-            formData.append('image_A', story1Image);
-        }
-        if (story2Image) {
-            formData.append('image_B', story2Image);
-        }
+        formData.append('quizRegisterDto', new Blob([JSON.stringify(quizRegisterDto)], { type: 'application/json' }));
+        formData.append('image_A', story1Image);
+        formData.append('image_B', story2Image);
 
         try {
             const response = await axios.post('https://valanse.site/quiz/register', formData, {
@@ -56,8 +51,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
             });
             console.log('Quiz created successfully:', response.data);
             setOpenDialog(true);
-            resetForm(); // 폼 초기화
-            onCreate(response.data); // 부모 컴포넌트에서 필요한 처리 수행 (예: 리스트 갱신 등)
+            resetForm(); // Reset the form after successful creation
         } catch (error) {
             console.error('Error creating quiz:', error.response ? error.response.data : error.message);
         }
@@ -68,7 +62,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     };
 
     return (
-        <Card style={{ border: '2px solid transparent', background: 'black', boxShadow: '0 0 10px #00FF00' }}>
+        <Card style={{border: '2px solid transparent', background: 'black', boxShadow: '0 0 10px #00FF00'}}>
             <Container>
                 <Grid container spacing={2} justifyContent="center">
                     <Grid item xs={12} style={{ height: '30px' }} />
@@ -106,10 +100,10 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
                         />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload setImage={setStory1Image} setImageUrl={setStory1ImageUrl} resetImage={story1ImageUrl === ''} />
+                        <ImageUpload setImage={setStory1Image} setImageUrl={setStory1ImageUrl} />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload setImage={setStory2Image} setImageUrl={setStory2ImageUrl} resetImage={story2ImageUrl === ''} />
+                        <ImageUpload setImage={setStory2Image} setImageUrl={setStory2ImageUrl} />
                     </Grid>
                     <Grid item xs={12} style={{ height: '30px' }} />
                     <Grid item xs={12} textAlign="center">
@@ -135,7 +129,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     );
 }
 
-const ImageUpload = ({ setImage, setImageUrl, resetImage }) => {
+const ImageUpload = ({ setImage, setImageUrl }) => {
     const [uploadImgUrl, setUploadImgUrl] = useState('');
 
     const onchangeImageUpload = (e) => {
@@ -146,16 +140,17 @@ const ImageUpload = ({ setImage, setImageUrl, resetImage }) => {
         reader.readAsDataURL(uploadFile);
         reader.onloadend = () => {
             setUploadImgUrl(reader.result);
+            // 이미지 URL 설정
             setImageUrl(reader.result);
         };
     };
 
-    // resetImage가 true인 경우 기본 이미지로 초기화
-    React.useEffect(() => {
-        if (resetImage) {
-            setUploadImgUrl('');
-        }
-    }, [resetImage]);
+    // 이미지를 선택하지 않은 경우 null로 설정
+    const handleRemoveImage = () => {
+        setImage(null);
+        setImageUrl('');
+        setUploadImgUrl('');
+    };
 
     return (
         <Grid container alignItems="center" justifyContent="space-around">
@@ -172,6 +167,9 @@ const ImageUpload = ({ setImage, setImageUrl, resetImage }) => {
                         onChange={onchangeImageUpload}
                     />
                 </Button>
+                <Button variant="outlined" color="secondary" onClick={handleRemoveImage}>
+                    이미지 제거
+                </Button>
             </Grid>
         </Grid>
     );
@@ -182,7 +180,6 @@ function App() {
 
     const handleCreateQuestion = (newQuestion) => {
         console.log('New question created:', newQuestion);
-        // 필요한 처리를 추가할 수 있습니다.
     };
 
     const handleCategoryChange = (event) => {
