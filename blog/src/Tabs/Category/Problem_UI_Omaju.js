@@ -1,30 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
-import {
-  Button,
-  Card,
-  CardContent,
-  CardActionArea,
-  CardMedia,
-  Container,
-  Dialog,
-  DialogActions,
-  DialogTitle,
-  DialogContent,
-  Grid,
-  Typography,
-  Checkbox,
-  FormControlLabel
-} from '@mui/material';
+import { Button, Card, CardContent, CardActionArea, CardMedia, Container, Dialog, DialogActions, DialogTitle, DialogContent, Grid, Typography, Checkbox, FormControlLabel } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CommentUI from '../../components/comments';
-import { Link } from 'react-router-dom';
 
-function ProblemUI() {
-  const { categoryName, quizId } = useParams();
-
+function ProblemUI({ categoryName }) {
   const [quizDataList, setQuizDataList] = useState([]);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -33,59 +14,51 @@ function ProblemUI() {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   useEffect(() => {
-    if (quizId) {
-      fetchQuizData(categoryName, quizId);
-    } else {
-      fetchQuizData(categoryName);
-    }
-  }, [categoryName, quizId]);
+    fetchQuizData(categoryName);
+  }, [categoryName]);
 
-  const fetchQuizData = async (category, quizId = null) => {
+  const fetchQuizData = async (category) => {
     try {
-      let quizDataArray = [];
+      const allQuizzesResponse = await axios.get('https://valanse.site/quiz/all', {
+        headers: {
+          'accept': 'application/json;charset=UTF-8',
+        },
+      });
+      const allQuizzes = allQuizzesResponse.data.data;
+      const categoryResponse = await axios.get(
+        `https://valanse.site/quiz-category/search?keyword=${encodeURIComponent(category)}`
+      );
+      const categoryQuizzes = categoryResponse.data.data;
+      const quizIds = categoryQuizzes.map((quiz) => quiz.quizId);
+      const filteredQuizzes = allQuizzes.filter((quiz) => quizIds.includes(quiz.quizId));
 
-      if (quizId) {
-        const response = await axios.get(`https://valanse.site/quiz/${quizId}`);
-        quizDataArray = [response.data];
-      } else {
-        const allQuizzesResponse = await axios.get('https://valanse.site/quiz/all', {
-          headers: {
-            'accept': 'application/json;charset=UTF-8',
-          },
-        });
-        const allQuizzes = allQuizzesResponse.data.data;
+      // 이미 푼 퀴즈를 저장할 배열
+      const answeredQuizzes = [];
 
-        const categoryResponse = await axios.get(
-          `https://valanse.site/quiz-category/search?keyword=${encodeURIComponent(category)}`
-        );
-        const categoryQuizzes = categoryResponse.data.data;
-        const quizIds = categoryQuizzes.map((quiz) => quiz.quizId);
-        const filteredQuizzes = allQuizzes.filter((quiz) => quizIds.includes(quiz.quizId));
-
-        const answeredQuizzes = [];
-
-        for (const quiz of filteredQuizzes) {
-          try {
-            const response = await axios.get(`https://valanse.site/quiz/check-user-answer/${quiz.quizId}`);
-            if (response.data.status === 200 && response.data.data === "User has answered the quiz") {
-              answeredQuizzes.push(quiz.quizId);
-            }
-          } catch (error) {
-            console.error('Error checking user answer:', error.message);
+      // 각 퀴즈에 대해 사용자가 이미 답변했는지 확인
+      for (const quiz of filteredQuizzes) {
+        try {
+          // 사용자가 퀴즈를 이미 풀었는지 확인하는 요청
+          const response = await axios.get(`https://valanse.site/quiz/check-user-answer/${quiz.quizId}`);
+          // 만약 사용자가 퀴즈를 풀었다면, answeredQuizzes에 추가
+          if (response.data.status === 200 && response.data.data === "User has answered the quiz") {
+            answeredQuizzes.push(quiz.quizId);
           }
+        } catch (error) {
+          console.error('퀴즈 답변 확인 중 오류 발생:', error.message);
         }
-
-        quizDataArray = filteredQuizzes.filter(quiz => !answeredQuizzes.includes(quiz.quizId))
-          .map(quiz => ({
-            ...quiz,
-            likes: 0,
-            dislikes: 0
-          }));
       }
 
+      // 사용자가 풀지 않은 퀴즈만 반환
+      const quizDataArray = filteredQuizzes.filter(quiz => !answeredQuizzes.includes(quiz.quizId))
+        .map(quiz => ({
+          ...quiz,
+          likes: 0,
+          dislikes: 0
+        }));
       setQuizDataList(quizDataArray);
     } catch (error) {
-      console.error('Error fetching quiz data:', error.message);
+      console.error('퀴즈 데이터 불러오기 중 오류 발생:', error.message);
       setShowNoProblemDialog(true);
     }
   };
@@ -93,6 +66,7 @@ function ProblemUI() {
   const handleOptionSelect = async (option, quizId) => {
     setSelectedOption(option);
     setShowConfirmDialog(true);
+    console.log(quizDataList[currentQuizIndex]);
   };
 
   const handleNext = async () => {
@@ -136,7 +110,7 @@ function ProblemUI() {
   const handleConfirmSelection = async () => {
     setShowConfirmDialog(false);
     try {
-      await handleNext();
+      handleNext();
     } catch (error) {
       console.error('Error saving user answer:', error.message);
     }
@@ -170,65 +144,85 @@ function ProblemUI() {
         aria-labelledby="no-problem-dialog-title"
         aria-describedby="no-problem-dialog-description"
       >
-        <DialogTitle id="no-problem-dialog-title">No Problems</DialogTitle>
+        <DialogTitle id="no-problem-dialog-title">문제가 없습니다.</DialogTitle>
         <DialogContent>
           <Typography variant="body1" id="no-problem-dialog-description">
-            There are no more problems available.
+            현재 문제가 더 이상 제공되지 않습니다.
           </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseNoProblemDialog} color="primary">
-            OK
+            확인
           </Button>
         </DialogActions>
       </Dialog>
-
       <Dialog
         open={showConfirmDialog}
         onClose={handleCloseConfirmDialog}
         aria-labelledby="confirm-dialog-title"
         aria-describedby="confirm-dialog-description"
       >
-        <DialogTitle id="confirm-dialog-title">Confirm Selection</DialogTitle>
+        <DialogTitle id="confirm-dialog-title">선택 확인</DialogTitle>
         <DialogContent>
           <Typography variant="body1" id="confirm-dialog-description">
-            Selected option: {selectedOption}. Are you sure you want to selectthis?
+            선택지: {selectedOption}. 정말 선택하시겠습니까?
           </Typography>
           <Typography variant="body2" sx={{ color: 'black', mt: 2 }}>
-            Please rate this quiz.
+            이 퀴즈에 대해 평가를 내려주세요.
           </Typography>
           <FormControlLabel
             control={<Checkbox checked={preference === -2} onChange={() => handlePreferenceChange(-2)} />}
-            label={<Typography variant="body1" sx={{ color: 'black' }}>Very Dislike</Typography>}
+            label={
+              <Typography variant="body1" sx={{ color: 'black' }}>
+                매우 싫음
+              </Typography>
+            }
             sx={{ bgcolor: 'transparent' }}
           />
           <FormControlLabel
             control={<Checkbox checked={preference === -1} onChange={() => handlePreferenceChange(-1)} />}
-            label={<Typography variant="body1" sx={{ color: 'black' }}>Dislike</Typography>}
+            label={
+              <Typography variant="body1" sx={{ color: 'black' }}>
+                싫음
+              </Typography>
+            }
             sx={{ bgcolor: 'transparent' }}
           />
           <FormControlLabel
             control={<Checkbox checked={preference === 0} onChange={() => handlePreferenceChange(0)} />}
-            label={<Typography variant="body1" sx={{ color: 'black' }}>Normal</Typography>}
+            label={
+              <Typography variant="body1" sx={{ color: 'black' }}>
+                보통
+              </Typography>
+            }
             sx={{ bgcolor: 'transparent' }}
           />
           <FormControlLabel
             control={<Checkbox checked={preference === 1} onChange={() => handlePreferenceChange(1)} />}
-            label={<Typography variant="body1" sx={{ color: 'black' }}>Like</Typography>}
+            label={
+              <Typography variant="body1" sx={{ color: 'black' }}>
+                좋음
+              </Typography>
+            }
             sx={{ bgcolor: 'transparent' }}
           />
           <FormControlLabel
             control={<Checkbox checked={preference === 2} onChange={() => handlePreferenceChange(2)} />}
-            label={<Typography variant="body1" sx={{ color: 'black' }}>Very Like</Typography>}
+            label={
+              <Typography variant="body1" sx={{ color: 'black' }}>
+                매우 좋음
+              </Typography>
+            }
             sx={{ bgcolor: 'transparent' }}
           />
         </DialogContent>
+
         <DialogActions>
           <Button onClick={handleCloseConfirmDialog} color="primary">
-            Cancel
+            취소
           </Button>
           <Button onClick={handleConfirmSelection} color="primary" autoFocus>
-            Confirm
+            확인
           </Button>
         </DialogActions>
       </Dialog>
@@ -248,7 +242,6 @@ function ProblemUI() {
                 {currentQuizData ? currentQuizData.content : ''}
               </Typography>
             </Grid>
-
             <Grid item xs={6} textAlign="center">
               <Card
                 onClick={() => handleOptionSelect('A', currentQuizData.quizId)}
@@ -278,7 +271,6 @@ function ProblemUI() {
                 </CardActionArea>
               </Card>
             </Grid>
-
             <Grid item xs={6} textAlign="center">
               <Card
                 onClick={() => handleOptionSelect('B', currentQuizData.quizId)}
@@ -308,7 +300,6 @@ function ProblemUI() {
                 </CardActionArea>
               </Card>
             </Grid>
-
             <Grid item xs={6} textAlign="center">
               <Button
                 variant="contained"
@@ -318,10 +309,9 @@ function ProblemUI() {
                 startIcon={<ArrowBackIcon />}
                 sx={{ bgcolor: 'limegreen', color: 'white' }}
               >
-                Previous
+                이전으로
               </Button>
             </Grid>
-
             <Grid item xs={6} textAlign="center">
               <Button
                 variant="contained"
@@ -331,10 +321,9 @@ function ProblemUI() {
                 endIcon={<ArrowForwardIcon />}
                 sx={{ bgcolor: 'limegreen', color: 'white' }}
               >
-                Next
+                다음으로
               </Button>
             </Grid>
-
             <Grid item xs={12}>
               {currentQuizData && <CommentUI quizId={currentQuizData.quizId} />}
             </Grid>
