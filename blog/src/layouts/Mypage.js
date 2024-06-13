@@ -5,20 +5,23 @@ import '../../src/layouts/Mypage.css';
 import Bground from "../layouts/img/green_hexa.png";
 import CreateQuestionDialog from '../layouts/remake_problem'; // 기존 다이얼로그 컴포넌트 임포트
 
-const QuizDetail = ({ quiz, onDelete, onGoBack }) => {
+const QuizDetail = ({ quiz, onGoBack }) => {
     const [openEditDialog, setOpenEditDialog] = useState(false); // 수정 다이얼로그 열림 상태 추가
 
     const handleEdit = () => {
         setOpenEditDialog(true); // 수정하기 버튼 클릭 시 수정 다이얼로그 열기
     };
 
-    const handleDelete = async () => {
+    const handleAction = async (actionType) => {
         try {
             await axios.delete(`https://valanse.site/quiz/${quiz.quizId}`);
-            onDelete(quiz.quizId); // 삭제 완료 후 콜백 함수 호출하여 상태 업데이트
-            onGoBack(); // 삭제 후 상세 페이지에서 목록 페이지로 이동
+            if (actionType === 'delete') {
+                onGoBack(); // 삭제 후 상세 페이지에서 목록 페이지로 이동
+            } else if (actionType === 'edit') {
+                // 수정 처리 로직 추가
+            }
         } catch (error) {
-            console.error('퀴즈 삭제 중 오류 발생:', error);
+            console.error('퀴즈 처리 중 오류 발생:', error);
         }
     };
 
@@ -27,8 +30,8 @@ const QuizDetail = ({ quiz, onDelete, onGoBack }) => {
             <CardContent>
                 <Typography variant="h6" gutterBottom sx={{ color: 'white' }}>{quiz.content}</Typography>
                 <Typography variant="subtitle2" sx={{ color: 'white' }}>퀴즈 ID: {quiz.quizId}</Typography>
-                <Button onClick={onGoBack} color="primary" sx={{ borderColor: 'lime', color: 'lime' }}>뒤로가기</Button>
-                <Button onClick={handleDelete} color="error" sx={{ borderColor: 'red', color: 'red' }}>삭제하기</Button>
+                <Button onClick={() => onGoBack()} color="primary" sx={{ borderColor: 'lime', color: 'lime' }}>뒤로가기</Button>
+                <Button onClick={() => handleAction('delete')} color="error" sx={{ borderColor: 'red', color: 'red' }}>삭제하기</Button>
                 <Button onClick={handleEdit} color="primary" sx={{ borderColor: 'lime', color: 'lime' }}>수정하기</Button>
             </CardContent>
             {/* 수정 다이얼로그 */}
@@ -70,25 +73,10 @@ const MyPage = () => {
     const [quizzes, setQuizzes] = useState([]);
     const [selectedQuiz, setSelectedQuiz] = useState(null);
     const [showDetail, setShowDetail] = useState(false);
-    const [deletingQuizId, setDeletingQuizId] = useState(null); // 삭제 진행 중인 퀴즈 ID 상태 추가
 
     const handleQuizClick = (quiz) => {
         setSelectedQuiz(quiz);
         setShowDetail(true);
-    };
-
-    const handleDeleteQuiz = async (quizId) => {
-        try {
-            setDeletingQuizId(quizId); // 삭제 진행 중인 퀴즈 ID 설정
-            await axios.delete(`https://valanse.site/quiz/${quizId}`);
-            setQuizzes(prevQuizzes => prevQuizzes.filter(q => q.quizId !== quizId)); // 삭제된 퀴즈 제외한 목록으로 업데이트
-            setSelectedQuiz(null);
-            setShowDetail(false);
-        } catch (error) {
-            console.error('퀴즈 삭제 중 오류 발생:', error);
-        } finally {
-            setDeletingQuizId(null); // 삭제 완료 후 삭제 진행 중인 상태 해제
-        }
     };
 
     const handleGoBack = () => {
@@ -122,7 +110,6 @@ const MyPage = () => {
                 ) : (
                     <QuizDetail
                         quiz={selectedQuiz}
-                        onDelete={handleDeleteQuiz}
                         onGoBack={handleGoBack}
                     />
                 )}
