@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import { Container, Typography, Button, Card, CardContent } from '@mui/material';
 import Bground from "../layouts/img/green_hexa.png";
-import CreateQuestionDialog from '../layouts/remake_problem';
+import CreateQuestionDialog from '../layouts/remake_problem'; // assuming this is your custom dialog component
 
 const QuizDetail = ({ quiz, onDelete, onGoBack }) => {
-    const [openDialog, setOpenDialog] = useState(false);
+    const [openDialog, setOpenDialog] = useState(false); // dialog open state
 
     const handleDeleteConfirmation = () => {
-        setOpenDialog(true);
+        setOpenDialog(true); // open dialog when delete button is clicked
     };
 
     return (
@@ -16,14 +16,16 @@ const QuizDetail = ({ quiz, onDelete, onGoBack }) => {
             <CardContent>
                 <Typography variant="h6" gutterBottom sx={{ color: 'white' }}>{quiz.content}</Typography>
                 <Typography variant="subtitle2" sx={{ color: 'white' }}>퀴즈 ID: {quiz.quizId}</Typography>
-                <Button onClick={onGoBack} color="primary" sx={{ borderColor: 'lime', color: 'lime' }}>뒤로가기</Button>
-                <Button onClick={handleDeleteConfirmation} color="error" sx={{ borderColor: 'red', color: 'red' }}>삭제하기</Button>
+                <Button onClick={onGoBack} color="primary" sx={{ borderColor: 'lime', color: 'lime', marginRight: '10px' }}>뒤로가기</Button>
+                <Button onClick={handleDeleteConfirmation} color="error" sx={{ borderColor: 'red', color: 'red', marginRight: '10px' }}>삭제하기</Button>
+                <Button onClick={() => setOpenDialog(true)} color="primary" sx={{ borderColor: 'lime', color: 'lime' }}>수정하기</Button>
             </CardContent>
+            {/* CreateQuestionDialog for delete confirmation */}
             <CreateQuestionDialog
                 open={openDialog}
-                handleClose={() => setOpenDialog(false)} 
+                handleClose={() => setOpenDialog(false)} // close dialog
                 quiz={quiz}
-                handleCreate={onDelete}
+                handleCreate={onDelete} // delete function
             />
         </Card>
     );
@@ -75,7 +77,7 @@ const MyPage = () => {
 
     const handleDeleteQuiz = async () => {
         try {
-            if (!selectedQuiz) return; 
+            if (!selectedQuiz) return; // ensure there is a selected quiz
             await axios.delete(`https://valanse.site/quiz/${selectedQuiz.quizId}`);
             setQuizzes(quizzes.filter((quiz) => quiz.quizId !== selectedQuiz.quizId));
             setSelectedQuiz(null);
