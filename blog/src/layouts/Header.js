@@ -10,6 +10,7 @@ const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [stateToken, setStateToken] = useState('');
     const [accessToken, setAccessToken] = useState('');
+    const [expiration, setExpiration] = useState(null);
     const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Seoul', hour12: true, hourCycle: 'h12' }));
     const navigate = useNavigate();
 
@@ -60,7 +61,6 @@ const Header = () => {
                         handleLogout();
                     }
                 } else if (error.response && error.response.status >= 400 && error.response.status < 500) {
-                    // 4xx 에러가 발생한 경우
                     console.error('Authentication required:', error.message);
                     toggleSignUpModal();
                 }
@@ -109,15 +109,13 @@ const Header = () => {
                 }
             });
 
-            // 응답을 확인하여 처리
             if (response.status === 200) {
                 const newToken = response.data.data;
                 setAccessToken(newToken);
                 Cookies.set('access_token', newToken);
             } else {
-                // 4xx 응답이 오면 로그인 화면을 표시
                 console.error('Refresh token renewal required.');
-                toggleSignUpModal(); // 로그인 모달 열기 또는 다른 로그인 화면 표시 로직 추가
+                toggleSignUpModal();
             }
         } catch (error) {
             console.error('Error refreshing access token:', error.message);
@@ -125,24 +123,25 @@ const Header = () => {
         }
     };
 
-    const getAllClaimsFromToken = async () => {
+    const checkTokenExpiration = async () => {
         try {
             const accessToken = Cookies.get('access_token');
-            const response = await axios.post('https://valanse.site/token/check/allClaimsFromToken', null, {
+            const response = await axios.post('https://valanse.site/token/check/expiration', null, {
                 headers: {
                     'Authorization': accessToken,
                     'accept': 'application/json;charset=UTF-8'
                 }
             });
-            console.log('All claims from token:', response.data);
+            setExpiration(response.data.data);
+            console.log('Token expiration:', response.data);
         } catch (error) {
-            console.error('Error fetching claims:', error.message);
+            console.error('Error checking token expiration:', error.message);
             if (error.response && error.response.status === 401 && error.response.data === "Access Token 만료!") {
                 const refreshToken = Cookies.get('refresh_token');
                 if (refreshToken) {
                     try {
                         await refreshAccessToken(refreshToken);
-                        await getAllClaimsFromToken(); // Retry fetching claims after refreshing token
+                        await checkTokenExpiration(); // Retry checking expiration after refreshing token
                     } catch (refreshError) {
                         console.error('Error refreshing access token:', refreshError.message);
                         handleLogout();
@@ -264,10 +263,15 @@ const Header = () => {
                             </Link>
                             <button
                                 style={{ ...buttonStyles.base, ...buttonStyles.login }}
-                                onClick={getAllClaimsFromToken}
+                                onClick={checkTokenExpiration}
                             >
-                                클레임 조회
+                                유효 기간 확인
                             </button>
+                            {expiration && (
+                                <div style={{ color: 'white', marginTop: '10px' }}>
+                                    <p>남은 유효 기간: {expiration} 초</p>
+                                </div>
+                            )}
                         </>
                     ) : (
                         <button
