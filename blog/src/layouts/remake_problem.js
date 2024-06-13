@@ -3,7 +3,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, F
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-function CreateQuestionDialog({ open, handleClose, quiz, handleCreate }) {
+function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQuizzes }) {
     const [question, setQuestion] = useState(quiz?.content || '');
     const [optionA, setOptionA] = useState(quiz?.optionA || '');
     const [optionB, setOptionB] = useState(quiz?.optionB || '');
@@ -45,6 +45,7 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate }) {
             console.log('Quiz updated successfully:', response.data);
             handleClose(); // 다이얼로그 닫기
             handleCreate(); // 수정 완료 후 처리
+            onUpdateQuizzes(); // 수정 완료 후 페이지 갱신
         } catch (error) {
             console.error('Error updating quiz:', error.response ? error.response.data : error.message);
         }
