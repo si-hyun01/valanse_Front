@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import Tabs from './Tabs';
+import Tabs from '../Tabs/RealTab';
 import Footer from './Footer';
-import ProblemUI from './ProblemUI';  // ProblemUI 컴포넌트 임포트
+import ProblemUI from '../Tabs/Category/Problem_UI_Omaju';  // ProblemUI 컴포넌트 임포트
 
 const Layout = ({ children }) => {
   const [selectedCategory, setSelectedCategory] = useState('');
