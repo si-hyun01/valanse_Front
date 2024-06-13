@@ -70,6 +70,7 @@ const MyPage = () => {
     const [quizzes, setQuizzes] = useState([]);
     const [selectedQuiz, setSelectedQuiz] = useState(null);
     const [showDetail, setShowDetail] = useState(false);
+    const [deletingQuizId, setDeletingQuizId] = useState(null); // 삭제 진행 중인 퀴즈 ID 상태 추가
 
     const handleQuizClick = (quiz) => {
         setSelectedQuiz(quiz);
@@ -78,12 +79,15 @@ const MyPage = () => {
 
     const handleDeleteQuiz = async (quizId) => {
         try {
+            setDeletingQuizId(quizId); // 삭제 진행 중인 퀴즈 ID 설정
             await axios.delete(`https://valanse.site/quiz/${quizId}`);
-            setQuizzes(prevQuizzes => prevQuizzes.filter(q => q.quizId !== quizId));
+            setQuizzes(prevQuizzes => prevQuizzes.filter(q => q.quizId !== quizId)); // 삭제된 퀴즈 제외한 목록으로 업데이트
             setSelectedQuiz(null);
             setShowDetail(false);
         } catch (error) {
             console.error('퀴즈 삭제 중 오류 발생:', error);
+        } finally {
+            setDeletingQuizId(null); // 삭제 완료 후 삭제 진행 중인 상태 해제
         }
     };
 
