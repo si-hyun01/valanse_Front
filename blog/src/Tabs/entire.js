@@ -25,7 +25,7 @@ const EnterPage = () => (
     </Grid>
     <Grid item xs={12}>
       <Container style={{ maxWidth: '80%' }}>
-          <CheckUserAnswer />
+          <RecommanQuiz />
       </Container>
     </Grid>
   </Grid>
