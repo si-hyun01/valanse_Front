@@ -4,29 +4,23 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQuizzes }) {
-    const [question, setQuestion] = useState(quiz?.content || '');
-    const [optionA, setOptionA] = useState(quiz?.optionA || '');
-    const [optionB, setOptionB] = useState(quiz?.optionB || '');
-    const [descriptionA, setDescriptionA] = useState(quiz?.descriptionA || '');
-    const [descriptionB, setDescriptionB] = useState(quiz?.descriptionB || '');
+    const [question, setQuestion] = useState('');
+    const [optionA, setOptionA] = useState('');
+    const [optionB, setOptionB] = useState('');
+    const [descriptionA, setDescriptionA] = useState('');
+    const [descriptionB, setDescriptionB] = useState('');
     const [imageA, setImageA] = useState(null);
     const [imageB, setImageB] = useState(null);
-    const [selectedCategory, setSelectedCategory] = useState(quiz?.category || '');
-    const [existingImageA, setExistingImageA] = useState(quiz?.imageA || null);
-    const [existingImageB, setExistingImageB] = useState(quiz?.imageB || null);
+    const [selectedCategory, setSelectedCategory] = useState('');
 
     useEffect(() => {
-        // Ensure that selectedCategory is not null
-        if (!selectedCategory && quiz && quiz.category) {
-            setSelectedCategory(quiz.category);
-        }
-    }, [quiz, selectedCategory]);
-
-    useEffect(() => {
-        // Set existing images if available
         if (quiz) {
-            setExistingImageA(quiz.imageA || null);
-            setExistingImageB(quiz.imageB || null);
+            setQuestion(quiz.content || '');
+            setOptionA(quiz.optionA || '');
+            setOptionB(quiz.optionB || '');
+            setDescriptionA(quiz.descriptionA || '');
+            setDescriptionB(quiz.descriptionB || '');
+            setSelectedCategory(quiz.category || '');
         }
     }, [quiz]);
 
@@ -37,13 +31,13 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
             optionB: optionB,
             descriptionA: descriptionA,
             descriptionB: descriptionB,
-            category: selectedCategory ? [selectedCategory] : [] 
+            category: selectedCategory ? [selectedCategory] : []
         };
 
         const formData = new FormData();
         formData.append('quizRegisterDto', new Blob([JSON.stringify(quizRegisterDto)], { type: 'application/json' }));
-        if (imageA || existingImageA) formData.append('image_A', imageA || existingImageA);
-        if (imageB || existingImageB) formData.append('image_B', imageB || existingImageB);
+        if (imageA) formData.append('image_A', imageA);
+        if (imageB) formData.append('image_B', imageB);
 
         try {
             const response = await axios.patch(`https://valanse.site/quiz/${quiz.quizId}`, formData, {
@@ -53,11 +47,11 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
                 }
             });
             console.log('Quiz updated successfully:', response.data);
-            handleClose(); // 다이얼로그 닫기
-            handleCreate(); // 수정 완료 후 처리
-            onUpdateQuizzes(); // 수정 완료 후 페이지 갱신
+            handleClose(); // 닫기
+            handleCreate(); // 처리 후
+            onUpdateQuizzes(); // 갱신
         } catch (error) {
-            console.error('Error updating quiz:', error.response ? error.response.data : error.message);
+            console.error('퀴즈 수정 오류:', error.response ? error.response.data : error.message);
         }
     };
 
@@ -69,7 +63,6 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
         <Dialog open={open} onClose={handleClose} maxWidth="md">
             <DialogTitle>퀴즈 수정</DialogTitle>
             <DialogContent>
-                {/* 카테고리 선택 */}
                 <FormControl fullWidth style={{ marginBottom: '30px', marginTop: '20px' }}>
                     <InputLabel>카테고리 선택</InputLabel>
                     <Select
