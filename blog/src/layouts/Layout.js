@@ -1,84 +1,73 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import Tabs from '../Tabs/RealTab';
+import Tabs from './Tabs';
 import Footer from './Footer';
-import Popularity from '../Tabs/popularity';
-import Notice from '../Tabs/notinoti';
-import Problem_UI_Omaju from '../Tabs/Category/Problem_UI_Omaju';
-import Make_ploblem from '../Tabs/make_ploblem';
-import Entire from '../Tabs/entire';
+import ProblemUI from './ProblemUI';  // ProblemUI 컴포넌트 임포트
 
 const Layout = ({ children }) => {
-    const navigate = useNavigate();
-    const { categoryName } = useParams();
-    const [selectedCategory, setSelectedCategory] = React.useState(categoryName || null);
-    const [activeTab, setActiveTab] = React.useState('전체');
-    const [isCategoryOpen, setCategoryOpen] = React.useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [activeTab, setActiveTab] = useState('전체');
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const navigate = useNavigate();
+  const { categoryName } = useParams();
 
-    React.useEffect(() => {
-        const closeDropdown = (e) => {
-            if (isCategoryOpen && !e.target.closest('.position-relative')) {
-                setCategoryOpen(false);
-            }
-        };
-
-        document.addEventListener('click', closeDropdown);
-
-        return () => {
-            document.removeEventListener('click', closeDropdown);
-        };
-    }, [isCategoryOpen]);
-
-    React.useEffect(() => {
-        if (categoryName) {
-            setSelectedCategory(categoryName);
-            setActiveTab('카테고리');
-        }
-    }, [categoryName]);
-
-    const handleTabChange = (tab) => {
-        setActiveTab(tab);
-        setSelectedCategory(null);
-        if (tab === '전체') {
-            navigate('/');
-        } else if (tab === '문제 만들기') {
-            navigate('/problems');
-        } else if (tab === '공지') {
-            navigate('/notice');
-        } else if (tab === '인기') {
-            navigate('/popularity');
-        } else {
-            navigate('/');
-        }
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.category-dropdown')) {
+        setIsCategoryOpen(false);
+      }
     };
 
-    const handleCategoryToggle = () => {
-        setCategoryOpen(!isCategoryOpen);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
     };
+  }, []);
 
-    const handleCategorySelect = (category) => {
-        setSelectedCategory(category);
-        setActiveTab('카테고리');
-        setCategoryOpen(false);
-        navigate(`/category/${category}`);
-    };
+  useEffect(() => {
+    if (categoryName) {
+      setSelectedCategory(categoryName);
+      setActiveTab(categoryName);
+    } else {
+      setSelectedCategory('');
+      setActiveTab('전체');
+    }
+  }, [categoryName]);
 
-    return (
-        <div>
-            <Tabs 
-                activeTab={activeTab}
-                onTabChange={handleTabChange}
-                onCategorySelect={handleCategorySelect}
-                isCategoryOpen={isCategoryOpen}
-                onCategoryToggle={handleCategoryToggle}
-                selectedCategory={selectedCategory}
-            />
-            <div>
-                {children}
-            </div>
-            <Footer />
-        </div>
-    );
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    navigate(tab === '전체' ? '/' : `/${tab.toLowerCase()}`);
+  };
+
+  const handleCategoryToggle = () => {
+    setIsCategoryOpen(!isCategoryOpen);
+  };
+
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+    setActiveTab(category);
+    setIsCategoryOpen(false);
+    navigate(`/category/${category}`);
+  };
+
+  return (
+    <>
+      <Tabs
+        activeTab={activeTab}
+        onTabChange={handleTabChange}
+        onCategorySelect={handleCategorySelect}
+        isCategoryOpen={isCategoryOpen}
+        onCategoryToggle={handleCategoryToggle}
+        selectedCategory={selectedCategory}
+      />
+      {selectedCategory ? (
+        <ProblemUI categoryName={selectedCategory} />
+      ) : (
+        children
+      )}
+      <Footer />
+    </>
+  );
 };
 
 export default Layout;
