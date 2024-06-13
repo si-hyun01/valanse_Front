@@ -125,6 +125,37 @@ const Header = () => {
         }
     };
 
+    const getAllClaimsFromToken = async () => {
+        try {
+            const accessToken = Cookies.get('access_token');
+            const response = await axios.post('https://valanse.site/token/check/allClaimsFromToken', null, {
+                headers: {
+                    'Authorization': accessToken,
+                    'accept': 'application/json;charset=UTF-8'
+                }
+            });
+            console.log('All claims from token:', response.data);
+        } catch (error) {
+            console.error('Error fetching claims:', error.message);
+            if (error.response && error.response.status === 401 && error.response.data === "Access Token 만료!") {
+                const refreshToken = Cookies.get('refresh_token');
+                if (refreshToken) {
+                    try {
+                        await refreshAccessToken(refreshToken);
+                        await getAllClaimsFromToken(); // Retry fetching claims after refreshing token
+                    } catch (refreshError) {
+                        console.error('Error refreshing access token:', refreshError.message);
+                        handleLogout();
+                    }
+                } else {
+                    handleLogout();
+                }
+            } else {
+                toggleSignUpModal();
+            }
+        }
+    };
+
     const handleLogout = async () => {
         try {
             const accessTokenCookie = Cookies.get('access_token');
@@ -231,6 +262,12 @@ const Header = () => {
                                     마이페이지
                                 </button>
                             </Link>
+                            <button
+                                style={{ ...buttonStyles.base, ...buttonStyles.login }}
+                                onClick={getAllClaimsFromToken}
+                            >
+                                클레임 조회
+                            </button>
                         </>
                     ) : (
                         <button
