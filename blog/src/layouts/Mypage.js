@@ -3,24 +3,28 @@ import axios from 'axios';
 import { Container, Typography, Button, Card, CardContent } from '@mui/material';
 import '../../src/layouts/Mypage.css'; 
 import Bground from "../layouts/img/green_hexa.png";
-import CreateQuestionDialog from '../layouts/remake_problem';
+import CreateQuestionDialog from '../layouts/remake_problem'; // 기존 다이얼로그 컴포넌트 임포트
 
 const QuizDetail = ({ quiz, onDelete, onGoBack }) => {
-    const [openDialog, setOpenDialog] = useState(false); // 다이얼로그 열림 상태 추가
-    const [actionType, setActionType] = useState(''); // 액션 타입 상태 추가 (delete 또는 edit)
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false); // 삭제 다이얼로그 열림 상태 추가
+    const [openEditDialog, setOpenEditDialog] = useState(false); // 수정 다이얼로그 열림 상태 추가
 
     const handleDeleteConfirmation = () => {
-        setOpenDialog(true);
-        setActionType('delete'); // 삭제 버튼 클릭 시 액션 타입을 delete로 설정
+        setOpenDeleteDialog(true); // 삭제하기 버튼 클릭 시 삭제 다이얼로그 열기
     };
 
     const handleEdit = () => {
-        setOpenDialog(true);
-        setActionType('edit'); // 수정 버튼 클릭 시 액션 타입을 edit으로 설정
+        setOpenEditDialog(true); // 수정하기 버튼 클릭 시 수정 다이얼로그 열기
     };
 
-    const handleCloseDialog = () => {
-        setOpenDialog(false);
+    const handleDelete = async () => {
+        try {
+            await axios.delete(`https://valanse.site/quiz/${quiz.quizId}`);
+            onDelete(quiz.quizId); // 삭제 완료 후 콜백 함수 호출하여 상태 업데이트
+            onGoBack(); // 삭제 후 상세 페이지에서 목록 페이지로 이동
+        } catch (error) {
+            console.error('퀴즈 삭제 중 오류 발생:', error);
+        }
     };
 
     return (
@@ -32,14 +36,26 @@ const QuizDetail = ({ quiz, onDelete, onGoBack }) => {
                 <Button onClick={handleDeleteConfirmation} color="error" sx={{ borderColor: 'red', color: 'red' }}>삭제하기</Button>
                 <Button onClick={handleEdit} color="primary" sx={{ borderColor: 'lime', color: 'lime' }}>수정하기</Button>
             </CardContent>
-            {/* 새로운 다이얼로그 */}
-            <CreateQuestionDialog
-                open={openDialog}
-                handleClose={handleCloseDialog}
-                quiz={quiz}
-                handleCreate={onDelete}
-                actionType={actionType} // 액션 타입을 다이얼로그에 전달
-            />
+            {/* 삭제 다이얼로그 */}
+            {openDeleteDialog && (
+                <CreateQuestionDialog
+                    open={openDeleteDialog}
+                    handleClose={() => setOpenDeleteDialog(false)}
+                    quiz={quiz}
+                    handleCreate={handleDelete}
+                    actionType="delete"
+                />
+            )}
+            {/* 수정 다이얼로그 */}
+            {openEditDialog && (
+                <CreateQuestionDialog
+                    open={openEditDialog}
+                    handleClose={() => setOpenEditDialog(false)}
+                    quiz={quiz}
+                    handleCreate={() => {} /* 수정 처리 함수 추가 */}
+                    actionType="edit"
+                />
+            )}
         </Card>
     );
 };
@@ -78,7 +94,7 @@ const MyPage = () => {
     const handleDeleteQuiz = async (quizId) => {
         try {
             await axios.delete(`https://valanse.site/quiz/${quizId}`);
-            setQuizzes(prevQuizzes => prevQuizzes.filter(quiz => quiz.quizId !== quizId));
+            setQuizzes(prevQuizzes => prevQuizzes.filter(q => q.quizId !== quizId));
             setSelectedQuiz(null);
             setShowDetail(false);
         } catch (error) {
