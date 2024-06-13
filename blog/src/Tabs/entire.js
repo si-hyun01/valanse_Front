@@ -7,7 +7,7 @@ import RecommanQuiz from "../components/remmandQuiz"
 import CheckUserAnswer from "../components/onlytest";
 
 const EnterPage = () => (
-  <Grid container spacing={1} alignItems="center">
+  <Grid container spacing={1} alignItems="center" style = {{ background : "black"}}>
     <Grid item xs={12}>
     <div style={{ backgroundColor: '#333333' }}>
         <SliderContainer />
