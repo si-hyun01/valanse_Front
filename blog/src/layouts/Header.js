@@ -62,7 +62,6 @@ const Header = () => {
                 } else if (error.response && error.response.status >= 400 && error.response.status < 500) {
                     // 4xx 에러가 발생한 경우
                     console.error('Authentication required:', error.message);
-                    toggleSignUpModal();
                 }
                 return Promise.reject(error);
             }
@@ -117,7 +116,6 @@ const Header = () => {
             } else {
                 // 4xx 응답이 오면 로그인 화면을 표시
                 console.error('Refresh token renewal required.');
-                toggleSignUpModal(); // 로그인 모달 열기 또는 다른 로그인 화면 표시 로직 추가
             }
         } catch (error) {
             console.error('Error refreshing access token:', error.message);
