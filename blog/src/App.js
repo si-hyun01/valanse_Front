@@ -1,10 +1,8 @@
-// App.js
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './layouts/Layout';
 import NoticeBoard from '../src/Tabs/notinoti';
-import NoticeWrite from '../src/Tabs/noti_write';
+import NoticeWrite from '../src/Tabs/noti_write'; // NoticeWrite 컴포넌트 가져오기
 import Mypage from '../src/layouts/Mypage';
 import Header from '../src/layouts/Header';
 import MakeProblem from '../src/Tabs/make_ploblem';
@@ -21,15 +19,15 @@ function App() {
 
   return (
     <Router>
-      <div style={appStyle}>
+      <div style={appStyle}> {/* 스타일 객체를 직접 적용 */}
         <Header />
         <Routes>
           <Route path="/" element={<Layout><Entire /></Layout>} />
           <Route path="/mypage" element={<Layout><Mypage /></Layout>} />
           <Route path="/category/:categoryName" element={<Layout><ProblemUI /></Layout>} />
-          <Route path="/category/:categoryName/:quizId" element={<Layout><ProblemUI /></Layout>} /> {/* 퀴즈마다 URL 추가 */}
+          <Route path="/problems/:categoryName" element={<Layout><ProblemUI /></Layout>} />
           <Route path="/notice" element={<Layout><NoticeBoard /></Layout>} />
-          <Route path="/noti_write" element={<Layout><NoticeWrite /></Layout>} />
+          <Route path="/noti_write" element={<Layout><NoticeWrite /></Layout>} /> {/* NoticeWrite 페이지로 연결되는 경로 추가 */}
           <Route path="/popularity" element={<Layout><Popularity /></Layout>} />
           <Route path="/problems" element={<Layout><MakeProblem /></Layout>} />
         </Routes>
