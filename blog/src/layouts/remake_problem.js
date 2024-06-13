@@ -14,6 +14,8 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
     const [selectedCategory, setSelectedCategory] = useState('');
     const [fileAName, setFileAName] = useState('');
     const [fileBName, setFileBName] = useState('');
+    const [previewImageA, setPreviewImageA] = useState(null); // State for preview image A
+    const [previewImageB, setPreviewImageB] = useState(null); // State for preview image B
 
     useEffect(() => {
         if (quiz) {
@@ -27,6 +29,10 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
             // Set file names for display
             setFileAName(quiz.imageA ? quiz.imageA.split('/').pop() : '');
             setFileBName(quiz.imageB ? quiz.imageB.split('/').pop() : '');
+
+            // Set preview images if available
+            if (quiz.imageA) setPreviewImageA(quiz.imageA);
+            if (quiz.imageB) setPreviewImageB(quiz.imageB);
         }
     }, [quiz]);
 
@@ -61,9 +67,17 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
         }
     };
 
-    const handleImageChange = (setImageFunc, setFileNameFunc) => (e) => {
-        setImageFunc(e.target.files[0]);
-        setFileNameFunc(e.target.files[0].name); // Set file name for display
+    const handleImageChange = (setImageFunc, setFileNameFunc, setPreviewFunc) => (e) => {
+        const file = e.target.files[0];
+        setImageFunc(file);
+        setFileNameFunc(file.name); // Set file name for display
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setPreviewFunc(reader.result); // Set preview image
+        };
+        if (file) {
+            reader.readAsDataURL(file);
+        }
     };
 
     return (
@@ -106,10 +120,10 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
                         <input
                             type="file"
                             accept="image/*"
-                            onChange={handleImageChange(setImageA, setFileAName)}
+                            onChange={handleImageChange(setImageA, setFileAName, setPreviewImageA)}
                             style={{ marginBottom: '20px' }}
                         />
-                        <div>{fileAName}</div> {/* Display file name */}
+                        {previewImageA && <img src={previewImageA} alt="Preview A" style={{ width: '200px', height: '150px', objectFit: 'cover', marginBottom: '20px' }} />}
                         <TextField
                             fullWidth
                             label="오른쪽 설명"
@@ -120,10 +134,10 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
                         <input
                             type="file"
                             accept="image/*"
-                            onChange={handleImageChange(setImageB, setFileBName)}
+                            onChange={handleImageChange(setImageB, setFileBName, setPreviewImageB)}
                             style={{ marginBottom: '20px' }}
                         />
-                        <div>{fileBName}</div> {/* Display file name */}
+                        {previewImageB && <img src={previewImageB} alt="Preview B" style={{ width: '200px', height: '150px', objectFit: 'cover', marginBottom: '20px' }} />}
                     </>
                 )}
             </DialogContent>
