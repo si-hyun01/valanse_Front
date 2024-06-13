@@ -94,8 +94,7 @@ const Header = () => {
             setAccessToken(token);
             Cookies.set('access_token', token);
             setIsLoggedIn(true);
-            // 상태 토큰 제거
-            removeStateTokenFromURL();
+            window.location.replace('https://valanse.vercel.app/');
         } catch (error) {
             console.error('Error getting access token:', error.message);
         }
@@ -141,8 +140,7 @@ const Header = () => {
                 setIsLoggedIn(false);
                 setAccessToken('');
                 setStateToken('');
-                // 로그아웃 시 URL에서 상태 토큰 제거
-                removeStateTokenFromURL();
+                window.location.replace('https://valanse.vercel.app/');
             }
         } catch (error) {
             console.error('Error during logout:', error.message);
@@ -183,13 +181,6 @@ const Header = () => {
         }
     };
 
-    const removeStateTokenFromURL = () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        urlParams.delete('stateToken');
-        const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-        window.history.replaceState({}, '', newUrl);
-    };
-
     return (
         <>
             <header style={{ backgroundColor: 'black', padding: '10px 0' }}>
@@ -219,43 +210,42 @@ const Header = () => {
                                 textShadow: '0 0 10px cyan, 0 0 20px cyan',
                                 fontFamily: 'monospace'
                             }}>
-                                {currentTime}
-                            </div>
+                            {currentTime}
                         </div>
                     </div>
-
-                    <div>
-                        {isLoggedIn ? (
-                            <>
-                                <button
-                                    style={{ ...buttonStyles.base, ...buttonStyles.logout }}
-                                    onClick={handleLogout}
-                                >
-                                    로그아웃
-                                </button>
-                                <Link to="/mypage">
-                                    <button
-                                        style={{ ...buttonStyles.base, ...buttonStyles.myPage }}
-                                    >
-                                        마이페이지
-                                    </button>
-                                </Link>
-                            </>
-                        ) : (
-                            <button
-                                style={{ ...buttonStyles.base, ...buttonStyles.login }}
-                                onClick={toggleSignUpModal}
-                            >
-                                로그인
-                            </button>
-                        )}
-                        <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} />
-                    </div>
                 </div>
-            </header>
-        </>
-    );
+
+                <div>
+                    {isLoggedIn ? (
+                        <>
+                            <button
+                                style={{ ...buttonStyles.base, ...buttonStyles.logout }}
+                                onClick={handleLogout}
+                            >
+                                로그아웃
+                            </button>
+                            <Link to="/mypage">
+                                <button
+                                    style={{ ...buttonStyles.base, ...buttonStyles.myPage }}
+                                >
+                                    마이페이지
+                                </button>
+                            </Link>
+                        </>
+                    ) : (
+                        <button
+                            style={{ ...buttonStyles.base, ...buttonStyles.login }}
+                            onClick={toggleSignUpModal}
+                        >
+                            로그인
+                        </button>
+                    )}
+                    <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} />
+                </div>
+            </div>
+        </header>
+    </>
+);
 };
 
 export default Header;
-
