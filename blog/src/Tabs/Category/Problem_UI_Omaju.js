@@ -1,11 +1,15 @@
+// ProblemUI.jsx
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Card, CardContent, CardActionArea, CardMedia, Container, Dialog, DialogActions, DialogTitle, DialogContent, Grid, Typography, Checkbox, FormControlLabel } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Link, useParams } from 'react-router-dom'; // 추가: useParams와 Link 추가
 import CommentUI from '../../components/comments';
 
-function ProblemUI({ categoryName }) {
+function ProblemUI() {
+  const { categoryName } = useParams(); // 추가: URL 매개변수(categoryName) 가져오기
   const [quizDataList, setQuizDataList] = useState([]);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -54,7 +58,9 @@ function ProblemUI({ categoryName }) {
         .map(quiz => ({
           ...quiz,
           likes: 0,
-          dislikes: 0
+          dislikes: 0,
+          // URL 추가
+          url: `/category/${encodeURIComponent(category)}/${quiz.quizId}`  // 예시 URL 형식
         }));
       setQuizDataList(quizDataArray);
     } catch (error) {
@@ -231,7 +237,7 @@ function ProblemUI({ categoryName }) {
           bgcolor: 'black',
           borderRadius: '16px',
           mt: 4,
-          boxShadow: '0px 0px 20px 0px rgba(0, 255, 255, 0.75)',
+          boxShadow: '0px 0px          20px 0px 20px 0px rgba(0, 255, 255, 0.75)',
         }}
       >
         <Container maxWidth="lg">
@@ -335,3 +341,4 @@ function ProblemUI({ categoryName }) {
 }
 
 export default ProblemUI;
+
