@@ -28,19 +28,24 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     };
 
     const handleCreate = async () => {
-        const formData = new FormData();
         const quizRegisterDto = {
             content: question,
             optionA: story1,
             optionB: story2,
-            descriptionA: story1,
-            descriptionB: story2,
+            descriptionA: story1, // 이 필드는 필요한 경우 수정하세요
+            descriptionB: story2, // 이 필드는 필요한 경우 수정하세요
             category: [selectedCategory]
         };
 
-        formData.append('quizRegisterDto', new Blob([JSON.stringify(quizRegisterDto)], { type: 'application/json' }));
-        formData.append('image_A', story1Image);
-        formData.append('image_B', story2Image);
+        // FormData 생성
+        const formData = new FormData();
+        formData.append('quizRegisterDto', JSON.stringify(quizRegisterDto));
+        if (story1Image) {
+            formData.append('image_A', story1Image);
+        }
+        if (story2Image) {
+            formData.append('image_B', story2Image);
+        }
 
         try {
             const response = await axios.post('https://valanse.site/quiz/register', formData, {
@@ -51,7 +56,8 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
             });
             console.log('Quiz created successfully:', response.data);
             setOpenDialog(true);
-            resetForm(); // Reset the form after successful creation
+            resetForm(); // 폼 초기화
+            onCreate(response.data); // 부모 컴포넌트에서 필요한 처리 수행 (예: 리스트 갱신 등)
         } catch (error) {
             console.error('Error creating quiz:', error.response ? error.response.data : error.message);
         }
@@ -176,6 +182,7 @@ function App() {
 
     const handleCreateQuestion = (newQuestion) => {
         console.log('New question created:', newQuestion);
+        // 필요한 처리를 추가할 수 있습니다.
     };
 
     const handleCategoryChange = (event) => {
