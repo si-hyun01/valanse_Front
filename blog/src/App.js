@@ -14,7 +14,7 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Layout activeTab="전체" />} />
-        <Route path="/mypage" element={<Header />} />
+        <Route path="/mypage" element={<Mypage />} />
         <Route path="/category/:categoryName" element={<Layout />} />
         <Route path="/problems/:categoryName" element={<ProblemUI />} />
         <Route path="/notice" element={<Layout />} />

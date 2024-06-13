@@ -94,7 +94,8 @@ const NoticeWrite = () => {
                             value={newNotice}
                             onChange={(e) => setNewNotice(e.target.value)}
                             variant="outlined"
-                            InputProps={{ style: { color: 'white' } }} // 텍스트 필드의 텍스트 색상 변경
+                            InputLabelProps={{ style: { color: 'white' } }} // 레이블 텍스트 색상 변경
+                            InputProps={{ style: { color: 'black' } }} // 텍스트 필드의 텍스트 색상 변경
                         />
                     </div>
                     <div style={{ marginBottom: '16px' }}></div> {/* 간격을 벌리는 부분 */}
@@ -107,7 +108,8 @@ const NoticeWrite = () => {
                             value={newNoticeContent}
                             onChange={(e) => setNewNoticeContent(e.target.value)}
                             variant="outlined"
-                            InputProps={{ style: { color: 'white' } }} // 텍스트 필드의 텍스트 색상 변경
+                            InputLabelProps={{ style: { color: 'white' } }} // 레이블 텍스트 색상 변경
+                            InputProps={{ style: { color: 'black' } }} // 텍스트 필드의 텍스트 색상 변경
                         />
                     </div>
                     <Button variant="contained" className="notii-button2" color="primary" onClick={handleAddNotice} style={{ marginTop: '16px' }}>
