@@ -48,8 +48,12 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
 
         const formData = new FormData();
         formData.append('quizRegisterDto', new Blob([JSON.stringify(quizRegisterDto)], { type: 'application/json' }));
+        // Check if new images are selected, otherwise append existing images
         if (imageA) formData.append('image_A', imageA);
+        else if (quiz.imageA) formData.append('image_A', quiz.imageA);
+
         if (imageB) formData.append('image_B', imageB);
+        else if (quiz.imageB) formData.append('image_B', quiz.imageB);
 
         try {
             const response = await axios.patch(`https://valanse.site/quiz/${quiz.quizId}`, formData, {
@@ -103,6 +107,9 @@ function CreateQuestionDialog({ open, handleClose, quiz, handleCreate, onUpdateQ
 
                 {selectedCategory && (
                     <>
+                        <div style={{ marginTop: '10px', color: 'gray', fontSize: '12px' }}>
+                            이미지는 다시 업로드해야 수정이 가능합니다.
+                        </div>
                         <TextField
                             fullWidth
                             label="퀴즈 제목"
