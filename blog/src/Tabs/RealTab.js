@@ -6,7 +6,7 @@ import Love_Image from '../layouts/img/LoveImage.png';
 import Song_Image from '../layouts/img/SongImage.png';
 import Actor_Image from '../layouts/img/actor.png';
 import Survival_Image from '../layouts/img/Survival.jpg';
-import Daily_Image from '../layouts/img/Survival.jpg';
+import Daily_Image from '../layouts/img/DailyImage.jpg';
 
 const Tabs = ({ activeTab, onTabChange, onCategorySelect, isCategoryOpen, onCategoryToggle, selectedCategory }) => {
     const navigate = useNavigate();
