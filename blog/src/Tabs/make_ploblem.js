@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, Container, Grid, TextField, Dialog, DialogTitle, DialogContent, DialogActions, FormControl, InputLabel, Select, MenuItem, Card } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+
+const initialImageUrl = "https://via.placeholder.com/200x150";
 
 function CreateQuestionPage({ onCreate, selectedCategory }) {
     const [question, setQuestion] = useState('');
@@ -13,8 +15,8 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     const [openDialog, setOpenDialog] = useState(false);
 
     // 이미지 URL 상태 초기화
-    const [story1ImageUrl, setStory1ImageUrl] = useState('');
-    const [story2ImageUrl, setStory2ImageUrl] = useState('');
+    const [story1ImageUrl, setStory1ImageUrl] = useState(initialImageUrl);
+    const [story2ImageUrl, setStory2ImageUrl] = useState(initialImageUrl);
 
     const resetForm = () => {
         setQuestion('');
@@ -23,8 +25,8 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
         setStory1Image(null);
         setStory2Image(null);
         // 이미지 URL 상태 초기화
-        setStory1ImageUrl('');
-        setStory2ImageUrl('');
+        setStory1ImageUrl(initialImageUrl);
+        setStory2ImageUrl(initialImageUrl);
     };
 
     const handleCreate = async () => {
@@ -130,7 +132,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
 }
 
 const ImageUpload = ({ setImage, setImageUrl }) => {
-    const [uploadImgUrl, setUploadImgUrl] = useState('');
+    const [uploadImgUrl, setUploadImgUrl] = useState(initialImageUrl);
 
     const onchangeImageUpload = (e) => {
         const { files } = e.target;
@@ -145,11 +147,17 @@ const ImageUpload = ({ setImage, setImageUrl }) => {
         };
     };
 
+    const resetImage = () => {
+        setUploadImgUrl(initialImageUrl); // 초기 상태 이미지 URL로 재설정
+        setImage(null); // 이미지 상태 초기화
+        setImageUrl(''); // 이미지 URL 상태 초기화
+    };
+
     return (
         <Grid container alignItems="center" justifyContent="space-around">
             <Grid item>
                 <img
-                    src={uploadImgUrl || "https://via.placeholder.com/200x150"}
+                    src={uploadImgUrl}
                     alt="사진 업로드 해주세요"
                     style={{ width: '200px', height: '150px' }}
                 />
@@ -163,6 +171,9 @@ const ImageUpload = ({ setImage, setImageUrl }) => {
                         style={{ display: 'none' }}
                         onChange={onchangeImageUpload}
                     />
+                </Button>
+                <Button variant="outlined" color="secondary" onClick={resetImage} style={{ marginLeft: '10px' }}>
+                    초기 상태로 되돌리기
                 </Button>
             </Grid>
         </Grid>
