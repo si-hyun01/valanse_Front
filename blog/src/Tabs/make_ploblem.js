@@ -148,8 +148,8 @@ const ImageUpload = ({ setImage, setImageUrl }) => {
     };
 
     useEffect(() => {
-        // 컴포넌트가 처음 렌더링될 때와 uploadImgUrl이 초기 이미지 URL이 아닐 때 초기화
-        if (uploadImgUrl !== '') {
+        // uploadImgUrl이 초기 이미지 URL이 아닐 때만 초기화
+        if (uploadImgUrl !== '' && uploadImgUrl !== initialImageUrl) {
             setUploadImgUrl('');
         }
     }, [uploadImgUrl]);
