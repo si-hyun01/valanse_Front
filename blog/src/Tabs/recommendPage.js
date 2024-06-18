@@ -113,7 +113,7 @@ function RecommendedQuizUI() {
         <DialogTitle id="no-problem-dialog-title">문제가 없습니다.</DialogTitle>
         <DialogContent>
           <Typography variant="body1" id="no-problem-dialog-description">
-            현재 문제가 더 이상 제공되지 않습니다.
+            현재 추천 문제가 아직 조회되지 않습니다. 
           </Typography>
         </DialogContent>
         <DialogActions>
