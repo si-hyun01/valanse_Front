@@ -16,15 +16,11 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     const [story1ImageUrl, setStory1ImageUrl] = useState('');
     const [story2ImageUrl, setStory2ImageUrl] = useState('');
 
-    const resetForm = () => {
-        setQuestion('');
-        setStory1('');
-        setStory2('');
-        setStory1Image(null);
-        setStory2Image(null);
-        // 이미지 URL 상태 초기화
-        setStory1ImageUrl('');
-        setStory2ImageUrl('');
+    const handleReset = () => {
+        setStory1Image(null); // 이미지 상태 초기화
+        setStory2Image(null); // 이미지 상태 초기화
+        setStory1ImageUrl(''); // 이미지 URL 상태 초기화
+        setStory2ImageUrl(''); // 이미지 URL 상태 초기화
     };
 
     const handleCreate = async () => {
@@ -51,10 +47,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
             });
             console.log('Quiz created successfully:', response.data);
             setOpenDialog(true);
-            handleReset();
-            // 이미지 URL 상태 초기화
-            setStory1ImageUrl('');
-            setStory2ImageUrl('');
+            handleReset(); // 이미지 초기화 함수 호출
         } catch (error) {
             console.error('Error creating quiz:', error.response ? error.response.data : error.message);
         }
@@ -65,7 +58,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     };
 
     return (
-        <Card style={{border: '2px solid transparent', background: 'black', boxShadow: '0 0 10px #00FF00'}}>
+        <Card style={{ border: '2px solid transparent', background: 'black', boxShadow: '0 0 10px #00FF00' }}>
             <Container>
                 <Grid container spacing={2} justifyContent="center">
                     <Grid item xs={12} style={{ height: '30px' }} />
@@ -133,7 +126,8 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
 }
 
 const ImageUpload = ({ setImage, setImageUrl }) => {
-    const [uploadImgUrl, setUploadImgUrl] = useState('');
+    const initialImageUrl = "https://via.placeholder.com/200x150";
+    const [uploadImgUrl, setUploadImgUrl] = useState(initialImageUrl);
 
     const onchangeImageUpload = (e) => {
         const { files } = e.target;
@@ -149,7 +143,7 @@ const ImageUpload = ({ setImage, setImageUrl }) => {
     };
 
     const handleReset = () => {
-        setUploadImgUrl(''); // 이미지 URL 초기화
+        setUploadImgUrl(initialImageUrl); // 초기 이미지 URL로 설정
         setImage(null); // 이미지 상태 초기화
         setImageUrl(''); // 이미지 URL 상태 초기화
     };
@@ -157,7 +151,7 @@ const ImageUpload = ({ setImage, setImageUrl }) => {
     return (
         <Grid container alignItems="center" justifyContent="space-around">
             <Grid item>
-                <img src={uploadImgUrl || "https://via.placeholder.com/200x150"} alt="사진 업로드 해주세요" style={{ width: '200px', height: '150px' }} />
+                <img src={uploadImgUrl} alt="사진 업로드 해주세요" style={{ width: '200px', height: '150px' }} />
             </Grid>
             <Grid item>
                 <Button variant="contained" color="primary" component="label" startIcon={<CloudUploadIcon />}>
