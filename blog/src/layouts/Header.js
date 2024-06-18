@@ -10,6 +10,7 @@ const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [stateToken, setStateToken] = useState('');
     const [accessToken, setAccessToken] = useState('');
+    const [refreshToken, setRefreshToken] = useState('');
     const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Seoul', hour12: true, hourCycle: 'h12' }));
     const navigate = useNavigate();
 
@@ -17,17 +18,17 @@ const Header = () => {
         const accessTokenCookie = Cookies.get('access_token');
         setIsLoggedIn(accessTokenCookie ? true : false);
 
+        const refreshTokenCookie = Cookies.get('refresh_token');
+        if (refreshTokenCookie) {
+            setRefreshToken(refreshTokenCookie);
+        }
+
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('stateToken');
         setStateToken(token);
 
         if (token) {
             getAccessToken(token);
-        }
-
-        const refreshToken = Cookies.get('refresh_token');
-        if (refreshToken) {
-            refreshAccessToken(refreshToken);
         }
 
         const requestInterceptor = axios.interceptors.request.use(
@@ -46,7 +47,6 @@ const Header = () => {
             async error => {
                 const originalRequest = error.config;
                 if (error.response && error.response.status === 401 && error.response.data === "Access Token 만료!") {
-                    const refreshToken = Cookies.get('refresh_token');
                     if (refreshToken) {
                         try {
                             await refreshAccessToken(refreshToken);
@@ -71,7 +71,7 @@ const Header = () => {
             axios.interceptors.request.eject(requestInterceptor);
             axios.interceptors.response.eject(responseInterceptor);
         };
-    }, []);
+    }, [refreshToken]);
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -137,6 +137,7 @@ const Header = () => {
                 Cookies.remove('refresh_token');
                 setIsLoggedIn(false);
                 setAccessToken('');
+                setRefreshToken('');
                 setStateToken('');
                 window.location.replace('https://valanse.vercel.app/');
             }
@@ -208,42 +209,45 @@ const Header = () => {
                                 textShadow: '0 0 10px cyan, 0 0 20px cyan',
                                 fontFamily: 'monospace'
                             }}>
-                            {currentTime}
+                                {currentTime}
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div>
-                    {isLoggedIn ? (
-                        <>
-                            <button
-                                style={{ ...buttonStyles.base, ...buttonStyles.logout }}
-                                onClick={handleLogout}
-                            >
-                                로그아웃
-                            </button>
-                            <Link to="/mypage">
+                    <div>
+                        {isLoggedIn ? (
+                            <>
                                 <button
-                                    style={{ ...buttonStyles.base, ...buttonStyles.myPage }}
+                                    style={{ ...buttonStyles.base, ...buttonStyles.logout }}
+                                    onClick={handleLogout}
                                 >
-                                    마이페이지
+                                    로그아웃
                                 </button>
-                            </Link>
-                        </>
-                    ) : (
-                        <button
-                            style={{ ...buttonStyles.base, ...buttonStyles.login }}
-                            onClick={toggleSignUpModal}
-                        >
-                            로그인
-                        </button>
-                    )}
-                    <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} />
+                                <Link to="/mypage">
+                                    <button
+                                        style={{ ...buttonStyles.base, ...buttonStyles.myPage }}
+                                    >
+                                        마이페이지
+                                    </button>
+                                </Link>
+                            </>
+                        ) : (
+                            <button
+                                style={{ ...buttonStyles.base, ...buttonStyles.login }}
+                                onClick={toggleSignUpModal}
+                            >
+                                로그인
+                            </button>
+                        )}
+                        <SignUpmodel show={showSignUpModal} onHide={toggleSignUpModal} />
+                    </div>
                 </div>
-            </div>
-        </header>
-    </>
-);
+                <div style={{ marginTop: '10px', textAlign: 'center', color: 'white' }}>
+                    {refreshToken ? `Refresh Token: ${refreshToken}` : 'Refresh Token이 없습니다.'}
+                </div>
+            </header>
+        </>
+    );
 };
 
 export default Header;
