@@ -102,10 +102,10 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
                         />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload setImage={setStory1Image} setImageUrl={setStory1ImageUrl} setInitialImageUrl={setStory1ImageUrl} />
+                        <ImageUpload setImage={setStory1Image} setImageUrl={setStory1ImageUrl} />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload setImage={setStory2Image} setImageUrl={setStory2ImageUrl} setInitialImageUrl={setStory2ImageUrl} />
+                        <ImageUpload setImage={setStory2Image} setImageUrl={setStory2ImageUrl} />
                     </Grid>
                     <Grid item xs={12} style={{ height: '30px' }} />
                     <Grid item xs={12} textAlign="center">
@@ -131,8 +131,8 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     );
 }
 
-const ImageUpload = ({ setImage, setImageUrl, setInitialImageUrl }) => {
-    const [uploadImgUrl, setUploadImgUrl] = useState(initialImageUrl);
+const ImageUpload = ({ setImage, setImageUrl }) => {
+    const [uploadImgUrl, setUploadImgUrl] = useState('');
 
     const onchangeImageUpload = (e) => {
         const { files } = e.target;
@@ -149,17 +149,16 @@ const ImageUpload = ({ setImage, setImageUrl, setInitialImageUrl }) => {
 
     useEffect(() => {
         // 컴포넌트가 처음 렌더링될 때와 uploadImgUrl이 초기 이미지 URL이 아닐 때 초기화
-        if (uploadImgUrl !== initialImageUrl) {
-            setInitialImageUrl(initialImageUrl);
-            setUploadImgUrl(initialImageUrl);
+        if (uploadImgUrl !== '') {
+            setUploadImgUrl('');
         }
-    }, [uploadImgUrl, setInitialImageUrl]);
+    }, [uploadImgUrl]);
 
     return (
         <Grid container alignItems="center" justifyContent="space-around">
             <Grid item>
                 <img
-                    src={uploadImgUrl}
+                    src={uploadImgUrl || "https://via.placeholder.com/200x150"}
                     alt="사진 업로드 해주세요"
                     style={{ width: '200px', height: '150px' }}
                 />
