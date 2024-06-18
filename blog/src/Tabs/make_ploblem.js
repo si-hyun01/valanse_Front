@@ -16,9 +16,9 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     const [story1ImageUrl, setStory1ImageUrl] = useState('');
     const [story2ImageUrl, setStory2ImageUrl] = useState('');
 
-    // 이미지 업로드 후 초기화를 위한 상태
-    const [reset1, setReset1] = useState(false);
-    const [reset2, setReset2] = useState(false);
+    // 업로드된 이미지 URL 저장
+    const [uploadedImageUrl1, setUploadedImageUrl1] = useState('');
+    const [uploadedImageUrl2, setUploadedImageUrl2] = useState('');
 
     const resetForm = () => {
         setQuestion('');
@@ -29,9 +29,9 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
         // 이미지 URL 상태 초기화
         setStory1ImageUrl('');
         setStory2ImageUrl('');
-        // 이미지 업로드 컴포넌트의 초기화를 위한 상태 초기화
-        setReset1(true);
-        setReset2(true);
+        // 업로드된 이미지 URL 초기화
+        setUploadedImageUrl1('');
+        setUploadedImageUrl2('');
     };
 
     const handleCreate = async () => {
@@ -107,10 +107,20 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
                         />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload setImage={setStory1Image} setImageUrl={setStory1ImageUrl} reset={() => setReset1(false)} />
+                        <ImageUpload
+                            setImage={setStory1Image}
+                            setImageUrl={setStory1ImageUrl}
+                            setUploadedImageUrl={setUploadedImageUrl1}
+                            uploadedImageUrl={uploadedImageUrl1}
+                        />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload setImage={setStory2Image} setImageUrl={setStory2ImageUrl} reset={() => setReset2(false)} />
+                        <ImageUpload
+                            setImage={setStory2Image}
+                            setImageUrl={setStory2ImageUrl}
+                            setUploadedImageUrl={setUploadedImageUrl2}
+                            uploadedImageUrl={uploadedImageUrl2}
+                        />
                     </Grid>
                     <Grid item xs={12} style={{ height: '30px' }} />
                     <Grid item xs={12} textAlign="center">
@@ -136,7 +146,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     );
 }
 
-const ImageUpload = ({ setImage, setImageUrl, reset }) => {
+const ImageUpload = ({ setImage, setImageUrl, setUploadedImageUrl, uploadedImageUrl }) => {
     const [uploadImgUrl, setUploadImgUrl] = useState('');
 
     const onchangeImageUpload = (e) => {
@@ -149,15 +159,17 @@ const ImageUpload = ({ setImage, setImageUrl, reset }) => {
             setUploadImgUrl(reader.result);
             // 이미지 URL 설정
             setImageUrl(reader.result);
+            // 업로드된 이미지 URL 저장
+            setUploadedImageUrl(reader.result);
         };
     };
 
-    // reset 함수를 이용해 상태 초기화
     useEffect(() => {
-        if (reset) {
-            setUploadImgUrl('');
+        // 업로드된 이미지 URL이 변경되면 표시할 이미지 URL 업데이트
+        if (uploadedImageUrl) {
+            setUploadImgUrl(uploadedImageUrl);
         }
-    }, [reset]);
+    }, [uploadedImageUrl]);
 
     return (
         <Grid container alignItems="center" justifyContent="space-around">
@@ -236,4 +248,4 @@ function App() {
     );
 }
 
-export default App;
+export default App
