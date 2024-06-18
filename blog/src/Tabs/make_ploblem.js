@@ -4,6 +4,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
+
 function CreateQuestionPage({ onCreate, selectedCategory }) {
     const [question, setQuestion] = useState('');
     const [story1, setStory1] = useState('');
@@ -100,10 +101,10 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
                         />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload setImage={setStory1Image} setUploadImgUrl={setStory1ImageUrl} resetImageUrl={() => setStory1ImageUrl('')} />
+                        <ImageUpload setImage={setStory1Image} setImageUrl={setStory1ImageUrl} />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload setImage={setStory2Image} setUploadImgUrl={setStory2ImageUrl} resetImageUrl={() => setStory2ImageUrl('')} />
+                        <ImageUpload setImage={setStory2Image} setImageUrl={setStory2ImageUrl} />
                     </Grid>
                     <Grid item xs={12} style={{ height: '30px' }} />
                     <Grid item xs={12} textAlign="center">
@@ -129,8 +130,9 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     );
 }
 
-const ImageUpload = ({ setImage, setUploadImgUrl, resetImageUrl }) => {
-    const [uploadImgUrl, setUploadImgUrlInternal] = useState('');
+const ImageUpload = ({ setImage, setImageUrl }) => {
+    const [uploadImgUrl, setUploadImgUrl] = useState('');
+    const defaultImageUrl = 'https://via.placeholder.com/200x150'; // 기본 이미지 URL
 
     const onchangeImageUpload = (e) => {
         const { files } = e.target;
@@ -139,21 +141,22 @@ const ImageUpload = ({ setImage, setUploadImgUrl, resetImageUrl }) => {
         const reader = new FileReader();
         reader.readAsDataURL(uploadFile);
         reader.onloadend = () => {
-            setUploadImgUrlInternal(reader.result);
-            // 이미지 URL 설정
             setUploadImgUrl(reader.result);
+            // 이미지 URL 설정
+            setImageUrl(reader.result);
         };
     };
 
-    const handleRemoveImage = () => {
-        setImage(null);
-        resetImageUrl(); // Reset the image URL
+    const handleResetImage = () => {
+        setImage(null); // 이미지 상태 초기화
+        setImageUrl(''); // 이미지 URL 초기화
+        setUploadImgUrl(defaultImageUrl); // 업로드된 이미지 URL 초기화
     };
 
     return (
         <Grid container alignItems="center" justifyContent="space-around">
             <Grid item>
-                <img src={uploadImgUrl || "https://via.placeholder.com/200x150"} alt="사진 업로드 해주세요" style={{ width: '200px', height: '150px' }} />
+                <img src={uploadImgUrl || defaultImageUrl} alt="사진 업로드 해주세요" style={{ width: '200px', height: '150px' }} />
             </Grid>
             <Grid item>
                 <Button variant="contained" color="primary" component="label" startIcon={<CloudUploadIcon />}>
@@ -166,8 +169,8 @@ const ImageUpload = ({ setImage, setUploadImgUrl, resetImageUrl }) => {
                     />
                 </Button>
                 {uploadImgUrl && (
-                    <Button variant="contained" color="secondary" onClick={handleRemoveImage} style={{ marginLeft: '10px' }}>
-                        이미지 제거
+                    <Button variant="contained" color="secondary" onClick={handleResetImage}>
+                        이미지 초기화
                     </Button>
                 )}
             </Grid>
