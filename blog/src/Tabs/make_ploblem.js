@@ -42,7 +42,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
             });
             console.log('Quiz created successfully:', response.data);
             setOpenDialog(true);
-            resetForm(); // Reset the form after successful creation
+            // resetForm(); // Reset the form after successful creation
         } catch (error) {
             console.error('Error creating quiz:', error.response ? error.response.data : error.message);
         }
@@ -102,10 +102,10 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
                         />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload setImage={setStory1Image} setImageUrl={setStory1ImageUrl} />
+                        <ImageUpload setImage={setStory1Image} setImageUrl={setStory1ImageUrl} currentImageUrl={story1ImageUrl} />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload setImage={setStory2Image} setImageUrl={setStory2ImageUrl} />
+                        <ImageUpload setImage={setStory2Image} setImageUrl={setStory2ImageUrl} currentImageUrl={story2ImageUrl} />
                     </Grid>
                     <Grid item xs={12} style={{ height: '30px' }} />
                     <Grid item xs={12} textAlign="center">
@@ -131,7 +131,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     );
 }
 
-const ImageUpload = ({ setImage, setImageUrl }) => {
+const ImageUpload = ({ setImage, setImageUrl, currentImageUrl }) => {
     const [uploadImgUrl, setUploadImgUrl] = useState('');
 
     const onchangeImageUpload = (e) => {
@@ -148,11 +148,11 @@ const ImageUpload = ({ setImage, setImageUrl }) => {
     };
 
     useEffect(() => {
-        // uploadImgUrl이 초기 이미지 URL이 아닐 때만 초기화
-        if (uploadImgUrl !== '' && uploadImgUrl !== initialImageUrl) {
-            setUploadImgUrl('');
+        // 컴포넌트가 처음 렌더링될 때 currentImageUrl로 설정
+        if (currentImageUrl !== initialImageUrl) {
+            setUploadImgUrl(currentImageUrl);
         }
-    }, [uploadImgUrl]);
+    }, [currentImageUrl]);
 
     return (
         <Grid container alignItems="center" justifyContent="space-around">
@@ -183,10 +183,17 @@ function App() {
 
     const handleCreateQuestion = (newQuestion) => {
         console.log('New question created:', newQuestion);
+        resetImageUpload(); // 이미지 업로드 초기화
     };
 
     const handleCategoryChange = (event) => {
         setSelectedCategory(event.target.value);
+    };
+
+    const resetImageUpload = () => {
+        // 이미지 업로드 컴포넌트의 상태 초기화
+        setStory1ImageUrl(initialImageUrl);
+        setStory2ImageUrl(initialImageUrl);
     };
 
     return (
