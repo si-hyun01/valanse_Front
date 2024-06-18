@@ -110,7 +110,7 @@ function RecommendedQuizUI() {
         aria-labelledby="no-problem-dialog-title"
         aria-describedby="no-problem-dialog-description"
       >
-        <DialogTitle id="no-problem-dialog-title">문제가 없습니다.</DialogTitle>
+        <DialogTitle id="no-problem-dialog-title">에러.</DialogTitle>
         <DialogContent>
           <Typography variant="body1" id="no-problem-dialog-description">
             현재 추천 문제가 아직 조회되지 않습니다. 
