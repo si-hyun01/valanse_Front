@@ -108,6 +108,24 @@ const Tabs = ({ activeTab, onTabChange, onCategorySelect, isCategoryOpen, onCate
                     </li>
                     <li className="nav-item" style={{ width: '230px' }}>
                         <button
+                            className={`nav-link ${activeTab === '추천 문제' && 'active'}`}
+                            style={{
+                                width: '100%',
+                                backgroundColor: activeTab === '추천 문제' ? 'rgba(0, 0, 255, 0.3)' : 'initial',
+                                fontWeight: 'bold',
+                                color: 'white',
+                                borderRadius: '0', // 사각형으로 만들기 위해 borderRadius를 0으로 설정
+                                height: '50px',
+                                fontSize: '20px',
+                                border: 'none'
+                            }}
+                            onClick={() => onTabChange('추천 문제')}
+                        >
+                            추천 문제
+                        </button>
+                    </li>
+                    <li className="nav-item" style={{ width: '230px' }}>
+                        <button
                             className={`nav-link ${activeTab === '문제 만들기' && 'active'}`}
                             style={{
                                 width: '100%',

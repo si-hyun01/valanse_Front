@@ -42,6 +42,8 @@ const Layout = ({ children }) => {
             navigate('/notice');
         } else if (tab === '인기') {
             navigate('/popularity');
+        } else if (tab === '추천 문제') {
+            navigate('/recommended');
         } else {
             navigate('/');
         }

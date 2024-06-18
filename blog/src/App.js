@@ -9,6 +9,7 @@ import MakeProblem from '../src/Tabs/make_ploblem';
 import ProblemUI from '../src/Tabs/Category/Problem_UI_Omaju';
 import Entire from '../src/Tabs/entire';
 import Popularity from '../src/Tabs/popularity';
+import RecommendedQuizUI from '../src/Tabs/recommendPage';
 
 function App() {
   const appStyle = {
@@ -27,6 +28,7 @@ function App() {
           <Route path="/category/:categoryName" element={<Layout><ProblemUI /></Layout>} />
           <Route path="/problems/:categoryName" element={<Layout><ProblemUI /></Layout>} />
           <Route path="/notice" element={<Layout><NoticeBoard /></Layout>} />
+          <Route path='/recommended' element = {<Layout><RecommendedQuizUI /></Layout>}/>
           <Route path="/noti_write" element={<Layout><NoticeWrite /></Layout>} /> {/* NoticeWrite 페이지로 연결되는 경로 추가 */}
           <Route path="/popularity" element={<Layout><Popularity /></Layout>} />
           <Route path="/problems" element={<Layout><MakeProblem /></Layout>} />
