@@ -76,17 +76,8 @@ function ProblemUI({ categoryName }) {
         await saveUserAnswer();
         setCurrentQuizIndex(nextIndex);
       } catch (error) {
-        console.error('Error saving user answer:', error.message);
+        console.error('사용자 답변 저장 중 오류 발생:', error.message);
       }
-    } else {
-      setShowNoProblemDialog(true);
-    }
-  };
-
-  const handleNext2 = () => {
-    const nextIndex = currentQuizIndex + 1;
-    if (nextIndex < quizDataList.length) {
-      setCurrentQuizIndex(nextIndex);
     } else {
       setShowNoProblemDialog(true);
     }
@@ -110,9 +101,10 @@ function ProblemUI({ categoryName }) {
   const handleConfirmSelection = async () => {
     setShowConfirmDialog(false);
     try {
-      handleNext();
+      await saveUserAnswer(); // 사용자 답변을 저장합니다.
+      handleNext(); // 다음 문제로 넘어가는 로직을 여기서 호출합니다.
     } catch (error) {
-      console.error('Error saving user answer:', error.message);
+      console.error('사용자 답변 저장 중 오류 발생:', error.message);
     }
   };
 
@@ -127,10 +119,10 @@ function ProblemUI({ categoryName }) {
         selectedOption: selectedOption,
         preference: preference
       });
-      console.log('User answer saved:', response.data);
+      console.log('사용자 답변 저장됨:', response.data);
     } catch (error) {
-      console.error('Error saving user answer:', error.message);
-      throw new Error('Failed to save user answer');
+      console.error('사용자 답변 저장 중 오류 발생:', error.message);
+      throw new Error('사용자 답변 저장 실패');
     }
   };
 
@@ -147,7 +139,7 @@ function ProblemUI({ categoryName }) {
         <DialogTitle id="no-problem-dialog-title">문제가 없습니다.</DialogTitle>
         <DialogContent>
           <Typography variant="body1" id="no-problem-dialog-description">
-            현재 문제가 더 이상 제공되지 않습니다.
+            현재 더 이상 문제를 제공할 수 없습니다.
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -165,10 +157,10 @@ function ProblemUI({ categoryName }) {
         <DialogTitle id="confirm-dialog-title">선택 확인</DialogTitle>
         <DialogContent>
           <Typography variant="body1" id="confirm-dialog-description">
-            선택지: {selectedOption}. 정말 선택하시겠습니까?
+            선택한 옵션: {selectedOption}. 선택을 확정하시겠습니까?
           </Typography>
           <Typography variant="body2" sx={{ color: 'black', mt: 2 }}>
-            이 퀴즈에 대해 평가를 내려주세요.
+            이 퀴즈에 대한 평가를 내려주세요.
           </Typography>
           <FormControlLabel
             control={<Checkbox checked={preference === -2} onChange={() => handlePreferenceChange(-2)} />}
@@ -216,7 +208,6 @@ function ProblemUI({ categoryName }) {
             sx={{ bgcolor: 'transparent' }}
           />
         </DialogContent>
-
         <DialogActions>
           <Button onClick={handleCloseConfirmDialog} color="primary">
             취소
@@ -239,7 +230,9 @@ function ProblemUI({ categoryName }) {
             <Grid item xs={12} style={{ height: '30px' }} />
             <Grid item xs={12}>
               <Typography variant="h4" align="center" sx={{ color: 'white' }}>
-                {currentQuizData ? currentQuizData.content : ''}
+                {currentQuizData
+              ? currentQuizData.content
+              : ''}
               </Typography>
             </Grid>
             <Grid item xs={6} textAlign="center">
@@ -316,7 +309,7 @@ function ProblemUI({ categoryName }) {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={handleNext2}
+                onClick={() => setShowConfirmDialog(true)}
                 disabled={currentQuizIndex === quizDataList.length - 1}
                 endIcon={<ArrowForwardIcon />}
                 sx={{ bgcolor: 'limegreen', color: 'white' }}
