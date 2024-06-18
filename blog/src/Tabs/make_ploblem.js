@@ -13,19 +13,12 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     const [story2Image, setStory2Image] = useState(null);
     const [openDialog, setOpenDialog] = useState(false);
 
-    // 이미지 URL 상태 초기화
-    const [story1ImageUrl, setStory1ImageUrl] = useState('');
-    const [story2ImageUrl, setStory2ImageUrl] = useState('');
-
     const resetForm = () => {
         setQuestion('');
         setStory1('');
         setStory2('');
         setStory1Image(null);
         setStory2Image(null);
-        // 이미지 URL 상태 초기화
-        setStory1ImageUrl('');
-        setStory2ImageUrl('');
     };
 
     const handleCreate = async () => {
@@ -101,10 +94,10 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
                         />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload setImage={setStory1Image} setImageUrl={setStory1ImageUrl} />
+                        <ImageUpload setImage={setStory1Image} />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload setImage={setStory2Image} setImageUrl={setStory2ImageUrl} />
+                        <ImageUpload setImage={setStory2Image} />
                     </Grid>
                     <Grid item xs={12} style={{ height: '30px' }} />
                     <Grid item xs={12} textAlign="center">
@@ -130,9 +123,8 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     );
 }
 
-const ImageUpload = ({ setImage, setImageUrl }) => {
+const ImageUpload = ({ setImage }) => {
     const [uploadImgUrl, setUploadImgUrl] = useState('');
-    const defaultImageUrl = 'https://via.placeholder.com/200x150'; // 기본 이미지 URL
 
     const onchangeImageUpload = (e) => {
         const { files } = e.target;
@@ -142,21 +134,13 @@ const ImageUpload = ({ setImage, setImageUrl }) => {
         reader.readAsDataURL(uploadFile);
         reader.onloadend = () => {
             setUploadImgUrl(reader.result);
-            // 이미지 URL 설정
-            setImageUrl(reader.result);
         };
-    };
-
-    const handleResetImage = () => {
-        setImage(null); // 이미지 상태 초기화
-        setImageUrl(''); // 이미지 URL 초기화
-        setUploadImgUrl(defaultImageUrl); // 업로드된 이미지 URL 초기화
     };
 
     return (
         <Grid container alignItems="center" justifyContent="space-around">
             <Grid item>
-                <img src={uploadImgUrl || defaultImageUrl} alt="사진 업로드 해주세요" style={{ width: '200px', height: '150px' }} />
+                <img src={uploadImgUrl || "https://via.placeholder.com/200x150"} alt="사진 업로드 해주세요" style={{ width: '200px', height: '150px' }} />
             </Grid>
             <Grid item>
                 <Button variant="contained" color="primary" component="label" startIcon={<CloudUploadIcon />}>
@@ -168,11 +152,6 @@ const ImageUpload = ({ setImage, setImageUrl }) => {
                         onChange={onchangeImageUpload}
                     />
                 </Button>
-                {uploadImgUrl && (
-                    <Button variant="contained" color="secondary" onClick={handleResetImage}>
-                        이미지 초기화
-                    </Button>
-                )}
             </Grid>
         </Grid>
     );
