@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Container, Grid, TextField, Dialog, DialogTitle, DialogContent, DialogActions, FormControl, InputLabel, Select, MenuItem, Card } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
@@ -16,11 +16,15 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     const [story1ImageUrl, setStory1ImageUrl] = useState('');
     const [story2ImageUrl, setStory2ImageUrl] = useState('');
 
-    const handleReset = () => {
-        setStory1Image(null); // 이미지 상태 초기화
-        setStory2Image(null); // 이미지 상태 초기화
-        setStory1ImageUrl(''); // 이미지 URL 상태 초기화
-        setStory2ImageUrl(''); // 이미지 URL 상태 초기화
+    const resetForm = () => {
+        setQuestion('');
+        setStory1('');
+        setStory2('');
+        setStory1Image(null);
+        setStory2Image(null);
+        // 이미지 URL 상태 초기화
+        setStory1ImageUrl('');
+        setStory2ImageUrl('');
     };
 
     const handleCreate = async () => {
@@ -47,7 +51,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
             });
             console.log('Quiz created successfully:', response.data);
             setOpenDialog(true);
-            handleReset(); // 이미지 초기화 함수 호출
+            resetForm(); // Reset the form after successful creation
         } catch (error) {
             console.error('Error creating quiz:', error.response ? error.response.data : error.message);
         }
@@ -96,10 +100,10 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
                         />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload setImage={setStory1Image} setImageUrl={setStory1ImageUrl} />
+                        <ImageUpload setImage={setStory1Image} setImageUrl={setStory1ImageUrl} reset={() => setStory1ImageUrl('')} />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload setImage={setStory2Image} setImageUrl={setStory2ImageUrl} />
+                        <ImageUpload setImage={setStory2Image} setImageUrl={setStory2ImageUrl} reset={() => setStory2ImageUrl('')} />
                     </Grid>
                     <Grid item xs={12} style={{ height: '30px' }} />
                     <Grid item xs={12} textAlign="center">
@@ -125,9 +129,8 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     );
 }
 
-const ImageUpload = ({ setImage, setImageUrl }) => {
-    const initialImageUrl = "https://via.placeholder.com/200x150";
-    const [uploadImgUrl, setUploadImgUrl] = useState(initialImageUrl);
+const ImageUpload = ({ setImage, setImageUrl, reset }) => {
+    const [uploadImgUrl, setUploadImgUrl] = useState('');
 
     const onchangeImageUpload = (e) => {
         const { files } = e.target;
@@ -142,16 +145,19 @@ const ImageUpload = ({ setImage, setImageUrl }) => {
         };
     };
 
-    const handleReset = () => {
-        setUploadImgUrl(initialImageUrl); // 초기 이미지 URL로 설정
-        setImage(null); // 이미지 상태 초기화
-        setImageUrl(''); // 이미지 URL 상태 초기화
-    };
+    // reset 함수를 이용해 상태 초기화
+    useEffect(() => {
+        reset(); // reset 함수가 전달되었다고 가정합니다.
+    }, [reset]);
 
     return (
         <Grid container alignItems="center" justifyContent="space-around">
             <Grid item>
-                <img src={uploadImgUrl} alt="사진 업로드 해주세요" style={{ width: '200px', height: '150px' }} />
+                <img
+                    src={uploadImgUrl || "https://via.placeholder.com/200x150"}
+                    alt="사진 업로드 해주세요"
+                    style={{ width: '200px', height: '150px' }}
+                />
             </Grid>
             <Grid item>
                 <Button variant="contained" color="primary" component="label" startIcon={<CloudUploadIcon />}>
@@ -162,9 +168,6 @@ const ImageUpload = ({ setImage, setImageUrl }) => {
                         style={{ display: 'none' }}
                         onChange={onchangeImageUpload}
                     />
-                </Button>
-                <Button variant="contained" color="secondary" onClick={handleReset}>
-                    이미지 초기화
                 </Button>
             </Grid>
         </Grid>
