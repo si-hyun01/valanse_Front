@@ -16,10 +16,6 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     const [story1ImageUrl, setStory1ImageUrl] = useState('');
     const [story2ImageUrl, setStory2ImageUrl] = useState('');
 
-    // 업로드된 이미지 URL 저장
-    const [uploadedImageUrl1, setUploadedImageUrl1] = useState('');
-    const [uploadedImageUrl2, setUploadedImageUrl2] = useState('');
-
     const resetForm = () => {
         setQuestion('');
         setStory1('');
@@ -29,9 +25,6 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
         // 이미지 URL 상태 초기화
         setStory1ImageUrl('');
         setStory2ImageUrl('');
-        // 업로드된 이미지 URL 초기화
-        setUploadedImageUrl1('');
-        setUploadedImageUrl2('');
     };
 
     const handleCreate = async () => {
@@ -107,20 +100,10 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
                         />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload
-                            setImage={setStory1Image}
-                            setImageUrl={setStory1ImageUrl}
-                            setUploadedImageUrl={setUploadedImageUrl1}
-                            uploadedImageUrl={uploadedImageUrl1}
-                        />
+                        <ImageUpload setImage={setStory1Image} setImageUrl={setStory1ImageUrl} />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload
-                            setImage={setStory2Image}
-                            setImageUrl={setStory2ImageUrl}
-                            setUploadedImageUrl={setUploadedImageUrl2}
-                            uploadedImageUrl={uploadedImageUrl2}
-                        />
+                        <ImageUpload setImage={setStory2Image} setImageUrl={setStory2ImageUrl} />
                     </Grid>
                     <Grid item xs={12} style={{ height: '30px' }} />
                     <Grid item xs={12} textAlign="center">
@@ -146,7 +129,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     );
 }
 
-const ImageUpload = ({ setImage, setImageUrl, setUploadedImageUrl, uploadedImageUrl }) => {
+const ImageUpload = ({ setImage, setImageUrl }) => {
     const [uploadImgUrl, setUploadImgUrl] = useState('');
 
     const onchangeImageUpload = (e) => {
@@ -159,17 +142,8 @@ const ImageUpload = ({ setImage, setImageUrl, setUploadedImageUrl, uploadedImage
             setUploadImgUrl(reader.result);
             // 이미지 URL 설정
             setImageUrl(reader.result);
-            // 업로드된 이미지 URL 저장
-            setUploadedImageUrl(reader.result);
         };
     };
-
-    useEffect(() => {
-        // 업로드된 이미지 URL이 변경되면 표시할 이미지 URL 업데이트
-        if (uploadedImageUrl) {
-            setUploadImgUrl(uploadedImageUrl);
-        }
-    }, [uploadedImageUrl]);
 
     return (
         <Grid container alignItems="center" justifyContent="space-around">
@@ -248,4 +222,4 @@ function App() {
     );
 }
 
-export default App
+export default App;
