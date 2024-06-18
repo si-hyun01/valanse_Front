@@ -13,10 +13,20 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     const [story2Image, setStory2Image] = useState(null);
     const [openDialog, setOpenDialog] = useState(false);
 
+    // 이미지 URL 상태 초기화
+    const [story1ImageUrl, setStory1ImageUrl] = useState('');
+    const [story2ImageUrl, setStory2ImageUrl] = useState('');
+
     const resetForm = () => {
         setQuestion('');
         setStory1('');
         setStory2('');
+        // 이미지 URL 상태 초기화
+        setStory1ImageUrl('');
+        setStory2ImageUrl('');
+    };
+
+    const resetImages = () => {
         setStory1Image(null);
         setStory2Image(null);
     };
@@ -44,8 +54,9 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
                 }
             });
             console.log('Quiz created successfully:', response.data);
-            resetForm(); // Reset the form after successful creation
             setOpenDialog(true);
+            resetForm(); // Reset the form after successful creation
+            resetImages(); // Reset images after successful creation
         } catch (error) {
             console.error('Error creating quiz:', error.response ? error.response.data : error.message);
         }
@@ -94,10 +105,10 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
                         />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload setImage={setStory1Image} />
+                        <ImageUpload setImage={setStory1Image} setUploadImgUrl={setStory1ImageUrl} />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload setImage={setStory2Image} />
+                        <ImageUpload setImage={setStory2Image} setUploadImgUrl={setStory2ImageUrl} />
                     </Grid>
                     <Grid item xs={12} style={{ height: '30px' }} />
                     <Grid item xs={12} textAlign="center">
@@ -123,7 +134,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     );
 }
 
-const ImageUpload = ({ setImage }) => {
+const ImageUpload = ({ setImage, setUploadImgUrl }) => {
     const [uploadImgUrl, setUploadImgUrl] = useState('');
 
     const onchangeImageUpload = (e) => {
