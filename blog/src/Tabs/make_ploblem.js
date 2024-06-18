@@ -16,6 +16,10 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     const [story1ImageUrl, setStory1ImageUrl] = useState('');
     const [story2ImageUrl, setStory2ImageUrl] = useState('');
 
+    // 이미지 업로드 후 초기화를 위한 상태
+    const [reset1, setReset1] = useState(false);
+    const [reset2, setReset2] = useState(false);
+
     const resetForm = () => {
         setQuestion('');
         setStory1('');
@@ -25,6 +29,9 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
         // 이미지 URL 상태 초기화
         setStory1ImageUrl('');
         setStory2ImageUrl('');
+        // 이미지 업로드 컴포넌트의 초기화를 위한 상태 초기화
+        setReset1(true);
+        setReset2(true);
     };
 
     const handleCreate = async () => {
@@ -100,10 +107,10 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
                         />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload setImage={setStory1Image} setImageUrl={setStory1ImageUrl} reset={() => setStory1ImageUrl('')} />
+                        <ImageUpload setImage={setStory1Image} setImageUrl={setStory1ImageUrl} reset={() => setReset1(false)} />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload setImage={setStory2Image} setImageUrl={setStory2ImageUrl} reset={() => setStory2ImageUrl('')} />
+                        <ImageUpload setImage={setStory2Image} setImageUrl={setStory2ImageUrl} reset={() => setReset2(false)} />
                     </Grid>
                     <Grid item xs={12} style={{ height: '30px' }} />
                     <Grid item xs={12} textAlign="center">
@@ -147,7 +154,9 @@ const ImageUpload = ({ setImage, setImageUrl, reset }) => {
 
     // reset 함수를 이용해 상태 초기화
     useEffect(() => {
-        reset(); // reset 함수가 전달되었다고 가정합니다.
+        if (reset) {
+            setUploadImgUrl('');
+        }
     }, [reset]);
 
     return (
