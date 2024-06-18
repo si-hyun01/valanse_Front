@@ -44,8 +44,8 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
                 }
             });
             console.log('Quiz created successfully:', response.data);
-            setOpenDialog(true);
             resetForm(); // Reset the form after successful creation
+            setOpenDialog(true);
         } catch (error) {
             console.error('Error creating quiz:', error.response ? error.response.data : error.message);
         }
