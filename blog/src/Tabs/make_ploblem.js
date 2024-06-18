@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Container, Grid, TextField, Dialog, DialogTitle, DialogContent, DialogActions, FormControl, InputLabel, Select, MenuItem, Card } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
@@ -102,10 +102,10 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
                         />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload setImage={setStory1Image} setImageUrl={setStory1ImageUrl} />
+                        <ImageUpload setImage={setStory1Image} setImageUrl={setStory1ImageUrl} setInitialImageUrl={setStory1ImageUrl} />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload setImage={setStory2Image} setImageUrl={setStory2ImageUrl} />
+                        <ImageUpload setImage={setStory2Image} setImageUrl={setStory2ImageUrl} setInitialImageUrl={setStory2ImageUrl} />
                     </Grid>
                     <Grid item xs={12} style={{ height: '30px' }} />
                     <Grid item xs={12} textAlign="center">
@@ -131,7 +131,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     );
 }
 
-const ImageUpload = ({ setImage, setImageUrl }) => {
+const ImageUpload = ({ setImage, setImageUrl, setInitialImageUrl }) => {
     const [uploadImgUrl, setUploadImgUrl] = useState(initialImageUrl);
 
     const onchangeImageUpload = (e) => {
@@ -146,6 +146,14 @@ const ImageUpload = ({ setImage, setImageUrl }) => {
             setImageUrl(reader.result);
         };
     };
+
+    useEffect(() => {
+        // 컴포넌트가 처음 렌더링될 때와 uploadImgUrl이 초기 이미지 URL이 아닐 때 초기화
+        if (uploadImgUrl !== initialImageUrl) {
+            setInitialImageUrl(initialImageUrl);
+            setUploadImgUrl(initialImageUrl);
+        }
+    }, [uploadImgUrl, setInitialImageUrl]);
 
     return (
         <Grid container alignItems="center" justifyContent="space-around">
