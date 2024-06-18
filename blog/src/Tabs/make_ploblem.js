@@ -51,7 +51,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
             });
             console.log('Quiz created successfully:', response.data);
             setOpenDialog(true);
-            resetForm(); // Reset the form after successful creation
+            handleReset();
             // 이미지 URL 상태 초기화
             setStory1ImageUrl('');
             setStory2ImageUrl('');
