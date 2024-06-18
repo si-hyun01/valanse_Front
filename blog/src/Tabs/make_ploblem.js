@@ -63,7 +63,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     };
 
     return (
-        <Card style={{border: '2px solid transparent', background: 'black', boxShadow: '0 0 10px #00FF00'}}>
+        <Card style={{ border: '2px solid transparent', background: 'black', boxShadow: '0 0 10px #00FF00' }}>
             <Container >
                 <Grid container spacing={2} justifyContent="center">
                     <Grid item xs={12} style={{ height: '30px' }} />
@@ -130,7 +130,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     );
 }
 
-const ImageUpload = ({ setImage, setImageUrl }) => {
+const ImageUpload = ({ setImage, setUploadImgUrl }) => {
     const [uploadImgUrl, setUploadImgUrl] = useState('');
 
     const onchangeImageUpload = (e) => {
@@ -141,8 +141,6 @@ const ImageUpload = ({ setImage, setImageUrl }) => {
         reader.readAsDataURL(uploadFile);
         reader.onloadend = () => {
             setUploadImgUrl(reader.result);
-            // 이미지 URL 설정
-            setImageUrl(reader.result);
         };
     };
     return (
@@ -177,7 +175,7 @@ function App() {
     };
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' , background: 'black'}}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: 'black' }}>
             <Container
                 maxWidth="md"
                 sx={{
