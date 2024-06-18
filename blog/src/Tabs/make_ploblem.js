@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, Container, Grid, TextField, Dialog, DialogTitle, DialogContent, DialogActions, FormControl, InputLabel, Select, MenuItem, Card } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-
-const initialImageUrl = "https://via.placeholder.com/200x150";
 
 function CreateQuestionPage({ onCreate, selectedCategory }) {
     const [question, setQuestion] = useState('');
@@ -15,8 +13,19 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     const [openDialog, setOpenDialog] = useState(false);
 
     // 이미지 URL 상태 초기화
-    const [story1ImageUrl, setStory1ImageUrl] = useState(initialImageUrl);
-    const [story2ImageUrl, setStory2ImageUrl] = useState(initialImageUrl);
+    const [story1ImageUrl, setStory1ImageUrl] = useState('');
+    const [story2ImageUrl, setStory2ImageUrl] = useState('');
+
+    const resetForm = () => {
+        setQuestion('');
+        setStory1('');
+        setStory2('');
+        setStory1Image(null);
+        setStory2Image(null);
+        // 이미지 URL 상태 초기화
+        setStory1ImageUrl('');
+        setStory2ImageUrl('');
+    };
 
     const handleCreate = async () => {
         const formData = new FormData();
@@ -42,25 +51,15 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
             });
             console.log('Quiz created successfully:', response.data);
             setOpenDialog(true);
-            // resetForm(); // Reset the form after successful creation
+            resetForm(); // Reset the form after successful creation
         } catch (error) {
             console.error('Error creating quiz:', error.response ? error.response.data : error.message);
         }
     };
 
-    const resetForm = () => {
-        setQuestion('');
-        setStory1('');
-        setStory2('');
-        setStory1Image(null);
-        setStory2Image(null);
-        // 이미지 URL 상태 초기화
-        setStory1ImageUrl(initialImageUrl);
-        setStory2ImageUrl(initialImageUrl);
-    };
-
     const handleCloseDialog = () => {
         setOpenDialog(false);
+        window.location.reload(); // 페이지 새로고침
     };
 
     return (
@@ -102,10 +101,10 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
                         />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload setImage={setStory1Image} setImageUrl={setStory1ImageUrl} currentImageUrl={story1ImageUrl} />
+                        <ImageUpload setImage={setStory1Image} setImageUrl={setStory1ImageUrl} />
                     </Grid>
                     <Grid item xs={6}>
-                        <ImageUpload setImage={setStory2Image} setImageUrl={setStory2ImageUrl} currentImageUrl={story2ImageUrl} />
+                        <ImageUpload setImage={setStory2Image} setImageUrl={setStory2ImageUrl} />
                     </Grid>
                     <Grid item xs={12} style={{ height: '30px' }} />
                     <Grid item xs={12} textAlign="center">
@@ -131,7 +130,7 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     );
 }
 
-const ImageUpload = ({ setImage, setImageUrl, currentImageUrl }) => {
+const ImageUpload = ({ setImage, setImageUrl }) => {
     const [uploadImgUrl, setUploadImgUrl] = useState('');
 
     const onchangeImageUpload = (e) => {
@@ -146,22 +145,10 @@ const ImageUpload = ({ setImage, setImageUrl, currentImageUrl }) => {
             setImageUrl(reader.result);
         };
     };
-
-    useEffect(() => {
-        // 컴포넌트가 처음 렌더링될 때 currentImageUrl로 설정
-        if (currentImageUrl !== initialImageUrl) {
-            setUploadImgUrl(currentImageUrl);
-        }
-    }, [currentImageUrl]);
-
     return (
         <Grid container alignItems="center" justifyContent="space-around">
             <Grid item>
-                <img
-                    src={uploadImgUrl || "https://via.placeholder.com/200x150"}
-                    alt="사진 업로드 해주세요"
-                    style={{ width: '200px', height: '150px' }}
-                />
+                <img src={uploadImgUrl || "https://via.placeholder.com/200x150"} alt="사진 업로드 해주세요" style={{ width: '200px', height: '150px' }} />
             </Grid>
             <Grid item>
                 <Button variant="contained" color="primary" component="label" startIcon={<CloudUploadIcon />}>
@@ -183,17 +170,10 @@ function App() {
 
     const handleCreateQuestion = (newQuestion) => {
         console.log('New question created:', newQuestion);
-        resetImageUpload(); // 이미지 업로드 초기화
     };
 
     const handleCategoryChange = (event) => {
         setSelectedCategory(event.target.value);
-    };
-
-    const resetImageUpload = () => {
-        // 이미지 업로드 컴포넌트의 상태 초기화
-        setStory1ImageUrl(initialImageUrl);
-        setStory2ImageUrl(initialImageUrl);
     };
 
     return (
