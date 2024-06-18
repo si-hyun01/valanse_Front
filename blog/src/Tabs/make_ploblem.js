@@ -4,7 +4,6 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-
 function CreateQuestionPage({ onCreate, selectedCategory }) {
     const [question, setQuestion] = useState('');
     const [story1, setStory1] = useState('');
@@ -148,6 +147,13 @@ const ImageUpload = ({ setImage, setImageUrl }) => {
             setImageUrl(reader.result);
         };
     };
+
+    const handleReset = () => {
+        setUploadImgUrl(''); // 이미지 URL 초기화
+        setImage(null); // 이미지 상태 초기화
+        setImageUrl(''); // 이미지 URL 상태 초기화
+    };
+
     return (
         <Grid container alignItems="center" justifyContent="space-around">
             <Grid item>
@@ -162,6 +168,9 @@ const ImageUpload = ({ setImage, setImageUrl }) => {
                         style={{ display: 'none' }}
                         onChange={onchangeImageUpload}
                     />
+                </Button>
+                <Button variant="contained" color="secondary" onClick={handleReset}>
+                    이미지 초기화
                 </Button>
             </Grid>
         </Grid>
