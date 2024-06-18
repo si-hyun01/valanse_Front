@@ -18,17 +18,6 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
     const [story1ImageUrl, setStory1ImageUrl] = useState(initialImageUrl);
     const [story2ImageUrl, setStory2ImageUrl] = useState(initialImageUrl);
 
-    const resetForm = () => {
-        setQuestion('');
-        setStory1('');
-        setStory2('');
-        setStory1Image(null);
-        setStory2Image(null);
-        // 이미지 URL 상태 초기화
-        setStory1ImageUrl(initialImageUrl);
-        setStory2ImageUrl(initialImageUrl);
-    };
-
     const handleCreate = async () => {
         const formData = new FormData();
         const quizRegisterDto = {
@@ -57,6 +46,17 @@ function CreateQuestionPage({ onCreate, selectedCategory }) {
         } catch (error) {
             console.error('Error creating quiz:', error.response ? error.response.data : error.message);
         }
+    };
+
+    const resetForm = () => {
+        setQuestion('');
+        setStory1('');
+        setStory2('');
+        setStory1Image(null);
+        setStory2Image(null);
+        // 이미지 URL 상태 초기화
+        setStory1ImageUrl(initialImageUrl);
+        setStory2ImageUrl(initialImageUrl);
     };
 
     const handleCloseDialog = () => {
@@ -147,12 +147,6 @@ const ImageUpload = ({ setImage, setImageUrl }) => {
         };
     };
 
-    const resetImage = () => {
-        setUploadImgUrl(initialImageUrl); // 초기 상태 이미지 URL로 재설정
-        setImage(null); // 이미지 상태 초기화
-        setImageUrl(''); // 이미지 URL 상태 초기화
-    };
-
     return (
         <Grid container alignItems="center" justifyContent="space-around">
             <Grid item>
@@ -171,9 +165,6 @@ const ImageUpload = ({ setImage, setImageUrl }) => {
                         style={{ display: 'none' }}
                         onChange={onchangeImageUpload}
                     />
-                </Button>
-                <Button variant="outlined" color="secondary" onClick={resetImage} style={{ marginLeft: '10px' }}>
-                    초기 상태로 되돌리기
                 </Button>
             </Grid>
         </Grid>
