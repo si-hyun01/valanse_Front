@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import { Container, Typography, Button, Card, CardContent } from '@mui/material';
+import { Container, Typography, Button, Card, CardContent, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import Bground from "../layouts/img/green_hexa.png";
 import CreateQuestionDialog from '../layouts/remake_problem'; // 기존 다이얼로그 컴포넌트 임포트
 import '../layouts/Mypage.css'; 
 
 const QuizDetail = ({ quiz, onGoBack, onUpdateQuizzes }) => {
     const [openEditDialog, setOpenEditDialog] = useState(false); // 수정 다이얼로그 열림 상태 추가
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false); // 삭제 확인 다이얼로그 열림 상태 추가
 
     const handleEdit = () => {
         setOpenEditDialog(true); // 수정하기 버튼 클릭 시 수정 다이얼로그 열기
@@ -20,6 +21,15 @@ const QuizDetail = ({ quiz, onGoBack, onUpdateQuizzes }) => {
         } catch (error) {
             console.error('퀴즈 처리 중 오류 발생:', error);
         }
+        setOpenDeleteDialog(false); // 삭제 확인 다이얼로그 닫기
+    };
+
+    const handleDeleteConfirm = () => {
+        setOpenDeleteDialog(true); // 삭제하기 버튼 클릭 시 삭제 확인 다이얼로그 열기
+    };
+
+    const handleCloseDeleteDialog = () => {
+        setOpenDeleteDialog(false); // 삭제 확인 다이얼로그 닫기
     };
 
     return (
@@ -28,7 +38,7 @@ const QuizDetail = ({ quiz, onGoBack, onUpdateQuizzes }) => {
                 <Typography variant="h6" gutterBottom sx={{ color: 'white' }}>{quiz.content}</Typography>
                 <Typography variant="subtitle2" sx={{ color: 'white' }}>퀴즈 ID: {quiz.quizId}</Typography>
                 <Button onClick={() => onGoBack()} color="primary" sx={{ borderColor: 'lime', color: 'lime' }}>뒤로가기</Button>
-                <Button onClick={handleDelete} color="error" sx={{ borderColor: 'red', color: 'red' }}>삭제하기</Button>
+                <Button onClick={handleDeleteConfirm} color="error" sx={{ borderColor: 'red', color: 'red' }}>삭제하기</Button>
                 <Button onClick={handleEdit} color="primary" sx={{ borderColor: 'lime', color: 'lime' }}>수정하기</Button>
             </CardContent>
             {/* 수정 다이얼로그 */}
@@ -41,6 +51,17 @@ const QuizDetail = ({ quiz, onGoBack, onUpdateQuizzes }) => {
                     actionType="edit"
                 />
             )}
+            {/* 삭제 확인 다이얼로그 */}
+            <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
+                <DialogTitle>삭제 확인</DialogTitle>
+                <DialogContent>
+                    <Typography>정말로 이 퀴즈를 삭제하시겠습니까?</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDeleteDialog} color="primary">취소</Button>
+                    <Button onClick={handleDelete} color="error">삭제</Button>
+                </DialogActions>
+            </Dialog>
         </Card>
     );
 };
