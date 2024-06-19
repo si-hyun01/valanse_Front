@@ -23,11 +23,6 @@ const EnterPage = () => (
           <PopularArt />
       </Container>
     </Grid>
-    <Grid item xs={12}>
-      <Container style={{ maxWidth: '80%' }}>
-          <RecommanQuiz />
-      </Container>
-    </Grid>
   </Grid>
 );
 
